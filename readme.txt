@@ -1,3 +1,35 @@
+Bla-bla-bla long story short:
+1. Only Buffer & Automat are written. Full of bugs at this point.
+
+Known issues so far:
+0. Doesnt support whitespaces yet
+1. Fails to handle empty input-file
+2. Automat works without stopping, i.e. after it finished breaking input-file into words it continues to spit out empty strings
+
+How to compile this crap:
+1. Go to the Buffer folder
+2. Open Terminal there
+3. Type this: 
+	g++ TestBuffer.cpp Buffer.cpp
+4. It should create new a.out file (executable)
+5. Execute:
+	./a.out
+6. Dont forget to change PATH_NAME variable!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Das Projekt wurde in 4 Teilprojekte aufgeteilt:
 
 	- Automat
