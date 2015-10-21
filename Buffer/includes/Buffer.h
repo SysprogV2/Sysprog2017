@@ -13,14 +13,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <stdlib.h>
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> //
 #include <malloc.h>
 
 #define EOF_SIGN '\0'
-#define PATH_NAME "/home/arty/workspace/SysProgTemplate_SS_15/Buffer/qute"
+#define DEFAULT_PATH_NAME "/home/arty/workspace/SysProgTemplate_SS_15/Buffer/buffer1"
 
 
 class Buffer {
@@ -28,54 +26,37 @@ class Buffer {
 	int fd;
 	char *buffer1;
 	char *buffer2;
-	const size_t alignment = 4096;
-    const size_t size = 512;
-
+	const static size_t alignment = 4096;
+    const static size_t size = 512;
+    char *filename = DEFAULT_PATH_NAME;
     ssize_t byte_read;
 public:
+
 	Buffer();
 	~Buffer();
+	Buffer(char *pathToFile);
 	char getChar();
 	void ungetChar(int back);
 	void load(void * someBuffer);
+	void allocateBufferMemory();
 };
 
+
 Buffer::Buffer() {
-	char *filename = PATH_NAME;
+	/* open filename and return filedescriptor */
 	fd = open(filename, O_RDONLY, O_DIRECT);
-	int error;
-
-	/* Buffer 1 */
-	void *tmp1;
-	error = posix_memalign(&tmp1, alignment, size);
-    if (error != 0) {
-        perror("posix_memalign");
-        exit(EXIT_FAILURE);
-    }
-    buffer1 = (char *) tmp1;
-    printf("posix_memalign(%d, %d) = %p\n", alignment, size, buffer1);
-
-    /* Buffer 2 */
-    void *tmp2;
-    error = posix_memalign(&tmp2, alignment, size);
-    if (error != 0) {
-        perror("posix_memalign");
-        exit(EXIT_FAILURE);
-    }
-    buffer2 = (char *) tmp2;
-    printf("posix_memalign(%d, %d) = %p\n", alignment, size, buffer2);
-
-    /* Load initial portion of file in Buffer1 */
-    load(buffer1);
-    next = buffer1;
-
-    /* Put constrains */
-    buffer1[size - 1] = '\0';
-    buffer2[size - 1] = '\0';
+	allocateBufferMemory();
 }
+
 Buffer::~Buffer() {
 	/* Close file descriptor */
 	close(fd);
+}
+
+Buffer::Buffer(char *pathToFile) {
+	filename = pathToFile;
+	fd = open(filename, O_RDONLY, O_DIRECT);
+	allocateBufferMemory();
 }
 
 char Buffer::getChar() {
@@ -115,6 +96,38 @@ void Buffer::load(void * someBuffer) {
 		tmp[byte_read] = '\0';
 	}
 	printf("read(%d, %p, %d) = %d\n", fd, someBuffer, size - 1, byte_read);
+}
+
+void Buffer::allocateBufferMemory() {
+		int error;
+
+		/* Buffer 1 */
+		void *tmp1;
+		error = posix_memalign(&tmp1, alignment, size);
+	    if (error != 0) {
+	        perror("posix_memalign");
+	        exit(EXIT_FAILURE);
+	    }
+	    buffer1 = (char *) tmp1;
+	    printf("posix_memalign(%d, %d) = %p\n", alignment, size, buffer1);
+
+	    /* Buffer 2 */
+	    void *tmp2;
+	    error = posix_memalign(&tmp2, alignment, size);
+	    if (error != 0) {
+	        perror("posix_memalign");
+	        exit(EXIT_FAILURE);
+	    }
+	    buffer2 = (char *) tmp2;
+	    printf("posix_memalign(%d, %d) = %p\n", alignment, size, buffer2);
+
+	    /* Load initial portion of file in Buffer1 */
+	    load(buffer1);
+	    next = buffer1;
+
+	    /* Put constrains */
+	    buffer1[size - 1] = '\0';
+	    buffer2[size - 1] = '\0';
 }
 
 #endif /* BUFFER_H_ */

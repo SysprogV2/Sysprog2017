@@ -1,20 +1,27 @@
 Bla-bla-bla long story short:
-1. Only Buffer & Automat are written. Full of bugs at this point.
+
+
+How to compile Scanner to test it:
+1. Open Terminal
+2. Change working directory with "cd" command to: 
+	<your_root>/SysProgTemplate_SS_15/Scanner/src
+3. Type this: 
+	g++ TestScanner.cpp Scanner.cpp
+4. It should create new a.out file (executable)
+5. Execute it with following command:
+	./a.out
+
 
 Known issues so far:
 0. Doesnt support whitespaces yet
 1. Fails to handle empty input-file
-2. Automat works without stopping, i.e. after it finished breaking input-file into words it continues to spit out empty strings
+2. Shows crap when you try to get more tokens than the input file
+   possibly could have
+3. Find more of them on your own!
 
-How to compile this crap:
-1. Go to the Buffer folder
-2. Open Terminal there
-3. Type this: 
-	g++ TestBuffer.cpp Buffer.cpp
-4. It should create new a.out file (executable)
-5. Execute:
-	./a.out
-6. Dont forget to change PATH_NAME variable!
+
+
+
 
 
 
@@ -35,7 +42,6 @@ Das Projekt wurde in 4 Teilprojekte aufgeteilt:
 	- Automat
 	- Buffer
 	- Symboltabelle
-	
 	- Scanner
 
 

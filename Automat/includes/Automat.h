@@ -30,6 +30,7 @@ class Automat {
 				ASSIGN_STATE, EOF_STATE, NULL_STATE};
     enum Symbols {ANY_LETTER, ANY_DIGIT, LESS, GREATER, COLON,
     			EQUALS, REST_SIGNS, EOF_SYMB, WHITESPACE, PROH_SIGN};
+
     int stateTable[9][12] = {
     			// STRT		 ID			INT			  <				>		   :			=			<ANY>		 <:			  <:>		   :=         Eof
     /* a-Z */	{ID_STATE, ID_STATE, START_STATE, START_STATE, START_STATE,START_STATE, START_STATE, START_STATE,START_STATE, START_STATE, START_STATE, EOF_STATE},
@@ -40,10 +41,10 @@ class Automat {
 	/*  =  */ 	{EQUALS_STATE, START_STATE, START_STATE, START_STATE, START_STATE, ASSIGN_STATE, START_STATE, START_STATE,START_STATE, START_STATE, START_STATE, EOF_STATE},
 	/* RST */	{ANY_SIGN_STATE, START_STATE, START_STATE, START_STATE, START_STATE, START_STATE, START_STATE, START_STATE, START_STATE, START_STATE, START_STATE, EOF_STATE},
     /* EOF */	{EOF_STATE, EOF_STATE, EOF_STATE, EOF_STATE, EOF_STATE, EOF_STATE, EOF_STATE, EOF_STATE, EOF_STATE, EOF_STATE, EOF_STATE, EOF_STATE}
-    /* WSP *///  ,{START_STATE, START_STATE, START_STATE, START_STATE, START_STATE,START_STATE, START_STATE, START_STATE,START_STATE, START_STATE, START_STATE, START_STATE}
+    /* WSP */  ,{START_STATE, START_STATE, START_STATE, START_STATE, START_STATE,START_STATE, START_STATE, START_STATE,START_STATE, START_STATE, START_STATE, START_STATE}
     /* PRH */
     };
-
+    bool tokenReady = false;
     int currentState;
     int lastFinalState;
     int back;
@@ -65,6 +66,8 @@ public:
     void stackTrim(int back);
     void stackFlush();
     char * stackGet();
+    bool isTokenReady();
+    void freeToken() ;
 };
 
 
@@ -87,27 +90,32 @@ Automat::~Automat() {
 	/* free stack */
 }
 
+bool Automat::isTokenReady() {
+	return tokenReady;
+}
+
+void Automat::freeToken() {
+	tokenReady = false;
+	stackFlush();
+}
 
 int Automat::read(char currentChar) {
-	stackPush(currentChar);
-    currentState = stateTable[mapCharToInt(currentChar)][currentState];
-
-    if (isFinal(currentState)) {
-        lastFinalState = currentState;
-        back = 0;
-    } else {
-        back++;
-        if (currentState == START_STATE || currentState == EOF_STATE) {
-        	stackTrim(back);
-        	std::cout << "> " <<  stackGet() << std::endl;
-            lastFinalState = NULL_STATE;
-            int tmpBack = back;
-            back = 0;
-            stackFlush();
-            return tmpBack;
-        }
-    }
-
+	if (!tokenReady ) {
+		stackPush(currentChar);
+		currentState = stateTable[mapCharToInt(currentChar)][currentState];
+		if (isFinal(currentState)) {
+			lastFinalState = currentState;
+			back = 0;
+		} else {
+			back++;
+			if (currentState == START_STATE || currentState == EOF_STATE) {
+				stackTrim(back);
+				tokenReady = true;
+				lastFinalState = NULL_STATE;
+				return back;
+			}
+		}
+	} // if (!tokenReady)
     return 0;
 }
 
