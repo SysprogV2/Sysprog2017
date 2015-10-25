@@ -17,9 +17,7 @@
 #include <stdlib.h> //
 #include <malloc.h>
 
-#define EOF_SIGN '\0'
 #define DEFAULT_PATH_NAME "/home/arty/workspace/SysProgTemplate_SS_15/Buffer/buffer1"
-
 
 class Buffer {
 	char *next;
@@ -27,11 +25,10 @@ class Buffer {
 	char *buffer1;
 	char *buffer2;
 	const static size_t alignment = 4096;
-    const static size_t size = 512;
+    const static size_t size = 4095;
     char *filename = DEFAULT_PATH_NAME;
     ssize_t byte_read;
 public:
-
 	Buffer();
 	~Buffer();
 	Buffer(char *pathToFile);
@@ -42,8 +39,9 @@ public:
 };
 
 
+
 Buffer::Buffer() {
-	/* open filename and return filedescriptor */
+	/* open filename and return file descriptor */
 	fd = open(filename, O_RDONLY, O_DIRECT);
 	allocateBufferMemory();
 }
@@ -74,7 +72,7 @@ char Buffer::getChar() {
 	return next++[0];
 }
 
-/* Fix this for */
+/* TODO: fix this -> causes a lot of bugs!!!! */
 void Buffer::ungetChar(int back) {
 	next -= back;
 	/*
@@ -98,6 +96,8 @@ void Buffer::load(void * someBuffer) {
 	printf("read(%d, %p, %d) = %d\n", fd, someBuffer, size - 1, byte_read);
 }
 
+
+// TODO: make one mem allocation instead of two, idiot!
 void Buffer::allocateBufferMemory() {
 		int error;
 
@@ -121,7 +121,7 @@ void Buffer::allocateBufferMemory() {
 	    buffer2 = (char *) tmp2;
 	    printf("posix_memalign(%d, %d) = %p\n", alignment, size, buffer2);
 
-	    /* Load initial portion of file in Buffer1 */
+	    /* Load initial portion of file into Buffer1 */
 	    load(buffer1);
 	    next = buffer1;
 
