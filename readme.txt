@@ -6,18 +6,18 @@ How to compile Scanner to test it:
 2. Change working directory with "cd" command to: 
 	<your_root>/SysProgTemplate_SS_15/Scanner/src
 3. Type this: 
-	g++ TestScanner.cpp Scanner.cpp
+	g++ TestScanner.cpp Scanner.cpp -std=c++11
 4. It should create new a.out file (executable)
 5. Execute it with following command:
-	./a.out
+	./a.out ../scan1
+	or
+	./a.out ../scan2
 
 
 Known issues so far:
-0. Doesnt support whitespaces yet
 1. Fails to handle empty input-file
-2. Shows crap when you try to get more tokens than the input file
-   possibly could have
-3. Find more of them on your own!
+2. Can process 1.2 MB file in 0.7 sec what is probably way too slow!
+3. Fails to determine line number correctly on big files (i.e. shows 26175 instead of 26180)
 
 
 
