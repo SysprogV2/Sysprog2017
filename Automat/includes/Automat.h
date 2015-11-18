@@ -8,21 +8,9 @@
 #ifndef Automat_H_
 #define Automat_H_
 
-#define SIGN_ARRAY_SZ 11
-#define MAX_TOKEN_SIZE 32 /* CAN ONLY ACCEPT TOKENS THAT ARE 32c LONG OR LESS!!!! */
-
-#ifndef IOSTREAM_H
-#define IOSTREAM_H
-#include <iostream>
-#endif /* IOSTREAM_H */
-
-
-#ifndef STDIO_H
-#define STDIO_H
-#include <stdio.h>
-#endif /* IOSTREAM_H */
-
+#include "Stack.h"
 #include "../../Scanner/includes/Position.h"
+#define SIGN_ARRAY_SZ 11
 
 class Automat {
 	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
@@ -34,7 +22,7 @@ class Automat {
     			  GREATER_SYMB, COLON_SYMB, EQUALS_SYMB, REST_SYMB,
 				  EOF_SYMB, WHITESPACE_SYMB, PROH_SYMB};
     int stateTable[11][18] = {
-    			// STRT   ID       INT	  < 		>      :	   =	 <ANY>	   <:	  <:>	   :=      Eof     WSP     *       :*   <comment>  *:    PROH_Z
+    /*            STRT    ID       INT	  < 		>      :	   =	 <ANY>	   <:	  <:>	   :=      Eof     WSP     *       :*   <comment>  *:    PROH_Z */
     /* a-Z */	{IDEN_Z, IDEN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
 	/* 0-9 */	{INTG_Z, IDEN_Z, INTG_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
 	/*  *  */	{MULT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, OPNC_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, COMM_Z, COMM_Z, STRT_Z, STRT_Z},
@@ -42,104 +30,98 @@ class Automat {
 	/*  >  */	{GREA_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, LCLL_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
 	/*  :  */ 	{COLN_Z, STRT_Z, STRT_Z, LCLN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, CLSC_Z, STRT_Z, STRT_Z},
 	/*  =  */ 	{EQLS_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, ASSG_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-	/* Rst */	{ASGN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-	/* Eof */	{EOF_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-	/* wsp */	{WSP_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, WSP_Z,  STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-    /* Prh */	{PROH_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z}
+	/* RST */	{ASGN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+	/* EOF */	{EOF_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+	/* WSP */	{WSP_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, WSP_Z,  STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+    /* PRH */	{PROH_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z}
     };
 
-    /* stores info about automata state */
+    /* stores info about automata's current state */
     int currentState;
     int lastFinalState;
     int back;
 
     /* stores info about current token */
 	int tokenType;
-	int tokenLength;
+	int lexemLength;
 	int tokenLine;
 	int tokenColumn;
 	bool tokenReady;
-	char *stack;
-    int stackHead;
+	Stack* stack;
 	Position *position;
 
 public:
     Automat();
     ~Automat();
-    int read(char c);
 
-    bool isEof(char c);
-    bool isRestSign(char c);
-    bool isDigit(char c);
-    bool isLetter(char c);
-    bool isWhitespace(char c);
-    bool isFinal(int someState);
+    int read(char c);
     int mapCharToInt(char c);
 
-    void stackPush(char c);
-    void stackTrim(int back);
-    void stackFlush();
-    char * stackGet();
+    bool isEof(char c);
+    bool isRest(char c);
+    bool isDigit(char c);
+    bool isLetter(char c);
+    bool isWspace(char c);
+    bool isFinal(int someState);
 
+    char* getLexem();
     bool isTokenReady();
     void freeToken();
-    int getTokenType();
-	int getTokenLength();
+
+    int getLexemType();
+	int getLexemLength();
 	int getLine();
 	int getColumn();
 };
 
-int Automat::getTokenLength() {
-	return tokenLength;
+int Automat::getLexemLength() {
+	return lexemLength;
 }
 
 Automat::Automat() {
 	tokenReady = false;
     currentState = STRT_Z;
     lastFinalState = NULL_STATE;
-    tokenLength = 0;
+    lexemLength = 0;
     back = 0;
-    stack = new char[MAX_TOKEN_SIZE];
-    stackHead = 0;
+    stack = new Stack();
     position = new Position();
     tokenLine = 0;
     tokenColumn = 0;
 }
 
 Automat::~Automat() {
-    delete stack;
+    // whatdo?
 }
 
 void Automat::freeToken() {
 	tokenReady = false;
-	stackFlush();
+	stack->flush();
+	lexemLength = 0;
 }
 
 int Automat::read(char currentChar) {
-	/* pos */
 	position->update(currentChar);
 	if ( !tokenReady ) {
 		currentState = stateTable[mapCharToInt(currentChar)][currentState];
-		stackPush(currentChar);
-		tokenLength++;
+		stack->push(currentChar);
+		lexemLength++;
 		if (isFinal(currentState)) {
 			lastFinalState = currentState;
 			back = 0;
 		} else {
 			back++;
 			if (currentState == STRT_Z ) {
-				stackTrim(back);
+				stack->trim(back);
+				lexemLength -= back; // adjust lexemLength
+
 				tokenType = lastFinalState;
 				tokenReady = true;
 				lastFinalState = NULL_STATE;
-				tokenLength -= back; // adjust tokenLength
+
 				position->update(back);
-				tokenLine = position->seekLineWithOffset(tokenLength) + 1;
-				tokenColumn = position->seekColumnWithOffset(tokenLength) + 1;
-				/* std::cout << std::endl << "DEBUG: " << position->seekLineWithOffset(tokenLength) + 1
-				        << " " << position->seekColumnWithOffset(tokenLength) + 1 << " "
-						<< "   length: " << (tokenLength) << " " << std::endl; */
-				tokenLength = 0;
+				tokenLine = position->seekLineWithOffset(lexemLength) + 1;
+				tokenColumn = position->seekColumnWithOffset(lexemLength) + 1;
 				return back;
 			}
 		}
@@ -147,13 +129,8 @@ int Automat::read(char currentChar) {
     return 0;
 }
 
-
-
-
-
-
-
-bool Automat::isRestSign(char c) {
+/* */
+bool Automat::isRest(char c) {
 	for (int i = 0; i < SIGN_ARRAY_SZ; i++) {
 		if (c == signArray[i]) return true;
 	}
@@ -169,16 +146,16 @@ bool Automat::isLetter(char c) {
     		((c >= 'A') && (c <= 'Z'));
 }
 
-bool Automat::isWhitespace(char c) {
+bool Automat::isWspace(char c) {
     return (c == '\n') || (c == ' ') ||  (c == '\t');
 }
 
 bool Automat::isFinal(int someState) {
-    return (someState != LCLN_Z &&
-			someState != STRT_Z &&
-			someState != EOF_Z &&
+    return (someState != STRT_Z &&
+    		someState != LCLN_Z &&
 			someState != COMM_Z &&
-			someState != OPNC_Z);
+			someState != OPNC_Z &&
+			someState != EOF_Z);
 }
 
 bool Automat::isTokenReady() {
@@ -186,32 +163,20 @@ bool Automat::isTokenReady() {
 }
 
 int Automat::mapCharToInt(char c) {
-    if (isLetter(c)) {
-        return ANY_LETTER;
-    } else if (isDigit(c)) {
-        return ANY_DIGIT;
-    } else if (c == '<') {
-        return LESS_SYMB;
-    } else if (c == '>') {
-        return GREATER_SYMB;
-    } else if (c == '*') {
-        return MULT_SYMB;
-    } else if (c == ':') {
-        return COLON_SYMB;
-    } else if (c == '=') {
-        return EQUALS_SYMB;
-    } else if (c == '\0') {
-        return EOF_SYMB;
-    } else if (isRestSign(c)){
-        return REST_SYMB;
-    } else if (isWhitespace(c)){
-        return WHITESPACE_SYMB;
-    } else {
-        return PROH_SYMB;
-    }
+    if (isLetter(c))      {  return ANY_LETTER; }
+    else if (isWspace(c)) {  return WHITESPACE_SYMB; }
+    else if (isDigit(c))  {  return ANY_DIGIT; }
+    else if (c == '<')    {  return LESS_SYMB; }
+    else if (c == '>')    {  return GREATER_SYMB; }
+    else if (c == '*')    {  return MULT_SYMB; }
+    else if (c == ':')    {  return COLON_SYMB; }
+    else if (c == '=')    {	 return EQUALS_SYMB; }
+    else if (isRest(c))   {	 return REST_SYMB; }
+    else if (c == '\0')   {  return EOF_SYMB; }
+    else                  {  return PROH_SYMB; }
 }
 
-int Automat::getTokenType() {
+int Automat::getLexemType() {
 	return tokenType;
 }
 
@@ -223,30 +188,8 @@ int Automat::getColumn() {
 	return tokenColumn;
 }
 
-
-
-
-
-
-
-/* TODO: replace all these stupid functions into separate class */
-void Automat::stackPush(char c) {
-	stack[stackHead++] = c;
-	stack[stackHead] = '\0';
-}
-
-void Automat::stackTrim(int back) {
-	stackHead -= back;
-	stack[stackHead] = '\0';
-}
-
-char * Automat::stackGet() {
-	return stack;
-}
-
-void Automat::stackFlush() {
-	stackHead = 0;
-	stack[0] = '\0';
+char* Automat::getLexem() {
+	return stack->get();
 }
 
 

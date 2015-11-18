@@ -1,19 +1,46 @@
 #include <string.h> // TODO: DELETE THIS LATER!!! Prohibited library!
 #include <stdlib.h>  // for strtol()
+#include "Information.h"
+
 class Token {
 	int tType;
 	int line;
 	int column;
-	char lexem[32];
+	Information* information;
+
+	enum TokenType {
+		WHITESPACE, UNKNOWN, COMMENT,
+
+		IDENTIFIER, INTEGER, WHILE, IF,
+
+		PLUS_S, MINUS_S, DIVIS_S, MULT_S,
+		LESS_S, GREA_S, EQUAL_S, ASSIGN_S,
+		SPEC_S, /* <:> */
+		EXCLM_S, AND_S, SEMICOL_S,
+
+		SQ_BRACKET_OPEN, SQ_BRACKET_CLOSE,
+		PARANTHESE_OPEN, PARANTHESE_CLOSE,
+		CRL_BRACKET_OPEN, CRL_BRACKET_CLOSE
+	};
+
 	long int value;
+	// TODO: remove this bullshit & add normal link-like references a-la Automat::States
 	enum States {STRT_Z, IDEN_Z, INTG_Z, LESS_Z, GREA_Z, COLN_Z,
 					 EQLS_Z, ASGN_Z, LCLN_Z, LCLL_Z, ASSG_Z, EOF_Z,
 					 WSP_Z, MULT_Z, OPNC_Z, COMM_Z, CLSC_Z, PROH_Z,
 					 NULL_STATE};
+	/*
+	char* ttypeString[10] = {"Start", "Identifier", "Integer", "Less", "Greater", "Division"
+							 "Equals", "<:>-hellknows", "Assignment", "Multiplication",
+							 "Prohibited"};
+	char* ttypeString[10] = {"Plus", "Minus", "Exclamation", "And", "Semicolon",
+							 "Paranthese O", "Paranthese C", "Braces O", "Braces C",
+							 "Brackets O", "Brackets C"};
+							 */
 	const char charArray[11] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
 public:
 	Token();
-	Token(int type, int l, int c, char *lex);
+	Token(int type, int l, int c, Information* info);
 	virtual ~Token();
 	void toString();
 };
@@ -25,19 +52,20 @@ Token::Token() {
 	value = 0;
 }
 
-Token::Token(int type, int l, int c, char *lex) {
+Token::Token(int type, int l, int c, Information* info) {
 	tType = type;
 	line = l;
 	column = c;
-	strcpy(lexem, lex);
+	information = info;
 	char *pEnd;
 	if (tType == INTG_Z) {
-		value = strtol(lexem, &pEnd, 10);
+		// TODO: where's Bereichueberschreitung, ha?
+		value = strtol(info->getLexem(), &pEnd, 10);
 	}
 }
 
 Token::~Token() {
-	delete lexem;
+	// haha, nothing!
 }
 
 void Token::toString() {
@@ -75,7 +103,7 @@ void Token::toString() {
 			break;
 		case ASGN_Z:
 			strcpy(typeToStr, "  sign    "); // TODO: describe more precisely!
-			typeToStr[0] = lexem[0];
+			typeToStr[0] = information->getLexem()[0];
 			break;
 		default:
 			strcpy(typeToStr, "--no idea-");
@@ -86,7 +114,7 @@ void Token::toString() {
 			  << "  Line: " << line << " Column: " << column << "  ";
 
 	if (tType == IDEN_Z) {
-		std::cout << "Lexem: " << lexem << std::endl;
+		std::cout << "Lexem: " << information->getLexem() << std::endl;
 	} else if (tType == INTG_Z) {
 		std::cout << "Value: " << value << std::endl;
 	} else {

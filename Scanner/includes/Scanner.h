@@ -18,80 +18,74 @@
 #ifndef SCANNER_H_
 #define SCANNER_H_
 
-#define MAX_TOKEN_SIZE 32
 #include "../../Buffer/includes/Buffer.h"
 #include "../../Automat/includes/Automat.h"
 #include "../../Scanner/includes/Token.h"
-
+#include "../../Scanner/includes/Information.h"
+#include "../../Symboltable/includes/StringTab.h"
+#include "../../Symboltable/includes/Symboltable.h"
 #define WSP_Z 12
 #define CLSC_Z 16
 
 
 class Scanner {
+	Symboltable *stab;
 	Buffer* buffer;
 	Automat* automat;
-	char* toReturn;
-	bool isEof = false;
 	int tokenType;
 	Token *t;
-
-	bool debugMode = false; // set to TRUE if you want to see ALL tokens
 public:
-	Scanner(char *filename, bool mode);
+	Scanner(char *filename, Symboltable* st);
 	Token* nextToken();
-	int getX();
-	int getY();
-	bool isEofReached();
-	int getTokenType();
 	virtual ~Scanner();
 };
 
-Scanner::Scanner(char *filename, bool mode) {
+Scanner::Scanner(char *filename, Symboltable* st) {
 	/* initialize buffer and automata */
-	toReturn = new char[MAX_TOKEN_SIZE];
+	stab = st;
 	buffer = new Buffer(filename);
 	automat = new Automat();
-	debugMode = mode;
 }
 
 Token *Scanner::nextToken() {
+	Information* info;
 	char currentChar;
 	/* run automat and feed it char by char, till any token is found */
 	while ( currentChar != '\0' && !automat->isTokenReady()) {
 		currentChar = buffer->getChar();
 		int back_steps = automat->read(currentChar);
-		tokenType = automat->getTokenType();
+		tokenType = automat->getLexemType();
 		buffer->ungetChar(back_steps);
+		if (automat->isTokenReady() && (tokenType == WSP_Z || tokenType == CLSC_Z)) {
+			automat->freeToken();
+		}
 	}
-	
+
 	/* create token and return it */
-	if (debugMode || (getTokenType() != WSP_Z && getTokenType() != CLSC_Z) ) {
-		t = new Token(getTokenType(),
-				automat->getLine(),
-				automat->getColumn(),
-				automat->stackGet());
-		t->toString();
-	}
-
-	/* indicate that Eof has been reached */
-	if (currentChar == '\0') isEof = true;
-
-	/* update the automata's state to default */
+	char* lexem = automat->getLexem();
+	int lexemLength = automat->getLexemLength();
+	char* lexemPtr = stab->insert(lexem, lexemLength);
+	info = new Information(lexemPtr);
+	t = new Token(tokenType,
+				  automat->getLine(),
+				  automat->getColumn(),
+				  info);
 	automat->freeToken();
-	return t;
+
+	/* if we need to finish already*/
+	if (currentChar == '\0') {
+		return NULL;
+	} else {
+		return t;
+	}
 }
 
-int Scanner::getTokenType() {
-	return tokenType;
-}
+
 
 Scanner::~Scanner() {
 	delete buffer;
 	delete automat;
-	delete toReturn;
 }
 
-bool Scanner::isEofReached() {
-	return isEof;
-}
+
 #endif /* SCANNER_H_ */

@@ -17,6 +17,7 @@ get_timestamp ()
 
 
 int main(int argc, char **argv) {
+	/*
 	// get the first timestamp
     timestamp_t t0 = get_timestamp();
 
@@ -29,5 +30,6 @@ int main(int argc, char **argv) {
     timestamp_t t1 = get_timestamp();
     double secs = (t1 - t0) / 1000000.0L;
     std::cout << "Exec time: " << secs << std::endl;
+    */
 }
 
