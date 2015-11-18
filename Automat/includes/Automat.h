@@ -9,32 +9,13 @@
 #define Automat_H_
 
 #include "Stack.h"
+#include "Syntax.h"
 #include "../../Scanner/includes/Position.h"
 #define SIGN_ARRAY_SZ 11
 
 class Automat {
-	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
-	enum States {STRT_Z, IDEN_Z, INTG_Z, LESS_Z, GREA_Z, COLN_Z, 
-				 EQLS_Z, ASGN_Z, LCLN_Z, LCLL_Z, ASSG_Z, EOF_Z, 
-				 WSP_Z, MULT_Z, OPNC_Z, COMM_Z, CLSC_Z, PROH_Z, 
-				 NULL_STATE};
-    enum Symbols {ANY_LETTER, ANY_DIGIT, MULT_SYMB, LESS_SYMB,
-    			  GREATER_SYMB, COLON_SYMB, EQUALS_SYMB, REST_SYMB,
-				  EOF_SYMB, WHITESPACE_SYMB, PROH_SYMB};
-    int stateTable[11][18] = {
-    /*            STRT    ID       INT	  < 		>      :	   =	 <ANY>	   <:	  <:>	   :=      Eof     WSP     *       :*   <comment>  *:    PROH_Z */
-    /* a-Z */	{IDEN_Z, IDEN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-	/* 0-9 */	{INTG_Z, IDEN_Z, INTG_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-	/*  *  */	{MULT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, OPNC_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, COMM_Z, COMM_Z, STRT_Z, STRT_Z},
-	/*  <  */ 	{LESS_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-	/*  >  */	{GREA_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, LCLL_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-	/*  :  */ 	{COLN_Z, STRT_Z, STRT_Z, LCLN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, CLSC_Z, STRT_Z, STRT_Z},
-	/*  =  */ 	{EQLS_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, ASSG_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-	/* RST */	{ASGN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-	/* EOF */	{EOF_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-	/* WSP */	{WSP_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, WSP_Z,  STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-    /* PRH */	{PROH_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z}
-    };
+	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';',
+										   '(', ')','{', '}', '[', ']'};
 
     /* stores info about automata's current state */
     int currentState;
@@ -42,7 +23,6 @@ class Automat {
     int back;
 
     /* stores info about current token */
-	int tokenType;
 	int lexemLength;
 	int tokenLine;
 	int tokenColumn;
@@ -51,6 +31,9 @@ class Automat {
 	Position *position;
 
 public:
+
+	Syntax* syntax;
+
     Automat();
     ~Automat();
 
@@ -68,7 +51,7 @@ public:
     bool isTokenReady();
     void freeToken();
 
-    int getLexemType();
+    int getFinalState();
 	int getLexemLength();
 	int getLine();
 	int getColumn();
@@ -80,14 +63,15 @@ int Automat::getLexemLength() {
 
 Automat::Automat() {
 	tokenReady = false;
-    currentState = STRT_Z;
-    lastFinalState = NULL_STATE;
+    currentState = Syntax::STRT_Z;
+    lastFinalState = Syntax::NULL_STATE;
     lexemLength = 0;
     back = 0;
     stack = new Stack();
     position = new Position();
     tokenLine = 0;
     tokenColumn = 0;
+    syntax = new Syntax();
 }
 
 Automat::~Automat() {
@@ -98,12 +82,14 @@ void Automat::freeToken() {
 	tokenReady = false;
 	stack->flush();
 	lexemLength = 0;
+	lastFinalState = Syntax::NULL_STATE;
 }
 
 int Automat::read(char currentChar) {
 	position->update(currentChar);
 	if ( !tokenReady ) {
-		currentState = stateTable[mapCharToInt(currentChar)][currentState];
+		currentState = syntax->getState(mapCharToInt(currentChar), currentState);
+		//currentState = Syntax::stateTable[mapCharToInt(currentChar)][currentState];
 		stack->push(currentChar);
 		lexemLength++;
 		if (isFinal(currentState)) {
@@ -111,14 +97,10 @@ int Automat::read(char currentChar) {
 			back = 0;
 		} else {
 			back++;
-			if (currentState == STRT_Z ) {
+			if (currentState == Syntax::STRT_Z ) {
+				tokenReady = true;
 				stack->trim(back);
 				lexemLength -= back; // adjust lexemLength
-
-				tokenType = lastFinalState;
-				tokenReady = true;
-				lastFinalState = NULL_STATE;
-
 				position->update(back);
 				tokenLine = position->seekLineWithOffset(lexemLength) + 1;
 				tokenColumn = position->seekColumnWithOffset(lexemLength) + 1;
@@ -151,11 +133,11 @@ bool Automat::isWspace(char c) {
 }
 
 bool Automat::isFinal(int someState) {
-    return (someState != STRT_Z &&
-    		someState != LCLN_Z &&
-			someState != COMM_Z &&
-			someState != OPNC_Z &&
-			someState != EOF_Z);
+    return (someState != Syntax::STRT_Z &&
+    		someState != Syntax::LCLN_Z &&
+			someState != Syntax::COMM_Z &&
+			someState != Syntax::OPNC_Z &&
+			someState != Syntax::EOF_Z);
 }
 
 bool Automat::isTokenReady() {
@@ -163,21 +145,21 @@ bool Automat::isTokenReady() {
 }
 
 int Automat::mapCharToInt(char c) {
-    if (isLetter(c))      {  return ANY_LETTER; }
-    else if (isWspace(c)) {  return WHITESPACE_SYMB; }
-    else if (isDigit(c))  {  return ANY_DIGIT; }
-    else if (c == '<')    {  return LESS_SYMB; }
-    else if (c == '>')    {  return GREATER_SYMB; }
-    else if (c == '*')    {  return MULT_SYMB; }
-    else if (c == ':')    {  return COLON_SYMB; }
-    else if (c == '=')    {	 return EQUALS_SYMB; }
-    else if (isRest(c))   {	 return REST_SYMB; }
-    else if (c == '\0')   {  return EOF_SYMB; }
-    else                  {  return PROH_SYMB; }
+    if (isLetter(c))      {  return Syntax::ANY_LETTER; }
+    else if (isWspace(c)) {  return Syntax::WHITESPACE_SYMB; }
+    else if (isDigit(c))  {  return Syntax::ANY_DIGIT; }
+    else if (c == '<')    {  return Syntax::LESS_SYMB; }
+    else if (c == '>')    {  return Syntax::GREATER_SYMB; }
+    else if (c == '*')    {  return Syntax::MULT_SYMB; }
+    else if (c == ':')    {  return Syntax::COLON_SYMB; }
+    else if (c == '=')    {	 return Syntax::EQUALS_SYMB; }
+    else if (isRest(c))   {	 return Syntax::REST_SYMB; }
+    else if (c == '\0')   {  return Syntax::EOF_SYMB; }
+    else                  {  return Syntax::PROH_SYMB; }
 }
 
-int Automat::getLexemType() {
-	return tokenType;
+int Automat::getFinalState() {
+	return lastFinalState;
 }
 
 int Automat::getLine() {

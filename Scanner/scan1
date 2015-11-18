@@ -1,6 +1,6 @@
 xoo := 3   + 4;     
 :************:   
-                                                                      :*die einfache Aufgabe  ! *:
+                  <:>                                                    :*die einfache Aufgabe  ! *:
 hohoohoh
 ?y <:=> X : (X - 4);
 Z := ((3 + 4 - 6);
@@ -12,6 +12,8 @@ Resultat := : X y % ::::
 
 
 
+Token Minus       Line: 5 Column: 16  ------
+Token Integer     Line: 5 Column: 18  Value: 4
 
 
 

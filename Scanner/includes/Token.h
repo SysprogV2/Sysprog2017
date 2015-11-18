@@ -1,48 +1,24 @@
 #include <string.h> // TODO: DELETE THIS LATER!!! Prohibited library!
 #include <stdlib.h>  // for strtol()
 #include "Information.h"
+#include "../../Automat/includes/Syntax.h"
 
 class Token {
 	int tType;
 	int line;
 	int column;
-	Information* information;
-
-	enum TokenType {
-		WHITESPACE, UNKNOWN, COMMENT,
-
-		IDENTIFIER, INTEGER, WHILE, IF,
-
-		PLUS_S, MINUS_S, DIVIS_S, MULT_S,
-		LESS_S, GREA_S, EQUAL_S, ASSIGN_S,
-		SPEC_S, /* <:> */
-		EXCLM_S, AND_S, SEMICOL_S,
-
-		SQ_BRACKET_OPEN, SQ_BRACKET_CLOSE,
-		PARANTHESE_OPEN, PARANTHESE_CLOSE,
-		CRL_BRACKET_OPEN, CRL_BRACKET_CLOSE
-	};
-
 	long int value;
-	// TODO: remove this bullshit & add normal link-like references a-la Automat::States
-	enum States {STRT_Z, IDEN_Z, INTG_Z, LESS_Z, GREA_Z, COLN_Z,
-					 EQLS_Z, ASGN_Z, LCLN_Z, LCLL_Z, ASSG_Z, EOF_Z,
-					 WSP_Z, MULT_Z, OPNC_Z, COMM_Z, CLSC_Z, PROH_Z,
-					 NULL_STATE};
-	/*
-	char* ttypeString[10] = {"Start", "Identifier", "Integer", "Less", "Greater", "Division"
-							 "Equals", "<:>-hellknows", "Assignment", "Multiplication",
-							 "Prohibited"};
-	char* ttypeString[10] = {"Plus", "Minus", "Exclamation", "And", "Semicolon",
-							 "Paranthese O", "Paranthese C", "Braces O", "Braces C",
-							 "Brackets O", "Brackets C"};
-							 */
-	const char charArray[11] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
+	Information* information;
+	Syntax* syntax;
+
+	const char signArray[SIGN_ARRAY_SZ] = {'+','-','!','&',';','(',')','{','}','[',']'};
 public:
 	Token();
-	Token(int type, int l, int c, Information* info);
+	Token(int type, int l, int c, Information* info, Syntax* syn);
 	virtual ~Token();
 	void toString();
+	char* typeToString();
+
 };
 
 Token::Token() {
@@ -52,74 +28,60 @@ Token::Token() {
 	value = 0;
 }
 
-Token::Token(int type, int l, int c, Information* info) {
-	tType = type;
+Token::Token(int state, int l, int c, Information* info, Syntax* syn) {
 	line = l;
 	column = c;
 	information = info;
-	char *pEnd;
-	if (tType == INTG_Z) {
-		// TODO: where's Bereichueberschreitung, ha?
-		value = strtol(info->getLexem(), &pEnd, 10);
+	syntax = syn;
+
+	/* determine the token type using STATE and INFO as basis */
+	/* if STATE corresponds to REST SIGNS */
+	if (state == Syntax::ASGN_Z) {
+		for (int i=0; i < 11; i++) {
+			if (info->getLexem()[0] == signArray[i])
+				tType = i + 19;
+		}
+	} else {
+		tType = state;
+		/* determine the value of integer */
+		char *pEnd;
+		if (tType == Syntax::INTG_Z) {
+			// TODO: where's Bereichueberschreitung, ha?
+			value = strtol(info->getLexem(), &pEnd, 10);
+		}
 	}
+
+
 }
 
 Token::~Token() {
-	// haha, nothing!
+	delete information;
 }
 
 void Token::toString() {
 	char typeToStr[11];
-	switch (tType) {
-		case IDEN_Z:
-			strcpy(typeToStr, "Identifier");
-			break;
-		case INTG_Z:
-			strcpy(typeToStr, "Integer   ");
-			break;
-		case LESS_Z:
-			strcpy(typeToStr, "Less      ");
-			break;
-		case GREA_Z:
-			strcpy(typeToStr, "Greater   ");
-			break;
-		case COLN_Z:
-			strcpy(typeToStr, "Division  ");
-			break;
-		case EQLS_Z:
-			strcpy(typeToStr, "Equals    ");
-			break;
-		case LCLL_Z:
-			strcpy(typeToStr, "<:>-type  ");
-			break;
-		case ASSG_Z:
-			strcpy(typeToStr, "Assignment");
-			break;
-		case MULT_Z:
-			strcpy(typeToStr, "Multiplcat");
-			break;
-		case PROH_Z:
-			strcpy(typeToStr, "Prohibited");
-			break;
-		case ASGN_Z:
-			strcpy(typeToStr, "  sign    "); // TODO: describe more precisely!
-			typeToStr[0] = information->getLexem()[0];
-			break;
-		default:
-			strcpy(typeToStr, "--no idea-");
-
-	}
-
+	const char *cms = syntax->getTokenTypeAsChar(tType);
+	strcpy(typeToStr, cms);
 	std::cout << "Token " << typeToStr
 			  << "  Line: " << line << " Column: " << column << "  ";
 
-	if (tType == IDEN_Z) {
+	if (tType == Syntax::IDEN_Z) {
 		std::cout << "Lexem: " << information->getLexem() << std::endl;
-	} else if (tType == INTG_Z) {
+	} else if (tType == Syntax::INTG_Z) {
 		std::cout << "Value: " << value << std::endl;
 	} else {
 		std::cout << "------" << std::endl;
 	}
 }
+/*
+char* Token::typeToString() {
+	char* buf = new char[50];
+	memcpy(buf, ttypeString[tType], 10);
+	buf += sizeof(char) * 10;
+	memcpy(buf, "  Line: ", 8);
+	buf += sizeof(char) * 8;
+	char *lineStr = new char[50];
+	//itoa(line, buf, 10);
+}
 
-
+*/

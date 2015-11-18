@@ -34,6 +34,7 @@ class Scanner {
 	Automat* automat;
 	int tokenType;
 	Token *t;
+	Syntax* syntax;
 public:
 	Scanner(char *filename, Symboltable* st);
 	Token* nextToken();
@@ -45,6 +46,7 @@ Scanner::Scanner(char *filename, Symboltable* st) {
 	stab = st;
 	buffer = new Buffer(filename);
 	automat = new Automat();
+	syntax = new Syntax();
 }
 
 Token *Scanner::nextToken() {
@@ -54,7 +56,7 @@ Token *Scanner::nextToken() {
 	while ( currentChar != '\0' && !automat->isTokenReady()) {
 		currentChar = buffer->getChar();
 		int back_steps = automat->read(currentChar);
-		tokenType = automat->getLexemType();
+		tokenType = automat->getFinalState();
 		buffer->ungetChar(back_steps);
 		if (automat->isTokenReady() && (tokenType == WSP_Z || tokenType == CLSC_Z)) {
 			automat->freeToken();
@@ -69,7 +71,8 @@ Token *Scanner::nextToken() {
 	t = new Token(tokenType,
 				  automat->getLine(),
 				  automat->getColumn(),
-				  info);
+				  info,
+				  syntax);
 	automat->freeToken();
 
 	/* if we need to finish already*/
