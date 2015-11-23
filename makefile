@@ -28,7 +28,7 @@ clean:
 	
 
 automatOBJs:
-	$(MAKE) -C $(AUTOMATDIR) AutomatOBJTarget
+	$(MAKE) -C $(AUTOMATDIR) AutomatTarget
 	
 	
 bufferOBJs:
@@ -36,7 +36,7 @@ bufferOBJs:
 
 	
 symboltableOBJs:
-	$(MAKE) -C $(SYMBOLTABLEDIR) SymboltableOBJTarget
+	$(MAKE) -C $(SYMBOLTABLEDIR) SymboltableTarget
 	
 
 scanner: 

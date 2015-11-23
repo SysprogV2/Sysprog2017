@@ -7,16 +7,16 @@
 
 #ifndef AUTOMAT_INCLUDES_SYNTAX_H_
 #define AUTOMAT_INCLUDES_SYNTAX_H_
-
+#define SIGN_ARRAY_SZ 11
 class Syntax {
-	const char* ttypeString[30] = {"Start     ", "Identifier", "Integer   ", "Less      ",
-									"Greater   ", "Colon     ", "Equals    ", "<:>-sign  ",
-									 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ",
-									 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ",
-									 "  --*:--  ", "Prohibited", " --null-- ", "Plus      ",
-									 "Minus     ", "Not       ", "And       ", "Semicol   ",
-									 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ",
-									 "Brackets [", "Brackets ]" };
+	const char* ttypeString[30] =  {   "Start     ", "Identifier", "Integer   ", "Less      ",
+		 								 "Greater   ", "Colon     ", "Equals    ", "<:>-sign  ",
+		 		 						 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ",
+		 		 						 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ",
+		 								 "  --*:--  ", "Prohibited", " --null-- ", "Plus      ",
+		 		 						 "Minus     ", "Not       ", "And       ", "Semicol   ",
+		 		 						 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ",
+		 		 						 "Brackets [", "Brackets ]" };
 	int stateTable[11][18] = {
 				    /*            STRT    ID       INT	  < 		>      :	   =	 <ANY>	   <:	  <:>	   :=      Eof     WSP     *       :*   <comment>  *:    PROH_Z */
 				    /* a-Z */	{IDEN_Z, IDEN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
@@ -31,6 +31,7 @@ class Syntax {
 					/* WSP */	{WSP_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, WSP_Z,  STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
 				    /* PRH */	{PROH_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z}
 				    };
+	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
 public:
 
 
@@ -45,24 +46,14 @@ public:
 
 	const char* getTokenTypeAsChar(int num);
 	int getState(int i, int j);
+	bool isRest(char c);
 
 	Syntax();
 	virtual ~Syntax();
 };
 
-Syntax::Syntax() {
 
-}
 
-Syntax::~Syntax() {
 
-}
 
- const char* Syntax::getTokenTypeAsChar(int num) {
-	const char *f = ttypeString[num];
-	return f;
-}
- int Syntax::getState(int i, int j) {
-	 return stateTable[i][j];
- }
 #endif /* AUTOMAT_INCLUDES_SYNTAX_H_ */

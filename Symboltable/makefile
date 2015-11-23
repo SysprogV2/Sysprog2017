@@ -16,7 +16,7 @@ BINDIRTEST = debug
 ## hier alle Object Files eintragen, ausser das File mit der Mainmethode
 ## darauf achten, dass letzte Zeile ohne "\" eingetragen wird
 
-OBJS = $(OBJDIR)/Symboltable.o \
+OBJS = $(OBJDIR)/Symboltable.o
 	#$(OBJDIR)/xx1.o \
 	#$(OBJDIR)/xxn.o
 
@@ -48,17 +48,24 @@ OBJS = $(OBJDIR)/Symboltable.o \
 
 # Variante mit guten Makefile-Kenntnissen
 
-makeTestSymboltable: SymboltableTarget TestSymboltableTarget
-	g++ -g $(OBJDIR)/*.o $(BINDIRTEST)/TestSymboltable.o  -o $(BINDIRTEST)/SymboltableTest
+makeTestSymboltable: SymboltableTarget StringTabTarget SymtabEntryTarget TestSymboltableTarget
+	g++ -g $(OBJDIR)/*.o $(BINDIRTEST)/TestSymboltable.o  ../Scanner/objs/Information.o -o $(BINDIRTEST)/SymboltableTest
 
-SymboltableTarget: $(OBJS)
+SymboltableTarget: src/Symboltable.cpp includes/Symboltable.h
+	g++ -g  -c src/Symboltable.cpp  -o $(OBJDIR)/Symboltable.o
+	
+StringTabTarget: src/StringTab.cpp includes/StringTab.h
+	g++ -g  -c src/StringTab.cpp  -o $(OBJDIR)/StringTab.o
 
+SymtabEntryTarget: src/SymtabEntry.cpp includes/SymtabEntry.h
+	g++ -g  -c src/SymtabEntry.cpp  -o $(OBJDIR)/SymtabEntry.o
+	
 # $@ name des object files = name auf der linken Seite vom Doppelpunkt des Targets
 # $< erste abhaengigkeit, $< das erste Element in der Liste der Abhaengigkeiten
 # $@ --> linke Seite vom Doppelpunkt
 # $^ --> rechte Seite vom Doppelpunkt
 
-$(OBJDIR)/%.o :  $(SRCDIR)/%.cpp $(HEADERDIR)/%.h
+$(OBJDIR)/%.o :  $(SRCDIR)/%.cpp $(HEADERDIR)/%.h ../../Scanner/includes/Information.h
 	g++ -g  -c -Wall  $<  -o $@
 
 

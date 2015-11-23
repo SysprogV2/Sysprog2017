@@ -8,18 +8,21 @@
 #ifndef SYMBOLTABLE_INCLUDES_SYMTABENTRY_H_
 #define SYMBOLTABLE_INCLUDES_SYMTABENTRY_H_
 
-#include "../Scanner/includes/Information.h"
+#include "../../Scanner/includes/Information.h"
 
 class SymtabEntry {
 	Information* information;
+	SymtabEntry* next;
 public:
+	SymtabEntry(SymtabEntry* next);
 	SymtabEntry(Information* info);
+	SymtabEntry();
+	void setInfo(Information* info);
+	Information* getInfo();
+	SymtabEntry* getNext();
 	virtual ~SymtabEntry();
 
 };
 
-SymtabEntry::SymtabEntry(Information* info) {
-	information = info;
-}
 
 #endif /* SYMBOLTABLE_INCLUDES_SYMTABENTRY_H_ */

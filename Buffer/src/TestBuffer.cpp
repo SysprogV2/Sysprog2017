@@ -4,11 +4,20 @@
 
 
 int main(int argc, char **argv) {
-	Buffer* buffer = new Buffer();
-	char p = 'x';
+	char* filename;
+	if (argc > 0) {
+		filename = argv[1];
+	} else {
+		std::cout << "Failed to read file. No filename is given!" << std::endl;
+		return 1;
+	}
+	Buffer* buffer = new Buffer(filename);
+
+	// print out all chars from a given file
+	char p = buffer->getChar();
 	while ( p != '\0' ) {
-		p = buffer->getChar();
 		std::cout << p;
+		p = buffer->getChar();
 	}
 	return 0;
 }

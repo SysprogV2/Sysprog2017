@@ -1,24 +1,12 @@
 /*
- * Position.h
+ * Position.cpp
  *
- *  Created on: Oct 23, 2015
+ *  Created on: Nov 18, 2015
  *      Author: arty
  */
 
-#ifndef SCANNER_INCLUDES_POSITION_H_
-#define SCANNER_INCLUDES_POSITION_H_
 
-class Position {
-	int currentLine;
-	int badArray[50000] = {0}; // TODO: fix this -> use vector!instead!!
-public:
-	Position();
-	virtual ~Position();
-	void update(char c);
-	void update(int back);
-	int seekLineWithOffset(int offset);
-	int seekColumnWithOffset(int offset);
-};
+#include "../includes/Position.h"
 
 Position::Position() {
 	currentLine = 0;
@@ -67,5 +55,3 @@ int Position::seekColumnWithOffset(int offset) {
 	}
 	return (badArray[tmpL] - offset);
 }
-
-#endif /* SCANNER_INCLUDES_POSITION_H_ */

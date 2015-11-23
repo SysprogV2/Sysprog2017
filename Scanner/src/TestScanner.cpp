@@ -4,7 +4,7 @@
 
 
 
-/* copypasted piece of code for running time measuring */
+/* copypasted piece of code for time measurements */
 typedef unsigned long long timestamp_t;
 static timestamp_t
 get_timestamp ()
@@ -15,21 +15,18 @@ get_timestamp ()
 }
 
 
-
 int main(int argc, char **argv) {
-	/*
-	// get the first timestamp
-    timestamp_t t0 = get_timestamp();
+	//get the first timestamp
+	timestamp_t t0 = get_timestamp();
 
-	Scanner* scanner = new Scanner(argv[1], false);
-	while (!scanner->isEofReached()) {
-		scanner->nextToken();
-	}
+	Symboltable* st = new Symboltable();
+	Scanner* s = new Scanner(argv[1], st);
+    Token* t;
+   	while ((t = s->nextToken())) {
+   		t->print();
+   }
 
 	// get the second and output
-    timestamp_t t1 = get_timestamp();
-    double secs = (t1 - t0) / 1000000.0L;
-    std::cout << "Exec time: " << secs << std::endl;
-    */
+    std::cout << "Exec time: " << ((get_timestamp() - t0) / 1000000.0L) << std::endl;
 }
 
