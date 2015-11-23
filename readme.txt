@@ -1,25 +1,15 @@
-Bla-bla-bla long story short:
+How to compile (Eclipse):
+1. Window -> Show View -> Make Target
+2. Choose appropriate folder (i.e. Scanner)
+3. Double click on "makeTest*something*"
+4. Wait, it can take several seconds to compile
 
-
-How to compile Scanner to test it:
-1. Open Terminal
-2. Change working directory with "cd" command to: 
-	<your_root>/SysProgTemplate_SS_15/Scanner/src
-3. Type this: 
-	g++ TestScanner.cpp Scanner.cpp -std=c++11
-4. It should create new a.out file (executable)
-5. Execute it with following command:
-	./a.out ../scan1
-	or
-	./a.out ../scan2
-
-
-Known issues so far:
-1. Fails to handle empty input-file
-2. Can process 1.2 MB file in 0.7 sec what is probably way too slow!
-3. Fails to determine line number correctly on big files (i.e. shows 26175 instead of 26180)
-
-
+How to run a test:
+1. Open console
+2. Change working directory (i.e. /SysProg15/Scanner/debug)
+3. Run
+	 i.e. for Scanner: 
+	 user@localhost$ ./ScannerTest scan1
 
 
 
