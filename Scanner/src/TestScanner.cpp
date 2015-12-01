@@ -27,6 +27,6 @@ int main(int argc, char **argv) {
    }
 
 	// get the second and output
-    std::cout << "Exec time: " << ((get_timestamp() - t0) / 1000000.0L) << std::endl;
+    std::cout << "Exec time  nnnn: " << ((get_timestamp() - t0) / 1000000.0L) << std::endl;
 }
 

@@ -23,6 +23,24 @@ int main (int argc, char* argv[]){
 		if (automat->isLexemReady()) {
 			automat->reset();
 		}
+
+
 	}
+
+
+
+	std::cout << "===========================" << std::endl;
+	Position* p = new Position();
+	p->update('a'); p->update('a'); p->update('a'); p->update('a'); // 1,4
+	p->update('\0'); p->update('\0'); p->update('\0'); 				// 4,4
+	std::cout << "col> " << p->seekColumnWithOffset(0) << std::endl;
+	std::cout << "line> " << p->seekLineWithOffset(0) << std::endl << std::endl;
+
+		p->update(5);
+		std::cout << "> " << p->seekLineWithOffset(0) << ":" <<p->seekColumnWithOffset(0) << std::endl;
+
+	p->update('a');
+	p->update('a'); p->update('\0');p->update('\0'); p->update('a'); p->update('a'); p->update('\0'); // 1,4
+		p->update('\0');
 
 }

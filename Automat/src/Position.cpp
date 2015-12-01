@@ -18,7 +18,7 @@ Position::~Position() {
 
 void Position::update(char c) {
 	badArray[currentLine]++;
-	if (c == '\n') {
+	if (c == '\0') {
 		currentLine++;
 	}
 }

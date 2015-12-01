@@ -64,5 +64,10 @@ Information* Symboltable::lookup(char* lexem) {
 }
 
 void Symboltable::initSymbols() {
+	insert("write", 5);
+	insert("read", 4);
+	insert("if", 2);
+	insert("else", 5);
 	insert("while", 5);
+	insert("int", 5);
 }
