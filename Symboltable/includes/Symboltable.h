@@ -18,6 +18,7 @@
 
 class Symboltable {
 	SymtabEntry *hashTab[TABLE_SIZE];
+	int density[TABLE_SIZE] = {0};
 	StringTab* strTab;
 public:
 	Symboltable();

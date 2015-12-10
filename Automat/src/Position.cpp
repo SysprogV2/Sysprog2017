@@ -9,49 +9,66 @@
 #include "../includes/Position.h"
 
 Position::Position() {
-	currentLine = 0;
+	currentNode = new Node;
+	tailPointer = currentNode;
+	globalLine = 0;
+	nodeNumber = 0;
 }
 
 Position::~Position() {
-	delete[] badArray;
+
 }
 
 void Position::update(char c) {
-	badArray[currentLine]++;
-	if (c == '\0') {
-		currentLine++;
+	currentNode->col++;
+
+	if (c == '\n') {
+		globalLine++;
+		/* add new node */
+		Node* tmp = new Node();
+		currentNode->next = tmp;
+		tmp->prev = currentNode;
+		currentNode = tmp;
+
+		/*
+		nodeNumber++;
+		if (nodeNumber > 90) {
+			Node* tmps = tailPointer;
+			tailPointer = tailPointer->next;
+			delete tmps;
+			nodeNumber--;
+		}
+		*/
 	}
+
+
 }
 
 void Position::update(int back) {
 	if (back == 0) return;
-	while (back > badArray[currentLine]) {
-		back -= badArray[currentLine];
-		badArray[currentLine--] = 0;
+	while (back > currentNode->col) {
+		back -= currentNode->col;
+		currentNode->col = 0;
+		currentNode = currentNode->prev;
+		globalLine--;
 	}
-	badArray[currentLine] -= back;
+	currentNode->col -= back;
 }
 
-int Position::seekLineWithOffset(int offset) {
-	if (offset == 0) return currentLine;
-
-	int tmpL = currentLine;
-
-	while (offset > badArray[tmpL]) {
-		offset -= badArray[tmpL];
-		tmpL--;
+void Position::getPos(int offset, int& line, int& col) {
+	if (offset == 0) {
+		line = globalLine;
+		col = currentNode->col;
 	}
-	return (tmpL);
-}
 
-int Position::seekColumnWithOffset(int offset) {
-	if (offset == 0) return badArray[currentLine];
-
-	int tmpL = currentLine;
-
-	while (offset > badArray[tmpL]) {
-		offset -= badArray[tmpL];
-		tmpL--;
+	Node *tmp = currentNode;
+	int tmpLine = globalLine;
+	while (offset > tmp->col) {
+		offset -= tmp->col;
+		tmp = tmp->prev;
+		tmpLine--;
 	}
-	return (badArray[tmpL] - offset);
+
+	line = tmpLine + 1;
+	col = tmp->col - offset + 1;
 }

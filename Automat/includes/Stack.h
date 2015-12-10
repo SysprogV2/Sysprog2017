@@ -8,7 +8,7 @@
 #ifndef BUFFER_INCLUDES_STACK_H_
 #define BUFFER_INCLUDES_STACK_H_
 
-#define MAX_TOKEN_SIZE 32
+#define MAX_TOKEN_SIZE 1024
 
 class Stack {
 	char *stack;

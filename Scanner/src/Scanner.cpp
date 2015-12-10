@@ -22,6 +22,7 @@ Scanner::Scanner(char *filename, Symboltable* st) {
 
 Token *Scanner::nextToken() {
 	char currentChar;
+
 	/* run automat and feed it char by char, till any token is found */
 	while ( currentChar != '\0' && !automat->isLexemReady()) {
 		currentChar = buffer->getChar();
@@ -33,12 +34,15 @@ Token *Scanner::nextToken() {
 		}
 	}
 
+
+
 	/* save all information about the lexem */
 	char* lexem = automat->getLexem();
 	int lexemLength = automat->getLexemLength();
 	Information* info;
 	int line = automat->getLine();
 	int col = automat->getColumn();
+
 
 	// creating corresponding token
 	if (tokenType == Syntax::IDEN_Z) {
@@ -55,9 +59,13 @@ Token *Scanner::nextToken() {
 		} else {
 			info = new Information(lexem);
 		}
+
 	}
 	Token* t = new Token(tokenType, line, col, info);
 	automat->reset();
+
+
+
 
 	/* if we need to finish already*/
 	if (currentChar == '\0') {

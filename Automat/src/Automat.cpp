@@ -43,8 +43,7 @@ int Automat::read(char currentChar) {
 				stack->trim(back);
 				lexemLength -= back; // adjust lexemLength
 				position->update(back);
-				lexemLine = position->seekLineWithOffset(lexemLength) + 1;
-				lexemColumn = position->seekColumnWithOffset(lexemLength) + 1;
+				position->getPos(lexemLength, lexemLine, lexemColumn);
 				return back;
 			}
 		}

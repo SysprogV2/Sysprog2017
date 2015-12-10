@@ -28,7 +28,10 @@ public:
 	Token(int type, int l, int c, Information* info);
 	virtual ~Token();
 	void print();
-	char* typeToString();
+	char* toString();
+	char* itoc(int number);
+	Information* getInformation();
+	//char* typeToString();
 
 };
 

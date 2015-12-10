@@ -6,10 +6,10 @@
  */
 
 #include "../includes/Information.h"
-
+#include <iostream>
 
 Information::Information() {
-	setLexem("df");
+	//setLexem("df");
 }
 
 Information::Information(char* lexem) {
@@ -29,9 +29,9 @@ char* Information::getLexem() {
 }
 
 bool Information::matches(char* other) {
-	char* tmp1 = this->lexem;
+	char* tmp1 = lexem;
 	char* tmp2 = other;
-	while (tmp1[0] != '\0' && tmp2[0] != '\0') {
+	while (tmp1[0] != '\0' || tmp2[0] != '\0') {
 		if (tmp1++[0] != tmp2++[0]) {
 			return false;
 		}

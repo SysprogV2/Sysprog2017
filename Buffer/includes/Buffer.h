@@ -19,17 +19,20 @@
 #include <stdlib.h> //
 #include <malloc.h>
 
+#define BUFFER_SIZE 2048
+#define BUFFER_ALIGNMENT 4096
+
 class Buffer {
 	char *next;
-	int fd;
-	char *buffer1;
-	char *buffer2;
-	const static size_t alignment = 4096;
-    const static size_t size = 4096;
-    char *filename;
-    ssize_t byte_read;
+		int fd;
+		char *buffer1;
+		char *buffer2;
+		const static size_t alignment = 4096;
+	    const static size_t size = 4096;
+	    char *filename;
+	    ssize_t byte_read;
 
-    char *currentWorkingBuffer;
+	    char *currentWorkingBuffer;
 public:
 	~Buffer();
 	Buffer(char *pathToFile);

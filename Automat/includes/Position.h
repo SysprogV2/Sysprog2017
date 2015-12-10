@@ -15,17 +15,16 @@ class Position {
 		int col = 0;
 	};
 	int globalLine;
+	Node* tailPointer;
+	int nodeNumber;
 	Node* currentNode;
 	int currentLine;
-	int stateN;
-	int badArray[50000] = {0}; // TODO: fix this -> use vector!instead!!
 public:
 	Position();
 	virtual ~Position();
 	void update(char c);
 	void update(int back);
-	int seekLineWithOffset(int offset);
-	int seekColumnWithOffset(int offset);
+	void getPos(int offset, int& line, int& col);
 };
 
 

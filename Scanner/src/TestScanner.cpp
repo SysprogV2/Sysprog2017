@@ -23,7 +23,9 @@ int main(int argc, char **argv) {
 	Scanner* s = new Scanner(argv[1], st);
     Token* t;
    	while ((t = s->nextToken())) {
-   		t->print();
+   		//t->print();
+   		std::cout << t->toString() << std::endl;
+   		//std::cout << t->getInformation()->getLexem() << std::endl;
    }
 
 	// get the second and output

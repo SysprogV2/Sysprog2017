@@ -8,6 +8,7 @@
 #include "../includes/Token.h"
 #include "../../Automat/includes/Syntax.h"
 #include <iostream>
+#include <errno.h>
 Token::Token() {
 	tType = 0;
 	line = 0;
@@ -33,8 +34,12 @@ Token::Token(int state, int l, int c, Information* info) {
 		/* determine the value of integer */
 		char *pEnd;
 		if (tType == Syntax::INTG_Z) {
-			// TODO: where's Bereichueberschreitung, ha?
 			value = strtol(info->getLexem(), &pEnd, 10);
+			if (errno == EINVAL) {
+				std::cout << "Cannot convert given CHAR* to LONG INT. Unknown error." << std::endl;
+			} else if (errno == ERANGE) {
+				std::cout << "A given integer is too big to be converted to LONG INT. MAX (2147483647) assigned instead." << std::endl;
+			}
 			delete info; // we don't need the lexem anymore
 		}
 	}
@@ -61,17 +66,66 @@ void Token::print() {
 	std::cout << std::endl;
 }
 
-/* TODO: yet to be implemented */
-char* Token::typeToString() {
-	char* buf = new char[50];
-	memcpy(buf, ttypeString[tType], 10);
-	buf += sizeof(char) * 10;
-	memcpy(buf, "  Line: ", 8);
-	buf += sizeof(char) * 8;
-	char *lineStr = new char[50];
+char* Token::toString() {
 
-	return buf;
+	char* buf = new char[70];
+	char* toReturn = buf;
+	strcpy(buf, ttypeString[tType]);
+	buf += sizeof(char) * 10;
+
+	strcpy(buf, "  Line: ");
+	buf += sizeof(char) * 8;
+	strcpy(buf, itoc(line));
+	buf += sizeof(char) * 8;
+
+	strcpy(buf, "   Col: ");
+	buf += sizeof(char) * 8;
+	strcpy(buf, itoc(column));
+	buf += sizeof(char) * 8;
+	strcpy(buf, "  ");
+	buf += sizeof(char) * 2;
+
+	if (tType == Syntax::IDEN_Z) {
+		strcpy(buf, " Lexem ");
+		buf += sizeof(char) * 7;
+		strcpy(buf, information->getLexem());
+	} else if (tType == Syntax::INTG_Z) {
+		strcpy(buf, " Value ");
+		buf += sizeof(char) * 7;
+		strcpy(buf, itoc(value));
+	} else {
+		strcpy(buf, " ------");
+
+	}
+	buf += sizeof(char) * 8;
+
+	buf[0] = '\0';
+	return toReturn;
 	//itoa(line, buf, 10);
 }
 
+char* Token::itoc(int number) {
+	int maxLength = 7;
+	char* output = new char[maxLength + 2];
+	output[8] = '\0';
+	int shift = 0;
+	int tmp = number;
+
+	while (tmp > 0) {
+		output[maxLength - shift] = '0' + (tmp % 10);
+		shift++;
+		tmp /= 10;
+	}
+
+	while (shift <= maxLength) {
+		output[maxLength - shift] =' ';
+		shift++;
+	}
+
+	return output;
+}
+
+Information* Token::getInformation() {
+	return information;
+}
 

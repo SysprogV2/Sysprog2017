@@ -36,6 +36,7 @@ int Symboltable::hash(char *lexem) {
 }
 
 SymtabEntry* Symboltable::insert(char *lexem, int size) {
+	//std::cout << "st->insert" << std::endl;
 	int key = hash(lexem);
 	if (hashTab[key] == NULL) {
 		hashTab[key] = new SymtabEntry();
@@ -45,7 +46,9 @@ SymtabEntry* Symboltable::insert(char *lexem, int size) {
 
 	}
 	char* lexemPtr = strTab->insert(lexem, size);
+	density[key]++;
 	hashTab[key]->setInfo(new Information(lexemPtr));
+	//std::cout << "Try to output int SYMTABLE::INSERT: " << lexemPtr << std::endl;
 	return hashTab[key];
 }
 
@@ -54,20 +57,31 @@ SymtabEntry* Symboltable::insert(char *lexem, int size) {
 /* returns corresponding Information* object if it is*/
 Information* Symboltable::lookup(char* lexem) {
 	int key = hash(lexem);
+	//std::cout << "Symboltable::lookup  key = " << key << "   density: " << density[key] << std::endl;
 	SymtabEntry* entry = hashTab[key];
-	while (entry != NULL) {
+	int koo = 0;
+	while (koo < density[key]) {
+		koo++;
+	//while (entry != NULL) {
 		Information* info = entry->getInfo();
-		if (info->matches(lexem)) return info;
+
+		//std::cout << "before LEXEM" << std::endl;
+		//std::cout << "LEXEM: " << info->getLexem() << std::endl; // it crashes here!!!
+		//std::cout << "after LEXEM" << std::endl;
+
+		bool m = info->matches(lexem);
+		if (m) return info;
 		entry = entry->getNext();
 	}
 	return NULL;
 }
 
 void Symboltable::initSymbols() {
-	insert("write", 5);
-	insert("read", 4);
+	//nsert("write", 5);
+	/*insert("read", 4);
 	insert("if", 2);
 	insert("else", 5);
-	insert("while", 5);
-	insert("int", 5);
+
+	insert("int", 5);*/
+	//insert("while", 5);
 }

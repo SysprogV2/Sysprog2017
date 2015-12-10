@@ -6,24 +6,26 @@
  */
 #include "../includes/SymtabEntry.h"
 #include "../../Scanner/includes/Information.h"
-
+#include <iostream>
 SymtabEntry::SymtabEntry(Information* info) {
-	this->information = info;
+	information = info;
 	next = this;
 }
 
 SymtabEntry::SymtabEntry() {
-
+	//this->information = NULL;
+	//next = this;
 }
 
-SymtabEntry::SymtabEntry(SymtabEntry* next) {
-	this->next = next;
+SymtabEntry::SymtabEntry(SymtabEntry* nextE) {
+	next = nextE;
 }
 void SymtabEntry::setInfo(Information *info) {
-	this->information = info;
+	information = info;
 }
 Information* SymtabEntry::getInfo() {
-	return this->information;
+	Information *some = information;
+	return  some;
 }
 SymtabEntry* SymtabEntry::getNext() {
 	return next;
