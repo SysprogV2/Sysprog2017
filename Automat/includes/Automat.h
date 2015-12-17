@@ -38,7 +38,7 @@ public:
     ~Automat();
 
     int read(char c);
-    int mapCharToInt(char c);
+    int mapCharToSymbolName(char c);
 
     bool isEof(char c);
     bool isRest(char c);

@@ -11,15 +11,11 @@
 Symboltable::Symboltable() {
 
 	strTab = new StringTab();
-	/*
-	for (int i = 0; i < TABLE_SIZE; i++) {
-		sTable[i] = new SymtabEntry();
-	}
-	*/
+	initSymbols();
 }
 
 Symboltable::~Symboltable() {
-	// nothing
+	delete strTab;
 }
 
 /*
@@ -36,7 +32,6 @@ int Symboltable::hash(char *lexem) {
 }
 
 SymtabEntry* Symboltable::insert(char *lexem, int size) {
-	//std::cout << "st->insert" << std::endl;
 	int key = hash(lexem);
 	if (hashTab[key] == NULL) {
 		hashTab[key] = new SymtabEntry();
@@ -48,7 +43,6 @@ SymtabEntry* Symboltable::insert(char *lexem, int size) {
 	char* lexemPtr = strTab->insert(lexem, size);
 	density[key]++;
 	hashTab[key]->setInfo(new Information(lexemPtr));
-	//std::cout << "Try to output int SYMTABLE::INSERT: " << lexemPtr << std::endl;
 	return hashTab[key];
 }
 
@@ -57,18 +51,11 @@ SymtabEntry* Symboltable::insert(char *lexem, int size) {
 /* returns corresponding Information* object if it is*/
 Information* Symboltable::lookup(char* lexem) {
 	int key = hash(lexem);
-	//std::cout << "Symboltable::lookup  key = " << key << "   density: " << density[key] << std::endl;
 	SymtabEntry* entry = hashTab[key];
 	int koo = 0;
 	while (koo < density[key]) {
 		koo++;
-	//while (entry != NULL) {
 		Information* info = entry->getInfo();
-
-		//std::cout << "before LEXEM" << std::endl;
-		//std::cout << "LEXEM: " << info->getLexem() << std::endl; // it crashes here!!!
-		//std::cout << "after LEXEM" << std::endl;
-
 		bool m = info->matches(lexem);
 		if (m) return info;
 		entry = entry->getNext();
@@ -76,12 +63,37 @@ Information* Symboltable::lookup(char* lexem) {
 	return NULL;
 }
 
-void Symboltable::initSymbols() {
-	//nsert("write", 5);
-	/*insert("read", 4);
-	insert("if", 2);
-	insert("else", 5);
+void Symboltable::print() {
+	int key = 0;
+	/* crowling through the whole table */
+	while (key < TABLE_SIZE) {
+		//std::cout << "Bucket #" << key << " :: ";
+		SymtabEntry* entry = hashTab[key];
+		int koo = 0;
+		/* crawling through the bucket */
+		while (koo < density[key]) {
+			Information* info = entry->getInfo();
+			std::cout << " " << info->getLexem();
+			entry = entry->getNext();
+			koo++;
+		}
+		key++;
+		std::cout << std::endl;
+	}
+}
 
-	insert("int", 5);*/
-	//insert("while", 5);
+
+void Symboltable::initSymbols() {
+	insert("write", 5);
+	insert("WRITE", 5);
+	insert("read", 4);
+	insert("READ", 4);
+	insert("if", 2);
+	insert("IF", 2);
+	insert("else", 4);
+	insert("ELSE", 4);
+	insert("int", 3);
+	insert("INT", 3);
+	insert("while", 5);
+	insert("WHILE", 5);
 }

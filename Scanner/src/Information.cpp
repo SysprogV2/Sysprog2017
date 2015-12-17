@@ -9,7 +9,7 @@
 #include <iostream>
 
 Information::Information() {
-	//setLexem("df");
+
 }
 
 Information::Information(char* lexem) {

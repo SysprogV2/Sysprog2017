@@ -24,7 +24,7 @@ void Position::update(char c) {
 
 	if (c == '\n') {
 		globalLine++;
-		/* add new node */
+		/* add new node and link it to the previous */
 		Node* tmp = new Node();
 		currentNode->next = tmp;
 		tmp->prev = currentNode;
@@ -40,8 +40,6 @@ void Position::update(char c) {
 		}
 		*/
 	}
-
-
 }
 
 void Position::update(int back) {

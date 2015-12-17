@@ -30,7 +30,7 @@ Automat::~Automat() {
 int Automat::read(char currentChar) {
 	position->update(currentChar);
 	if ( !lexemReady ) {
-		currentState = syntax->getState(mapCharToInt(currentChar), currentState);
+		currentState = syntax->getState(mapCharToSymbolName(currentChar), currentState);
 		stack->push(currentChar);
 		lexemLength++;
 		if (isFinal(currentState)) {
@@ -68,7 +68,7 @@ bool Automat::isLetter(char c) {
 }
 
 bool Automat::isWspace(char c) {
-    return (c == '\n') || (c == ' ') ||  (c == '\t');
+    return (c == '\n') || (c == ' ') ||  (c == '\t')  || (c == '\r');
 }
 
 bool Automat::isFinal(int someState) {
@@ -90,7 +90,7 @@ void Automat::reset() {
 	lastFinalState = Syntax::NULL_STATE;
 }
 
-int Automat::mapCharToInt(char c) {
+int Automat::mapCharToSymbolName(char c) {
     if (isLetter(c))      {  return Syntax::ANY_LETTER; }
     else if (isWspace(c)) {  return Syntax::WHITESPACE_SYMB; }
     else if (isDigit(c))  {  return Syntax::ANY_DIGIT; }

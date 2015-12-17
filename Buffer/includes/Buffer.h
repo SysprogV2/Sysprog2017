@@ -24,15 +24,15 @@
 
 class Buffer {
 	char *next;
-		int fd;
-		char *buffer1;
-		char *buffer2;
-		const static size_t alignment = 4096;
-	    const static size_t size = 4096;
-	    char *filename;
-	    ssize_t byte_read;
+	int fd;
+	char *buffer1;
+	char *buffer2;
+    char *filename;
+    ssize_t byte_read;
 
-	    char *currentWorkingBuffer;
+    int shift;
+
+    char *currentWorkingBuffer;
 public:
 	~Buffer();
 	Buffer(char *pathToFile);
@@ -40,7 +40,6 @@ public:
 	void ungetChar(int back);
 	void load(void * someBuffer);
 	void allocateBufferMemory();
-	void* alloc();
 };
 
 

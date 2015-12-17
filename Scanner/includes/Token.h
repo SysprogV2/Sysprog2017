@@ -13,26 +13,32 @@ class Token {
 	int column;
 	long int value;
 	Information* information;
+	char symbol;
 	//Syntax* syntax;
-	char* ttypeString[30] = {"Start     ", "Identifier", "Integer   ", "Less      ",
-										"Greater   ", "Colon     ", "Equals    ", "<:>-sign  ",
+	char* ttypeString[36] = {"Start     ", "Identifier", "Integer   ", "Less      ",
+							 "Greater   ", "Colon     ", "Equals    ", "<:>-sign  ",
 										 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ",
 										 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ",
 										 "  --*:--  ", "Prohibited", " --null-- ", "Plus      ",
 										 "Minus     ", "Not       ", "And       ", "Semicol   ",
 										 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ",
-										 "Brackets [", "Brackets ]" };
+										 "Brackets [", "Brackets ]" ,"IF-Token  " , "WHILE-Token",
+										 "INT-Token ", "WRITE-Toke", "ELSE-Token", "READ-Token"
+	};
 	const char signArray[SIGN_ARRAY_SZ] = {'+','-','!','&',';','(',')','{','}','[',']'};
 public:
 	Token();
-	Token(int type, int l, int c, Information* info);
+	Token(int state, int l, int c, Information* info);
 	virtual ~Token();
-	void print();
-	char* toString();
 	char* itoc(int number);
+	int getType();
 	Information* getInformation();
-	//char* typeToString();
-
+	char* getLexem();
+	int getLine();
+	int getColumn();
+	char* typeAsString();
+	int getValue();
+	char getSymbol();
 };
 
 #endif

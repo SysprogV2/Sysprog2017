@@ -16,10 +16,12 @@ Syntax::~Syntax() {
 
 }
 
- const char* Syntax::getTokenTypeAsChar(int num) {
+/*
+ const static char* Syntax::getTokenTypeAsChar(int num) {
 
 	return ttypeString[num];
-}
+}*/
+
  int Syntax::getState(int i, int j) {
 	 return stateTable[i][j];
  }

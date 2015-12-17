@@ -20,6 +20,7 @@ class Symboltable {
 	SymtabEntry *hashTab[TABLE_SIZE];
 	int density[TABLE_SIZE] = {0};
 	StringTab* strTab;
+
 public:
 	Symboltable();
 	virtual ~Symboltable();
@@ -28,6 +29,7 @@ public:
 	SymtabEntry* insert(char *lexem, int size);
 	Information* lookup(char* lexem);
 	void initSymbols();
+	void print();
 };
 
 

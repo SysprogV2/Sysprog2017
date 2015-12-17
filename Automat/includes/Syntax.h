@@ -9,15 +9,9 @@
 #define AUTOMAT_INCLUDES_SYNTAX_H_
 #define SIGN_ARRAY_SZ 11
 class Syntax {
-	const char* ttypeString[30] =  {   "Start     ", "Identifier", "Integer   ", "Less      ",
-		 								 "Greater   ", "Colon     ", "Equals    ", "<:>-sign  ",
-		 		 						 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ",
-		 		 						 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ",
-		 								 "  --*:--  ", "Prohibited", " --null-- ", "Plus      ",
-		 		 						 "Minus     ", "Not       ", "And       ", "Semicol   ",
-		 		 						 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ",
-		 		 						 "Brackets [", "Brackets ]" };
-	int stateTable[11][18] = {    // WSP x WSP has changed from WSP_Z to STRT_Z
+
+
+	int stateTable[11][18] = {
 				    /*            STRT    ID       INT	  < 		>      :	   =	 <ANY>	   <:	  <:>	   :=      Eof     WSP     *       :*   <comment>  *:    PROH_Z */
 				    /* a-Z */	{IDEN_Z, IDEN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
 					/* 0-9 */	{INTG_Z, IDEN_Z, INTG_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
@@ -34,6 +28,15 @@ class Syntax {
 	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
 public:
 
+	const char* ttypeStrinaSSga[30] =  {"Start     ", "Identifier", "Integer   ", "Less      ",
+				"Greater   ", "Colon     ", "Equals    ", "<:>-sign  ",
+				 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ",
+				 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ",
+				 "  --*:--  ", "Prohibited", " --null-- ", "Plus      ",
+				 "Minus     ", "Not       ", "And       ", "Semicol   ",
+				 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ",
+				 "Brackets [", "Brackets ]"
+	};
 
 	enum States {STRT_Z, IDEN_Z, INTG_Z, LESS_Z, GREA_Z, COLN_Z,
 				 EQLS_Z, ASGN_Z, LCLN_Z, LCLL_Z, ASSG_Z, EOF_Z,
@@ -44,7 +47,7 @@ public:
 				  EOF_SYMB, WHITESPACE_SYMB, PROH_SYMB};
 
 
-	const char* getTokenTypeAsChar(int num);
+	//const char* getTokenTypeAsChar(int num);
 	int getState(int i, int j);
 	bool isRest(char c);
 

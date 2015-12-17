@@ -34,8 +34,6 @@ Token *Scanner::nextToken() {
 		}
 	}
 
-
-
 	/* save all information about the lexem */
 	char* lexem = automat->getLexem();
 	int lexemLength = automat->getLexemLength();
@@ -43,8 +41,7 @@ Token *Scanner::nextToken() {
 	int line = automat->getLine();
 	int col = automat->getColumn();
 
-
-	// creating corresponding token
+	/* creating corresponding token */
 	if (tokenType == Syntax::IDEN_Z) {
 		info = stab->lookup(lexem);
 		if (info == NULL) {
@@ -59,24 +56,17 @@ Token *Scanner::nextToken() {
 		} else {
 			info = new Information(lexem);
 		}
-
 	}
 	Token* t = new Token(tokenType, line, col, info);
 	automat->reset();
 
-
-
-
 	/* if we need to finish already*/
 	if (currentChar == '\0') {
-		std::cout << "Processing is finished" << std::endl;
 		return NULL;
 	} else {
 		return t;
 	}
 }
-
-
 
 Scanner::~Scanner() {
 	delete buffer;
