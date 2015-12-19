@@ -23,11 +23,11 @@ int main(int argc, char **argv) {
 	std::ofstream output_file;
 	output_file.open(argv[2]);
 	Token* t;
+	Syntax* syntax = new Syntax();
 	std::cout << "processing..." << std::endl;
    	while ((t = s->nextToken())) {
    		/* output to console */
    		if (t->getType() == Syntax::PROH_Z) {
-
    			std::cout << "unknown Token Line: " << t->getLine()
    					  << " Column: " << t->getColumn()
 					  << " Symbol: " << t->getSymbol()
@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
    		/* print everything else to file */
    		} else {
    			//output_file << "Token " << Syntax:
-   			output_file << "Token " << t->typeAsString()
+   			output_file << "Token " << syntax->getTokenTypeAsChar(t->getType())
 						<< " Line: " << t->getLine()
    		   			    << " Column: " << t->getColumn();
    			if (t->getType() == Syntax::IDEN_Z) {

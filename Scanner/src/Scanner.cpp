@@ -6,10 +6,15 @@
  */
 #include "../includes/Scanner.h"
 
+#define CONV_ERR "error: cannot convert given CHAR* to LONG INT"
+#define CONV_ERR_OVERFLOW "error: given integer is too big to be converted to LONG INT"
+
 Scanner::Scanner(char *filename) {
 	buffer = new Buffer(filename);
 	automat = new Automat();
 	syntax = new Syntax();
+	tokenType = Syntax::STRT_Z;
+	stab = NULL;
 }
 
 Scanner::Scanner(char *filename, Symboltable* st) {
@@ -18,10 +23,13 @@ Scanner::Scanner(char *filename, Symboltable* st) {
 	buffer = new Buffer(filename);
 	automat = new Automat();
 	syntax = new Syntax();
+	tokenType = Syntax::STRT_Z;
 }
 
 Token *Scanner::nextToken() {
 	char currentChar;
+	long int value;
+	char symbol;
 
 	/* run automat and feed it char by char, till any token is found */
 	while ( currentChar != '\0' && !automat->isLexemReady()) {
@@ -29,35 +37,41 @@ Token *Scanner::nextToken() {
 		int back_steps = automat->read(currentChar);
 		tokenType = automat->getFinalState();
 		buffer->ungetChar(back_steps);
-		if (automat->isLexemReady() && (tokenType == WSP_Z || tokenType == CLSC_Z)) {
+		if (automat->isLexemReady() && (tokenType == Syntax::WSP_Z || tokenType == Syntax::CLSC_Z)) {
 			automat->reset();
 		}
 	}
 
 	/* save all information about the lexem */
+	Information* info;
 	char* lexem = automat->getLexem();
 	int lexemLength = automat->getLexemLength();
-	Information* info;
 	int line = automat->getLine();
 	int col = automat->getColumn();
 
+	/* determine precise token type */
+	int ttttype = typeFromState(tokenType, lexem);
+	Token* t = new Token(ttttype, line, col);
+
 	/* creating corresponding token */
-	if (tokenType == Syntax::IDEN_Z) {
+	if (ttttype == Syntax::IDEN_Z) {
 		info = stab->lookup(lexem);
 		if (info == NULL) {
 			SymtabEntry* entry = stab->insert(lexem, lexemLength);
 			info = entry->getInfo();
-		} else {
-			// do nothing
 		}
+		t->setInformation(info);
 	} else {
-		if (tokenType == Syntax::INTG_Z) {
-			info = new Information(lexem);
-		} else {
-			info = new Information(lexem);
+		if (ttttype == Syntax::INTG_Z) {
+			value = valueFromLexem(lexem);
+			t->setValue(value);
+		}
+		if (ttttype == Syntax::PROH_Z) {
+			t->setSymbol(lexem[0]);
 		}
 	}
-	Token* t = new Token(tokenType, line, col, info);
+
+	/* now we can reset automat */
 	automat->reset();
 
 	/* if we need to finish already*/
@@ -73,3 +87,30 @@ Scanner::~Scanner() {
 	delete automat;
 }
 
+int Scanner::typeFromState(int state, char* lexem) {
+	/* determine the token type using STATE and LEXEM as basis */
+	/* if STATE corresponds to REST SIGNS */
+	char symbol = lexem[0];
+	int tType = state;
+	if (state == Syntax::ASGN_Z) {
+		tType = syntax->unpackSignToState(symbol);
+	} else {
+		if (state == Syntax::IDEN_Z) {
+			int koo = syntax->ifKeyword(lexem);
+			if (koo > 0) tType = koo; // 30..35
+		}
+	}
+	return tType;
+}
+
+long int Scanner::valueFromLexem(char* lexem) {
+	long int value = 0;
+	char *pEnd;
+	value = strtol(lexem, &pEnd, 10);
+	if (errno == EINVAL) {
+		std::cout << CONV_ERR << std::endl;
+	} else if (errno == ERANGE) {
+		std::cout << CONV_ERR_OVERFLOW << std::endl;
+	}
+	return value;
+}

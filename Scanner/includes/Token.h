@@ -15,19 +15,10 @@ class Token {
 	Information* information;
 	char symbol;
 	//Syntax* syntax;
-	char* ttypeString[36] = {"Start     ", "Identifier", "Integer   ", "Less      ",
-							 "Greater   ", "Colon     ", "Equals    ", "<:>-sign  ",
-										 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ",
-										 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ",
-										 "  --*:--  ", "Prohibited", " --null-- ", "Plus      ",
-										 "Minus     ", "Not       ", "And       ", "Semicol   ",
-										 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ",
-										 "Brackets [", "Brackets ]" ,"IF-Token  " , "WHILE-Token",
-										 "INT-Token ", "WRITE-Toke", "ELSE-Token", "READ-Token"
-	};
+
 	const char signArray[SIGN_ARRAY_SZ] = {'+','-','!','&',';','(',')','{','}','[',']'};
 public:
-	Token();
+	Token(int type, int line, int column);
 	Token(int state, int l, int c, Information* info);
 	virtual ~Token();
 	char* itoc(int number);
@@ -36,9 +27,11 @@ public:
 	char* getLexem();
 	int getLine();
 	int getColumn();
-	char* typeAsString();
 	int getValue();
+	void setValue(long int value);
 	char getSymbol();
+	void setSymbol(char symbol);
+	void setInformation(Information* info);
 };
 
 #endif

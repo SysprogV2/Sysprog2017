@@ -15,12 +15,6 @@
 #include "../../Scanner/includes/Token.h"
 #include "../../Automat/includes/Syntax.h"
 
-
-
-#define WSP_Z 12
-#define CLSC_Z 16
-
-
 class Scanner {
 	Symboltable *stab;
 	Buffer* buffer;
@@ -30,6 +24,8 @@ class Scanner {
 public:
 	Scanner(char *filename);
 	Scanner(char *filename, Symboltable* st);
+	int typeFromState(int state, char* lexem);
+	long int valueFromLexem(char* lexem);
 	Token* nextToken();
 	virtual ~Scanner();
 };
