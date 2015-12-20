@@ -28,8 +28,6 @@ Scanner::Scanner(char *filename, Symboltable* st) {
 
 Token *Scanner::nextToken() {
 	char currentChar;
-	long int value;
-	char symbol;
 
 	/* run automat and feed it char by char, till any token is found */
 	while ( currentChar != '\0' && !automat->isLexemReady()) {
@@ -48,12 +46,12 @@ Token *Scanner::nextToken() {
 	int lexemLength = automat->getLexemLength();
 	int line = automat->getLine();
 	int col = automat->getColumn();
-
-	/* determine precise token type */
 	int ttttype = typeFromState(tokenType, lexem);
+
+	/* create Token */
 	Token* t = new Token(ttttype, line, col);
 
-	/* creating corresponding token */
+	/* add additional information to the token */
 	if (ttttype == Syntax::IDEN_Z) {
 		info = stab->lookup(lexem);
 		if (info == NULL) {
@@ -63,7 +61,7 @@ Token *Scanner::nextToken() {
 		t->setInformation(info);
 	} else {
 		if (ttttype == Syntax::INTG_Z) {
-			value = valueFromLexem(lexem);
+			long int value = valueFromLexem(lexem);
 			t->setValue(value);
 		}
 		if (ttttype == Syntax::PROH_Z) {
@@ -89,16 +87,13 @@ Scanner::~Scanner() {
 
 int Scanner::typeFromState(int state, char* lexem) {
 	/* determine the token type using STATE and LEXEM as basis */
-	/* if STATE corresponds to REST SIGNS */
 	char symbol = lexem[0];
 	int tType = state;
 	if (state == Syntax::ASGN_Z) {
 		tType = syntax->unpackSignToState(symbol);
-	} else {
-		if (state == Syntax::IDEN_Z) {
-			int koo = syntax->ifKeyword(lexem);
-			if (koo > 0) tType = koo; // 30..35
-		}
+	} else if (state == Syntax::IDEN_Z) {
+		int koo = syntax->ifKeyword(lexem);
+		if (koo > 0) tType = koo; // 30..35
 	}
 	return tType;
 }
