@@ -8,7 +8,7 @@
 #include "../includes/Syntax.h"
 
 Syntax::Syntax() {
-
+	keywordNumber = KEYWORD_NUMBER;
 }
 
 Syntax::~Syntax() {
@@ -19,31 +19,39 @@ char* Syntax::getTokenTypeAsChar(int num) {
 	return ttypeString[num];
 }
 
- int Syntax::getState(int i, int j) {
-	 return stateTable[i][j];
- }
+int Syntax::getState(int i, int j) {
+	return stateTable[i][j];
+}
 
- bool Syntax::isRest(char c) {
+/*
+ * checks if a character belongs to a group of "packed" chars
+ * @return TRUE if it does
+ */
+
+
+/*
+ * finds a state for a given "packed" character
+ * returns -1 if the char does NOT belong to a group
+ *     of "packed" chars
+ * @return corresponding state for a char
+ */
+int Syntax::isPacked(char sign) {
 	for (int i = 0; i < SIGN_ARRAY_SZ; i++) {
- 		if (c == signArray[i]) return true;
- 	}
- }
-
-int Syntax::unpackSignToState(char sign) {
-	for (int i=0; i < SIGN_ARRAY_SZ; i++) {
-		if (sign == signArray[i])
-			return i + 19;
+		if (sign == signArray[i]) return i + STATETABLE_WIDTH + 1;
 	}
 	return -1;
 }
 
+/*
+ * checks whether the given lexem is a keyword
+ * returns -1 if not
+ * @return corresponding token type for keyword
+ */
 int Syntax::ifKeyword(char* lexem) {
-	char* another;
 	int tType = 0;
-	for (int i = 0; i < 12; i++) {
-		another = keywordsArray[i];
-		if (matches(lexem, another))
-			return (30 + i / 2);
+	for (int i = 0; i < KEYWORD_NUMBER * 2; i++) {
+		if (matches(lexem, keywordsArray[i]))
+			return (STATES_NUMBER + i / 2);
 	}
 	return -1;
 }

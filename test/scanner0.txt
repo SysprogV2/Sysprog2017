@@ -1,0 +1,23 @@
+xoo := 3   + 4;     
+:*******   *:
+hohoohoh
+\q \Q \e \E
+?y <:=> X : (X - 4);
+<:> <:::>
+Z := ((3 + 4 - 6);
+if (x > 10) then WRITE spmthig;
+iF (x < 10) or () wRiTe smm WRITE;
+Resultat := : X y % ::::
+Token Minus       Line: 5 Column: 16  ------
+Token Integer     Line: 5 Column: 18  Value: 4:**:*:*:
+nd put him in prison[ in the 
+sdf
+dfd
+
+df
+df
+fd
+:::: 2147483645
+2147483646
+-2147483647
+2147483660

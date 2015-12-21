@@ -8,10 +8,13 @@
 #ifndef AUTOMAT_INCLUDES_SYNTAX_H_
 #define AUTOMAT_INCLUDES_SYNTAX_H_
 #define SIGN_ARRAY_SZ 11
+#define STATETABLE_WIDTH 18
+#define STATETABLE_HEIGHT 11
+#define KEYWORD_NUMBER 6
+#define STATES_NUMBER STATETABLE_WIDTH + STATETABLE_HEIGHT + 1
 class Syntax {
 
-
-	int stateTable[11][18] = {
+	int stateTable[STATETABLE_HEIGHT][STATETABLE_WIDTH] = {
 				/*            STRT    ID       INT	  < 		>      :	   =	 <ANY>	   <:	  <:>	   :=      Eof     WSP     *       :*   <comment>  *:    PROH_Z */
 				/* a-Z */	{IDEN_Z, IDEN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
 				/* 0-9 */	{INTG_Z, IDEN_Z, INTG_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
@@ -25,7 +28,8 @@ class Syntax {
 				/* WSP */	{WSP_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
 				/* PRH */	{PROH_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z}
 	};
-	char* ttypeString[36] = {"Start     ", "Identifier", "Integer   ", "Less      ",
+	char* ttypeString[STATES_NUMBER + KEYWORD_NUMBER] = {
+							 "Start     ", "Identifier", "Integer   ", "Less      ",
 							 "Greater   ", "Colon     ", "Equals    ", "<:>-sign  ",
 							 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ",
 							 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ",
@@ -36,9 +40,11 @@ class Syntax {
 							 "INT-Token ", "WRITE-Toke", "ELSE-Token", "READ-Token"
 	};
 	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
-	char* keywordsArray[12] = {"if", "IF", "while", "WHILE", "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};
-public:
 
+	char* keywordsArray[KEYWORD_NUMBER * 2] = {"if", "IF", "while", "WHILE", "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};
+
+public:
+	int keywordNumber;
 	enum States {STRT_Z, IDEN_Z, INTG_Z, LESS_Z,
 				 GREA_Z, COLN_Z, EQLS_Z, ASGN_Z,
 				 LCLN_Z, LCLL_Z, ASSG_Z, EOF_Z,
@@ -56,9 +62,8 @@ public:
 	virtual ~Syntax();
 	char* getTokenTypeAsChar(int num);
 	int getState(int i, int j);
-	bool isRest(char c);
 
-	int unpackSignToState(char sign);
+	int isPacked(char sign);
 	int ifKeyword(char* lexem);
 	bool matches(char* one, char* another);
 };

@@ -9,18 +9,18 @@
 #define Automat_H_
 
 #include "Stack.h"
-#include "Position.h"
 #include "Syntax.h"
 
-#define SIGN_ARRAY_SZ 11
-
 class Automat {
-	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
-
     /* stores info about automata's current state */
     int currentState;
     int lastFinalState;
     int back;
+
+    /* stores position */
+    int gLine;
+    int gCol;
+    int tmpCol;
 
     /* stores info about current lexem */
 	int lexemLength;
@@ -28,7 +28,6 @@ class Automat {
 	int lexemColumn;
 	bool lexemReady;
 	Stack* stack;
-	Position *position;
 	Syntax* syntax;
 public:
 
@@ -41,7 +40,6 @@ public:
     int mapCharToSymbolName(char c);
 
     bool isEof(char c);
-    bool isRest(char c);
     bool isDigit(char c);
     bool isLetter(char c);
     bool isWspace(char c);
@@ -55,6 +53,9 @@ public:
 	int getLexemLength();
 	int getLine();
 	int getColumn();
+
+	void updatePos(char c);
+	void updatePos(int back);
 };
 
 #endif

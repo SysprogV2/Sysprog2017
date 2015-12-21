@@ -19,13 +19,12 @@ class Scanner {
 	Symboltable *stab;
 	Buffer* buffer;
 	Automat* automat;
-	int tokenType;
 	Syntax* syntax;
 public:
 	Scanner(char *filename);
 	Scanner(char *filename, Symboltable* st);
-	int typeFromState(int state, char* lexem);
-	long int valueFromLexem(char* lexem);
+	int mapStateToType(int state, char* lexem);
+	long int lexemToValue(char* lexem);
 	Token* nextToken();
 	virtual ~Scanner();
 };

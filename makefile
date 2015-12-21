@@ -1,6 +1,8 @@
 #
 #	baut das komplette Scanner Projekt
 #
+DEBUGDIR = debug
+
 OBJDIR = objs
 
 AUTOMATDIR = Automat
@@ -24,6 +26,10 @@ clean:
 	rm -f $(BUFFERDIR)/$(OBJDIR)/*.o
 	rm -f $(SYMBOLTABLEDIR)/$(OBJDIR)/*.o
 	rm -f $(SCANNERDIR)/$(OBJDIR)/*.o
+	rm -f $(AUTOMATDIR)/$(DEBUGDIR)/*.*
+	rm -f $(BUFFERDIR)/$(DEBUGDIR)/*
+	rm -f $(SYMBOLTABLEDIR)/$(DEBUGDIR)/*
+	rm -f $(SCANNERDIR)/$(DEBUGDIR)/*
 	rm -f $(SCANNERDIR)/debug/*
 	
 

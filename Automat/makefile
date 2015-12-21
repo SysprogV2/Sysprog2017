@@ -7,8 +7,8 @@
 # -g --> debug Informationen erzeugen
 # -o --> name des output-files
 
-makeTestAutomat : AutomatTarget TestAutomatTarget PositionTarget SyntaxTarget StackTarget
-	g++ -g objs/Automat.o objs/Position.o objs/Syntax.o objs/Stack.o debug/TestAutomat.o -o debug/AutomatTest
+makeTestAutomat : AutomatTarget TestAutomatTarget SyntaxTarget StackTarget
+	g++ -g objs/Automat.o objs/Syntax.o objs/Stack.o debug/TestAutomat.o -o debug/AutomatTest
 
 # PositionTarget SyntaxTarget StackTarget	
 # objs/Position.o objs/Syntax.o objs/Stack.o
@@ -23,10 +23,6 @@ makeTestAutomat : AutomatTarget TestAutomatTarget PositionTarget SyntaxTarget St
 
 AutomatTarget:  src/Automat.cpp includes/Automat.h
 	g++ -g  -c -Wall src/Automat.cpp -o objs/Automat.o 
-
-
-PositionTarget: src/Position.cpp includes/Position.h
-	g++ -g  -c -Wall src/Position.cpp -o objs/Position.o
 
 SyntaxTarget: src/Syntax.cpp includes/Syntax.h
 	g++ -g  -c -Wall src/Syntax.cpp -o objs/Syntax.o

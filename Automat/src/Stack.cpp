@@ -20,7 +20,7 @@ Stack::Stack() {
 	void* tmp;
 	int error = posix_memalign(&tmp, 4096, MAX_TOKEN_SIZE);
 	if (error != 0) {
-	    std::cout << "Couldn't allocate memory. Exiting..." << std::endl;
+	    std::cout << "Couldn't allocate memory for stack. Exiting..." << std::endl;
 	    exit(EXIT_FAILURE);
 	}
 	stack = (char*) tmp;
@@ -32,7 +32,6 @@ Stack::~Stack() {
 
 void Stack::push(char c) {
 	stack[stackHead++] = c;
-	//stack[stackHead] = '\0';
 }
 
 void Stack::trim(int back) {

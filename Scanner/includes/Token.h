@@ -14,8 +14,6 @@ class Token {
 	long int value;
 	Information* information;
 	char symbol;
-	//Syntax* syntax;
-
 	const char signArray[SIGN_ARRAY_SZ] = {'+','-','!','&',';','(',')','{','}','[',']'};
 public:
 	Token(int type, int line, int column);

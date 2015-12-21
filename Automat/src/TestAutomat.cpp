@@ -30,12 +30,5 @@ int main (int argc, char* argv[]){
 
 
 	std::cout << "===========================" << std::endl;
-	Position* p = new Position();
-	p->update('a'); p->update('a'); p->update('a'); p->update('a'); // 1,4
-	p->update('\0'); p->update('\0'); p->update('\0'); 				// 4,4
-
-	p->update('a');
-	p->update('a'); p->update('\0');p->update('\0'); p->update('a'); p->update('a'); p->update('\0'); // 1,4
-		p->update('\0');
 
 }
