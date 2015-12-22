@@ -43,8 +43,6 @@ int Automat::read(char currentChar) {
 				stack->trim(back);						// delete last N (=back) characters
 				lexemLength -= back; 					// adjust lexemLength
 				updatePos(back);
-				lexemLine = gLine + 1;
-				lexemColumn = gCol - lexemLength + 1;
 				return back;
 			}
 		}
@@ -109,7 +107,7 @@ bool Automat::isLetter(char c) {
 }
 
 bool Automat::isWspace(char c) {
-    return (c == '\n') || (c == ' ') ||  (c == '\t')  || (c == '\r');
+    return (c == '\n') || (c == ' ') ||  (c == '\t') || (c == '\r');
 }
 
 int Automat::getFinalState() {
@@ -125,11 +123,11 @@ int Automat::getLexemLength() {
 }
 
 int Automat::getLine() {
-	return lexemLine;
+	return gLine + 1;
 }
 
 int Automat::getColumn() {
-	return lexemColumn;
+	return gCol - lexemLength + 1;
 }
 
 void Automat::updatePos(char c) {
@@ -145,8 +143,9 @@ void Automat::updatePos(int back) {
 	if (back > gCol) {
 		gCol = tmpCol - back;
 		gLine--;
+	} else {
+		gCol -= back;
 	}
-	gCol -= back;
 }
 
 
