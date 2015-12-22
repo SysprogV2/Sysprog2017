@@ -11,6 +11,7 @@
 
 #include "StringTab.h"
 #include "SymtabEntry.h"
+#include "../../Scanner/includes/Information.h"
 #include <iostream>
 
 #define TABLE_SIZE 1019 // prime number here!

@@ -5,11 +5,8 @@
  *      Author: knad0001
  */
 #include "../includes/Symboltable.h"
-#include "../includes/SymtabEntry.h"
-#include "../../Scanner/includes/Information.h"
 
 Symboltable::Symboltable() {
-
 	strTab = new StringTab();
 	initSymbols();
 }
