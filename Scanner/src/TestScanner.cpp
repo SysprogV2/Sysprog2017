@@ -27,6 +27,7 @@ int main(int argc, char **argv) {
 	std::cout << "processing..." << std::endl;
    	while ((t = s->nextToken())) {
    		/* output to console */
+
    		if (t->getType() == Syntax::PROH_Z) {
    			std::cout << "unknown Token Line: " << t->getLine()
    					  << " Column: " << t->getColumn()

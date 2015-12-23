@@ -15,7 +15,7 @@ class Automat {
     /* stores info about automata's current state */
     int currentState;
     int lastFinalState;
-    int back;
+
 
     /* stores position */
     int gLine;
@@ -31,7 +31,7 @@ class Automat {
 	Syntax* syntax;
 public:
 
-
+int back;
 
     Automat();
     ~Automat();
@@ -55,7 +55,7 @@ public:
 	int getColumn();
 
 	void updatePos(char c);
-	void updatePos(int back);
+	void updatePosition(int back);
 };
 
 #endif

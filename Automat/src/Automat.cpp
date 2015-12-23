@@ -31,7 +31,7 @@ int Automat::read(char currentChar) {
 	updatePos(currentChar);
 	if ( !lexemReady ) {
 		currentState = syntax->getState(mapCharToSymbolName(currentChar), currentState);
-		stack->push(currentChar);
+		if (currentState != Syntax::OPNC_Z) stack->push(currentChar);
 		lexemLength++;
 		if (isFinal(currentState)) {
 			lastFinalState = currentState;
@@ -42,7 +42,7 @@ int Automat::read(char currentChar) {
 				lexemReady = true;
 				stack->trim(back);						// delete last N (=back) characters
 				lexemLength -= back; 					// adjust lexemLength
-				updatePos(back);
+				updatePosition(back);
 				return back;
 			}
 		}
@@ -139,7 +139,7 @@ void Automat::updatePos(char c) {
 	}
 }
 
-void Automat::updatePos(int back) {
+void Automat::updatePosition(int back) {
 	if (back > gCol) {
 		gCol = tmpCol - back;
 		gLine--;

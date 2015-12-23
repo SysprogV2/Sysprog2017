@@ -23,14 +23,19 @@
 #define BUFFER_ALIGNMENT 4096
 
 class Buffer {
-	char *next;
+	char *filename;
 	int fd;
 	char *buffer1;
 	char *buffer2;
-    char *filename;
-    ssize_t byte_read;
+	char *terminator1;
+	char *terminator2;
 
+	char *next;
+    char *theEndOfPrevBuffer;
+    ssize_t byte_read;
     int shift;
+    bool isAnymoreToRead;
+    bool shouldLoadNewPortion;
 
     char *currentWorkingBuffer;
 public:

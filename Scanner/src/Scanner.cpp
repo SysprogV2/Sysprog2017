@@ -39,7 +39,7 @@ Token *Scanner::nextToken() {
 	int finalState = 0;
 
 	/* run automat and feed it char by char, till any lexem is found */
-	while ( currentChar != '\0' && !automat->isLexemReady()) {
+	while ( currentChar != '\0' &&  !automat->isLexemReady()) {
 		currentChar = buffer->getChar();
 		int back_steps = automat->read(currentChar);
 		finalState = automat->getFinalState();

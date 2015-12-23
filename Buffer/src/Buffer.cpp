@@ -15,40 +15,55 @@ Buffer::Buffer(char *pathToFile) {
 	fd = open(filename, O_RDONLY, O_DIRECT);
 	allocateBufferMemory();
 	shift = 0;
+	isAnymoreToRead = true;
+	shouldLoadNewPortion = true;
 }
 
 char Buffer::getChar() {
-	if (next[0] == '\0') {
-		if (next == &buffer1[(BUFFER_SIZE / 2) - 1]) {
-			load(buffer2);
+	if (isAnymoreToRead) {
+		if (next == terminator1) {
+			theEndOfPrevBuffer = --next;
+			if (shouldLoadNewPortion) load(buffer2);
 			next = buffer2;
-		} else if (next == &buffer2[(BUFFER_SIZE / 2) - 1]) {
-			load(buffer1);
+			shouldLoadNewPortion = true;
+		} else if (next == terminator2) {
+			theEndOfPrevBuffer = --next;
+			if (shouldLoadNewPortion) load(buffer1);
 			next = buffer1;
-		} else {
-			return next[0];
+			shouldLoadNewPortion = true;
+		}
+	} else {
+		if (byte_read == 0) {
+			return '\0';
 		}
 	}
 	shift++;
 	return next++[0];
 }
 
-/* TODO: fix this -> could cause a lot of bugs!!! */
 void Buffer::ungetChar(int back) {
 	next -= back;
 	shift -= back;
-	if (shift > -1 && shift < 1) printf(" %d \n", shift);
+
+	if (shift < 0) {
+		shift++;
+		next = theEndOfPrevBuffer;
+		next -= (shift) * sizeof(char);
+		shouldLoadNewPortion = false;
+	}
+
 }
 
 /* Load given buffer with a content of a textfile */
 void Buffer::load(void * someBuffer) {
 	byte_read = read(fd, someBuffer, (BUFFER_SIZE / 2) - 1);
-	if (byte_read < (signed) ((BUFFER_SIZE / 2)) && byte_read > 0) {
+	if (byte_read < (signed) ((BUFFER_SIZE / 2) - 1) && byte_read >= 0) {
 		char * tmp = (char *) someBuffer;
+		tmp[byte_read++] = '\n';
 		tmp[byte_read] = '\0';
+		isAnymoreToRead = false;
 	}
-	shift = 1;
-	//printf("read(%d, %p, %d) = %d\n", fd, someBuffer, (BUFFER_SIZE / 2) - 1, byte_read);
+	shift = 0;
 }
 
 void Buffer::allocateBufferMemory() {
@@ -58,15 +73,14 @@ void Buffer::allocateBufferMemory() {
 		    std::cout << "Couldn't allocate memory. Exiting..." << std::endl;
 		    exit(EXIT_FAILURE);
 		}
-		char* terminator;
 
 		buffer1 = (char *) tmp1;
-		terminator = buffer1 + ((BUFFER_SIZE / 2) - 1) * sizeof(char);
-		terminator[0] = '\0';
+		terminator1 = buffer1 + ((BUFFER_SIZE / 2) - 1) * sizeof(char);
+		terminator1[0] = '\0';
 
-		buffer2 = buffer1 + sizeof(char);
-		terminator = buffer2 + ((BUFFER_SIZE / 2) - 1) * sizeof(char);
-		terminator[0] = '\0';
+		buffer2 = terminator1 + sizeof(char);
+		terminator2 = buffer2 + ((BUFFER_SIZE / 2) - 1) * sizeof(char);
+		terminator2[0] = '\0';
 
 	    load(buffer1);
 	    next = buffer1;
