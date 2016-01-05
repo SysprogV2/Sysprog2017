@@ -29,15 +29,15 @@ class Syntax {
 				/* PRH */	{PROH_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z}
 	};
 	char* ttypeString[STATES_NUMBER + KEYWORD_NUMBER] = {
-							 "Start     ", "Identifier", "Integer   ", "Less      ",
-							 "Greater   ", "Colon     ", "Equals    ", "<:>-sign  ",
-							 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ",
-							 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ",
-							 "  --*:--  ", "Prohibited", " --null-- ", "Plus      ",
-							 "Minus     ", "Not       ", "And       ", "Semicol   ",
-							 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ",
-							 "Brackets [", "Brackets ]" ,"IF-Token  ", "WHILE-Toke",
-							 "INT-Token ", "WRITE-Toke", "ELSE-Token", "READ-Token"
+							 "Start     ", "Identifier", "Integer   ", "Less      ", //  0- 3
+							 "Greater   ", "Colon     ", "Equals    ", "<:>-sign  ", //  4- 7
+							 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ", //  8-11
+							 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ", // 12-15
+							 "  --*:--  ", "Prohibited", " --null-- ", "Plus      ", // 16-19
+							 "Minus     ", "Not       ", "And       ", "Semicol   ", // 20-23
+							 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ", // 24-27
+							 "Brackets [", "Brackets ]" ,"IF-Token  ", "WHILE-Toke", // 28-31
+							 "INT-Token ", "WRITE-Toke", "ELSE-Token", "READ-Token"  // 32-35
 	};
 	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
 

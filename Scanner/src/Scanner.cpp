@@ -13,7 +13,7 @@ Scanner::Scanner(char *filename) {
 	buffer = new Buffer(filename);
 	automat = new Automat();
 	syntax = new Syntax();
-	stab = NULL;
+	stab = nullptr;
 }
 
 Scanner::Scanner(char *filename, Symboltable* st) {
@@ -63,7 +63,7 @@ Token *Scanner::nextToken() {
 	Information* info;
 	if (tokenType == Syntax::IDEN_Z) {
 		info = stab->lookup(lexem);
-		if (info == NULL) {
+		if (info == nullptr) {
 			SymtabEntry* entry = stab->insert(lexem, lexemLength);
 			info = entry->getInfo();
 		}
@@ -82,7 +82,7 @@ Token *Scanner::nextToken() {
 
 	/* if we need to finish already*/
 	if (currentChar == '\0') {
-		return NULL;
+		return nullptr;
 	} else {
 		return t;
 	}

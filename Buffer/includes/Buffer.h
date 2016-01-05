@@ -18,6 +18,7 @@
 
 #include <stdlib.h> //
 #include <malloc.h>
+#include "../../Compatibility/compab.h"
 
 #define BUFFER_SIZE 2048
 #define BUFFER_ALIGNMENT 4096

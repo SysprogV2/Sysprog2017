@@ -12,7 +12,7 @@ Buffer::~Buffer() {
 
 Buffer::Buffer(char *pathToFile) {
 	filename = pathToFile;
-	fd = open(filename, O_RDONLY, O_DIRECT);
+	fd = open(filename, O_RDONLY, O_DIRECT); // TODO find a Windows replacement for O_DIRECT and define it as O_DIRECT in compab.h
 	allocateBufferMemory();
 	shift = 0;
 	isAnymoreToRead = true;
@@ -25,12 +25,12 @@ char Buffer::getChar() {
 			theEndOfPrevBuffer = --next;
 			if (shouldLoadNewPortion) load(buffer2);
 			next = buffer2;
-			shouldLoadNewPortion = true;
+			shouldLoadNewPortion = true; // perhaps better: shouldLoadNewPortion = isAnymoreToRead;
 		} else if (next == terminator2) {
 			theEndOfPrevBuffer = --next;
 			if (shouldLoadNewPortion) load(buffer1);
 			next = buffer1;
-			shouldLoadNewPortion = true;
+			shouldLoadNewPortion = true; // perhaps better: shouldLoadNewPortion = isAnymoreToRead;
 		}
 	} else {
 		if (byte_read == 0) {

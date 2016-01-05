@@ -13,8 +13,8 @@ SymtabEntry::SymtabEntry(Information* info) {
 }
 
 SymtabEntry::SymtabEntry() {
-	this->information = NULL;
-	this->next = NULL;
+	this->information = nullptr;
+	this->next = nullptr;
 }
 
 SymtabEntry::SymtabEntry(SymtabEntry* nextEntry) {

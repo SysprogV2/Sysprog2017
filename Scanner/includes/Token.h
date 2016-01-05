@@ -5,6 +5,7 @@
 #include <string.h> // TODO: DELETE THIS LATER!!! Prohibited library!
 #include <stdlib.h>  // for strtol()
 #include "Information.h"
+#include "../../Compatibility/compab.h"
 
 #define SIGN_ARRAY_SZ 11
 class Token {
@@ -30,6 +31,7 @@ public:
 	char getSymbol();
 	void setSymbol(char symbol);
 	void setInformation(Information* info);
+	bool hasSameTypeAs (Token* other);
 };
 
 #endif
