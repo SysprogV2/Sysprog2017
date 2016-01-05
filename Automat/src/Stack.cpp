@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include "../../Compability/compab.h"
 
 Stack::Stack() {
 	stackHead = 0;

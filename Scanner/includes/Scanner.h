@@ -14,6 +14,7 @@
 #include "../../Symboltable/includes/Symboltable.h"
 #include "../../Scanner/includes/Token.h"
 #include "../../Automat/includes/Syntax.h"
+#include "../../Compability/compab.h"
 
 class Scanner {
 	Symboltable *stab;

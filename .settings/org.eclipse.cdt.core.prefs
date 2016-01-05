@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+environment/project/cdt.managedbuild.toolchain.gnu.base.1369296955/PATH/delimiter=;
+environment/project/cdt.managedbuild.toolchain.gnu.base.1369296955/PATH/operation=replace
+environment/project/cdt.managedbuild.toolchain.gnu.base.1369296955/PATH/value=C\:\\MinGW\\bin;C\:\\MinGW\\msys\\1.0\\bin
+environment/project/cdt.managedbuild.toolchain.gnu.base.1369296955/append=true
+environment/project/cdt.managedbuild.toolchain.gnu.base.1369296955/appendContributed=true

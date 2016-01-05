@@ -1,0 +1,213 @@
+// already created, can be ignored
+interface ParseTree {
+  static bool isMatching();
+  Token first();
+}
+
+interface Prog : public ParseTree {
+  
+}
+
+interface Decls : public ParseTree {
+
+}
+
+interface Decl : public ParseTree {
+
+}
+
+interface Array : public ParseTree {
+
+}
+
+interface Statements : public ParseTree {
+
+}
+
+interface Statement : public ParseTree {
+
+}
+
+interface Exp : public ParseTree {
+
+}
+
+interface Exp2 : public ParseTree {
+
+}
+
+interface Index : public ParseTree {
+
+}
+
+interface OpExp : public ParseTree {
+
+}
+
+interface Op : public ParseTree {
+
+}
+
+class ProgOnly : public Prog {
+  private:
+    Decls declarationSegment;
+    Statements statementSegment
+}
+
+class DeclsSeq : public Decls {
+  private:
+    Decl firstDeclaration;
+    Decls restOfDeclarations;
+}
+
+class DeclsEps : public Decls {
+
+}
+
+class DeclOnly : public Decl {
+  private:
+    Array index;
+    Token identifier;
+}
+
+class ArrayIndex : public Array {
+  private:
+    Token integer;
+}
+
+class ArrayEps : public Array {
+
+}
+
+class StatementsSeq : public Statements {
+  private:
+    Statement firstStatement;
+    Statements restOfStatements;
+}
+
+class StatementsEps : public Statements {
+
+}
+
+class StatementSetValue : public Statement {
+  private:
+    Token identifier;
+    Index index;
+    Exp aimValue;
+}
+
+class StatementWrite : public Statement {
+  private:
+    Exp toPrint;
+}
+
+class StatementRead : public Statement {
+  private:
+    Token identifier;
+    Index index;
+}
+
+class StatementBlock : public Statement {
+  private:
+    Statements blockContent;
+}
+
+class StatementIfElse : public Statement {
+  private:
+    Exp condition;
+    Statement thenCase;
+    Statement elseCase;
+}
+
+class StatementWhile : public Statement {
+  private:
+    Exp condition;
+    Statement loop;
+}
+
+class ExpOnly : public Exp {
+  private:
+    Exp2 firstExpression;
+    OpExp calculateTo;
+}
+
+class Exp2Nested : public Exp2 {
+  private:
+    Exp nestedExpression;
+}
+
+class Exp2Variable : public Exp2 {
+  private:
+    Token identifier;
+    Index index;
+}
+
+class Exp2Constant : public Exp2 {
+  private:
+    Token integer;
+}
+
+class Exp2LessThanZero : public Exp2 {
+  private:
+    Exp2 positiveVersion;
+}
+
+class Exp2Negation : public Exp2 {
+  private:
+    Exp2 toNegate;
+}
+
+class IndexIs : public Index {
+  private:
+    Exp index;
+}
+
+class IndexEps : public Index {
+
+}
+
+class OpExpNext : public OpExp {
+  private:
+    Op operator;
+    Exp operand;
+}
+
+class OpExpEps : public OpExp {
+
+}
+
+class OpPlus : public Op {
+
+}
+
+class OpMinus : public Op {
+
+}
+
+class OpMult : public Op {
+
+}
+
+class OpDiv : public Op {
+
+}
+
+class OpLess : public Op {
+
+}
+
+class OpGreater : public Op {
+
+}
+
+class OpEquals : public Op {
+
+}
+
+class OpNotEquals : public Op {
+
+}
+
+class OpAnd : public Op {
+
+}

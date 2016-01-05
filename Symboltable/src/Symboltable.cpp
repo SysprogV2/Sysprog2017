@@ -30,7 +30,7 @@ int Symboltable::hash(char *lexem) {
 
 SymtabEntry* Symboltable::insert(char *lexem, int size) {
 	int key = hash(lexem);
-	if (hashTab[key] == NULL) {
+	if (hashTab[key] == nullptr) {
 		hashTab[key] = new SymtabEntry();
 	} else {
 		SymtabEntry prev = hashTab[key];
@@ -57,7 +57,7 @@ Information* Symboltable::lookup(char* lexem) {
 		if (m) return info;
 		entry = entry->getNext();
 	}
-	return NULL;
+	return nullptr;
 }
 
 void Symboltable::print() {

@@ -15,7 +15,7 @@ Token::Token(int type, int line, int column) {
 	this->column = column;
 	this->value = 0;
 	this->symbol = 'a';
-	this->information = NULL;
+	this->information = nullptr;
 }
 
 Token::Token(int state, int l, int c, Information* info) {
@@ -71,3 +71,6 @@ void Token::setSymbol(char symbol) {
 	this->symbol = symbol;
 }
 
+bool Token::hasSameTypeAs(Token* other) {
+	return this->tType == other->tType;
+}
