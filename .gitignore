@@ -1,0 +1,14 @@
+.cproject
+.project
+.metadata/
+.settings/
+Automat/objs/
+Automat/debug/
+Scanner/objs/
+Scanner/debug/
+Symboltable/objs/
+Symboltable/debug/
+Parser/objs/
+Parser/debug/
+Buffer/debug/
+Buffer/objs/

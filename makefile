@@ -22,7 +22,6 @@ clean:
 	rm -f $(BUFFERDIR)/$(DEBUGDIR)/*
 	rm -f $(SYMBOLTABLEDIR)/$(DEBUGDIR)/*
 	rm -f $(SCANNERDIR)/$(DEBUGDIR)/*
-	rm -f $(SCANNERDIR)/debug/*
 	
 
 automatOBJs:
