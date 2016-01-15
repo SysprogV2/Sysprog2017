@@ -10,7 +10,7 @@
 #define SIGN_ARRAY_SZ 11
 #define STATETABLE_WIDTH 18
 #define STATETABLE_HEIGHT 11
-#define KEYWORD_NUMBER 6
+#define KEYWORD_NUMBER 2
 #define STATES_NUMBER STATETABLE_WIDTH + STATETABLE_HEIGHT + 1
 class Syntax {
 
@@ -33,15 +33,15 @@ class Syntax {
 							 "Greater   ", "Colon     ", "Equals    ", "<:>-sign  ", //  4- 7
 							 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ", //  8-11
 							 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ", // 12-15
-							 "  --*:--  ", "Prohibited", " --null-- ", "Plus      ", // 16-19
-							 "Minus     ", "Not       ", "And       ", "Semicol   ", // 20-23
+							 "  --*:--  ", "Prohibited", " --null-- ", "PlusToken ", // 16-19
+							 "MinusToken", "NotToken  ", "AndToken  ", "SemicolTok", // 20-23
 							 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ", // 24-27
-							 "Brackets [", "Brackets ]" ,"IF-Token  ", "WHILE-Toke", // 28-31
-							 "INT-Token ", "WRITE-Toke", "ELSE-Token", "READ-Token"  // 32-35
+							 "Brackets [", "Brackets ]" ,"IfToken   ", "WhileToken"//, // 28-31
+							 //"INT-Token ", "WRITE-Toke", "ELSE-Token", "READ-Token"  // 32-35
 	};
 	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
 
-	char* keywordsArray[KEYWORD_NUMBER * 2] = {"if", "IF", "while", "WHILE", "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};
+	char* keywordsArray[KEYWORD_NUMBER * 2] = {"if", "IF", "while", "WHILE"}; /*, "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};*/
 
 public:
 	int keywordNumber;

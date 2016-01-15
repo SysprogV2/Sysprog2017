@@ -35,7 +35,6 @@ SymtabEntry* Symboltable::insert(char *lexem, int size) {
 	} else {
 		SymtabEntry prev = hashTab[key];
 		hashTab[key] = new SymtabEntry(prev);
-
 	}
 	char* lexemPtr = strTab->insert(lexem, size);
 	density[key]++;
@@ -49,12 +48,11 @@ SymtabEntry* Symboltable::insert(char *lexem, int size) {
 Information* Symboltable::lookup(char* lexem) {
 	int key = hash(lexem);
 	SymtabEntry* entry = hashTab[key];
-	int koo = 0;
-	while (koo < density[key]) {
-		koo++;
+	int tmp = 0;
+	while (tmp < density[key]) {
+		tmp++;
 		Information* info = entry->getInfo();
-		bool m = info->matches(lexem);
-		if (m) return info;
+		if (info->matches(lexem)) return info;
 		entry = entry->getNext();
 	}
 	return nullptr;
@@ -64,15 +62,15 @@ void Symboltable::print() {
 	int key = 0;
 	/* crowling through the whole table */
 	while (key < TABLE_SIZE) {
-		//std::cout << "Bucket #" << key << " :: ";
+		std::cout << "Bucket #" << key << " :: ";
 		SymtabEntry* entry = hashTab[key];
-		int koo = 0;
+		int tmp = 0;
 		/* crawling through the bucket */
-		while (koo < density[key]) {
+		while (tmp < density[key]) {
 			Information* info = entry->getInfo();
-			std::cout << " " << info->getLexem();
+			std::cout << " -> " << info->getLexem();
 			entry = entry->getNext();
-			koo++;
+			tmp++;
 		}
 		key++;
 		std::cout << std::endl;
@@ -81,16 +79,20 @@ void Symboltable::print() {
 
 
 void Symboltable::initSymbols() {
+	/*
 	insert("write", 5);
 	insert("WRITE", 5);
 	insert("read", 4);
 	insert("READ", 4);
+	*/
 	insert("if", 2);
 	insert("IF", 2);
+	/*
 	insert("else", 4);
 	insert("ELSE", 4);
 	insert("int", 3);
 	insert("INT", 3);
+	*/
 	insert("while", 5);
 	insert("WHILE", 5);
 }

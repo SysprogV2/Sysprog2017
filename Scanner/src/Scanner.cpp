@@ -116,6 +116,7 @@ long int Scanner::lexemToValue(char* lexem) {
 		std::cout << CONV_ERR << std::endl;
 	} else if (errno == ERANGE) {
 		std::cout << CONV_ERR_OVERFLOW << std::endl;
+		errno = 0;
 	}
 	return value;
 }

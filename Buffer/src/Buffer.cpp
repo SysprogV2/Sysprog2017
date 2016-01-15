@@ -44,14 +44,12 @@ char Buffer::getChar() {
 void Buffer::ungetChar(int back) {
 	next -= back;
 	shift -= back;
-
 	if (shift < 0) {
 		shift++;
 		next = theEndOfPrevBuffer;
 		next -= (shift) * sizeof(char);
 		shouldLoadNewPortion = false;
 	}
-
 }
 
 /* Load given buffer with a content of a textfile */
@@ -84,7 +82,5 @@ void Buffer::allocateBufferMemory() {
 
 	    load(buffer1);
 	    next = buffer1;
-
-
 }
 

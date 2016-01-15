@@ -8,13 +8,13 @@
 #include "../includes/StringTab.h"
 
 StringTab::StringTab() {
-	void *gtfo;
-	int error = posix_memalign(&gtfo, INITIAL_ALGN, INITIAL_SIZE * sizeof(char));
+	void *spacePtr;
+	int error = posix_memalign(&spacePtr, INITIAL_ALGN, INITIAL_SIZE * sizeof(char));
 	if (error != 0) {
 	    perror("posix_memalign");
 	    exit(EXIT_FAILURE);
 	}
-	string = (char*) gtfo;
+	string = (char*) spacePtr;
 	freeP = string;
 	overallSpace = INITIAL_SIZE;
 	freeSpace = INITIAL_SIZE;
@@ -61,17 +61,17 @@ void StringTab::resize(char * stringItself, int size) {
 	}
 
 	/* copy the content of old string */
-	void *gtfo;
-	int error = posix_memalign(&gtfo, 4096, overallSpace * sizeof(char));
+	void *allocPtr;
+	int error = posix_memalign(&allocPtr, 4096, overallSpace * sizeof(char));
 	if (error != 0) {
 	    perror("posix_memalign");
 	    exit(EXIT_FAILURE);
     }
-	memcpy(gtfo, string, occupiedSpace * sizeof(char));
+	memcpy(allocPtr, string, occupiedSpace * sizeof(char));
 
 	/* update original pointers */
-	string = (char*) gtfo;
-	freeP = (char*) gtfo + occupiedSpace * sizeof(char);
+	string = (char*) allocPtr;
+	freeP = (char*) allocPtr + occupiedSpace * sizeof(char);
 
 }
 

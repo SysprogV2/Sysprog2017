@@ -1,3 +1,12 @@
+1231245616
+12123
+2323
+132463578333
+34534534
+45
+4545
+
+
 12345
 ABCDEFGHIJKLMNOPQRSTUVWXYZ
 abcdefghijklmnopqrstuvwxyz
@@ -8,10 +17,17 @@ abcdefghijklmnopqrstuvwxyz
 12345.12E-123
 
 dies ist ein :* 111 aaaa +- 1234.0 mod*: Kommentar
-
 print
 read
 printread
 readprint
-ABCDEFGHIJK$LMNOPQRSTUVWXYZ
+if
+while
+whileif
+ifwhile
+WHILEIF
+IF
+WHILe
+WHILE
+ABCDEFGHIJK&LMNOPQR
 

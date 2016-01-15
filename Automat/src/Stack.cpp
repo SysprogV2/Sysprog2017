@@ -19,7 +19,7 @@ Stack::Stack() {
 	void* tmp;
 	int error = posix_memalign(&tmp, 4096, MAX_TOKEN_SIZE);
 	if (error != 0) {
-	    std::cout << "Couldn't allocate memory for stack. Exiting..." << std::endl;
+	    std::cout << MEM_ALLOC_ERR << std::endl;
 	    exit(EXIT_FAILURE);
 	}
 	stack = (char*) tmp;
@@ -30,7 +30,13 @@ Stack::~Stack() {
 }
 
 void Stack::push(char c) {
-	stack[stackHead++] = c;
+	if (stackHead < MAX_TOKEN_SIZE) {
+		stack[stackHead++] = c;
+	} else {
+		std::cout << STACK_OVERFLOW_ERR << std::endl;
+		stackHead = 0;
+		stack[stackHead] = '\0';
+	}
 }
 
 void Stack::trim(int back) {

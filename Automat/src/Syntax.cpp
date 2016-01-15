@@ -24,12 +24,6 @@ int Syntax::getState(int i, int j) {
 }
 
 /*
- * checks if a character belongs to a group of "packed" chars
- * @return TRUE if it does
- */
-
-
-/*
  * finds a state for a given "packed" character
  * returns -1 if the char does NOT belong to a group
  *     of "packed" chars
