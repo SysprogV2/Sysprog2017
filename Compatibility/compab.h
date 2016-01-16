@@ -8,7 +8,7 @@
 #ifndef COMPATIBILITY_COMPAB_H_
 #define COMPATIBILITY_COMPAB_H_
 
-#ifndef nullptr
+#ifndef nullptr // skips if nullptr is a keyword?
 #define nullptr 0
 #endif
 

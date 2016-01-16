@@ -30,7 +30,7 @@
 #define TYPE_REFERENCE_TOKEN_EQUALS new Token (6, 0, 0)
 #define TYPE_REFERENCE_TOKEN_NOT_EQUALS new Token (7, 0, 0)
 #define TYPE_REFERENCE_TOKEN_AND new Token (22, 0, 0)
-#define EPSILON_TOKEN nullptr // TODO change to constructor of Epsilon Token
+#define EPSILON_TOKEN new Token (18, 0, 0)
 
 #define PFR friend class Parser;
 
@@ -39,79 +39,93 @@ protected:
 	static Token* epsToken;
 	static Token* bracketsToken;
 	static Token* minusToken;
+	static Token* integerToken;
+	static Token* identifierToken;
 public:
 	static void initStatic();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	virtual ~ParseTree() = 0;
 	// later: virtual bool typeCheck() = 0;
 	// later: virtual void makeCode() = 0;
+	PFR
 };
 
 class Prog : public ParseTree {
 public:
 	static void initStatic();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 };
 
 class Decls : public ParseTree {
 public:
 	static void initStatic();
-    static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+    static TokenTypeRegistry* first();
 };
 
 class Decl : public ParseTree {
 public:
 	static void initStatic();
-    static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+    static TokenTypeRegistry* first();
 };
 
 class Array : public ParseTree {
 public:
 	static void initStatic();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 };
 
 class Statements : public ParseTree {
 public:
 	static void initStatic();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 };
 
 class Statement : public ParseTree {
 public:
 	static void initStatic();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 };
 
 class Exp : public ParseTree {
 public:
 	static void initStatic();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 };
 
 class Exp2 : public ParseTree {
 public:
 	static void initStatic();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 };
 
 class Index : public ParseTree {
 public:
 	static void initStatic();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 };
 
 class OpExp : public ParseTree {
 public:
 	static void initStatic();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 };
 
 class Op : public ParseTree {
 public:
 	static void initStatic();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 };
 
 class ProgOnly : public Prog {
@@ -121,8 +135,8 @@ private:
 public:
 	static void initStatic();
 	ProgOnly();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~ProgOnly();
 	PFR
 };
@@ -134,8 +148,8 @@ private:
 public:
 	static void initStatic();
 	DeclsSeq();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~DeclsSeq();
 	PFR
 };
@@ -144,8 +158,8 @@ class DeclsEps : public Decls {
 public:
 	static void initStatic();
 	DeclsEps();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~DeclsEps();
 	PFR
 };
@@ -158,8 +172,8 @@ private:
 public:
 	static void initStatic();
 	DeclOnly();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~DeclOnly();
 	PFR
 };
@@ -171,8 +185,8 @@ private:
 public:
 	static void initStatic();
 	ArrayIndex();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~ArrayIndex();
 	PFR
 };
@@ -181,8 +195,8 @@ class ArrayEps : public Array {
 public:
 	static void initStatic();
 	ArrayEps();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~ArrayEps();
 	PFR
 };
@@ -194,8 +208,8 @@ private:
 public:
 	static void initStatic();
 	StatementsSeq();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~StatementsSeq();
 	PFR
 };
@@ -204,8 +218,8 @@ class StatementsEps : public Statements {
 public:
 	static void initStatic();
 	StatementsEps();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~StatementsEps();
 	PFR
 };
@@ -219,8 +233,8 @@ private:
 public:
 	static void initStatic();
 	StatementSetValue();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~StatementSetValue();
 	PFR
 };
@@ -232,8 +246,8 @@ private:
 public:
 	static void initStatic();
 	StatementWrite();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~StatementWrite();
 	PFR
 };
@@ -246,8 +260,8 @@ private:
 public:
 	static void initStatic();
 	StatementRead();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~StatementRead();
 	PFR
 };
@@ -259,8 +273,8 @@ private:
 public:
 	static void initStatic();
 	StatementBlock();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~StatementBlock();
 	PFR
 };
@@ -274,8 +288,8 @@ private:
 public:
 	static void initStatic();
 	StatementIfElse();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~StatementIfElse();
 	PFR
 };
@@ -288,8 +302,8 @@ private:
 public:
 	static void initStatic();
 	StatementWhile();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~StatementWhile();
 	PFR
 };
@@ -301,8 +315,8 @@ private:
 public:
 	static void initStatic();
 	ExpOnly();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~ExpOnly();
 	PFR
 };
@@ -314,8 +328,8 @@ private:
 public:
 	static void initStatic();
 	Exp2Nested();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~Exp2Nested();
 	PFR
 };
@@ -328,8 +342,8 @@ private:
 public:
 	static void initStatic();
 	Exp2Variable();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~Exp2Variable();
 	PFR
 };
@@ -341,8 +355,8 @@ private:
 public:
 	static void initStatic();
 	Exp2Constant();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~Exp2Constant();
 	PFR
 };
@@ -354,8 +368,8 @@ private:
 public:
 	static void initStatic();
 	Exp2NumericNegation();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~Exp2NumericNegation();
 	PFR
 };
@@ -367,8 +381,8 @@ private:
 public:
 	static void initStatic();
 	Exp2LogicalNegation();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~Exp2LogicalNegation();
 	PFR
 };
@@ -380,8 +394,8 @@ private:
 public:
 	static void initStatic();
 	IndexPosition();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~IndexPosition();
 };
 
@@ -389,8 +403,8 @@ class IndexEps : public Index {
 public:
 	static void initStatic();
 	IndexEps();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~IndexEps();
 	PFR
 };
@@ -401,8 +415,8 @@ class OpExpNext : public OpExp {
 public:
 	static void initStatic();
 	OpExpNext();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~OpExpNext();
 	PFR
 };
@@ -411,8 +425,8 @@ class OpExpEps : public OpExp {
 public:
 	static void initStatic();
 	OpExpEps();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~OpExpEps();
 	PFR
 };
@@ -423,8 +437,8 @@ private:
 public:
 	static void initStatic();
 	OpPlus();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~OpPlus();
 	PFR
 };
@@ -435,8 +449,8 @@ private:
 public:
 	static void initStatic();
 	OpMinus();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~OpMinus();
 	PFR
 };
@@ -447,8 +461,8 @@ private:
 public:
 	static void initStatic();
 	OpMult();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~OpMult();
 	PFR
 };
@@ -459,8 +473,8 @@ private:
 public:
 	static void initStatic();
 	OpDiv();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~OpDiv();
 	PFR
 };
@@ -471,8 +485,8 @@ private:
 public:
 	static void initStatic();
 	OpLess();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~OpLess();
 	PFR
 };
@@ -483,8 +497,8 @@ private:
 public:
 	static void initStatic();
 	OpGreater();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~OpGreater();
 	PFR
 };
@@ -495,8 +509,8 @@ private:
 public:
 	static void initStatic();
 	OpEquals();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~OpEquals();
 	PFR
 };
@@ -507,8 +521,8 @@ private:
 public:
 	static void initStatic();
 	OpNotEquals();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~OpNotEquals();
 	PFR
 };
@@ -519,8 +533,8 @@ private:
 public:
 	static void initStatic();
 	OpAnd();
-	static bool isMatching();
-	static TokenSequence* first();
+	static bool isMatching(TokenSequence* sequence);
+	static TokenTypeRegistry* first();
 	~OpAnd();
 	PFR
 };
