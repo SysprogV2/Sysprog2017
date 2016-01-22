@@ -113,9 +113,9 @@ long int Scanner::lexemToValue(char* lexem) {
 	char *pEnd;
 	value = strtol(lexem, &pEnd, 10);
 	if (errno == EINVAL) {
-		std::cout << CONV_ERR << std::endl;
+		std::cout << CONV_ERR << std::endl; // TODO actually throw the error
 	} else if (errno == ERANGE) {
-		std::cout << CONV_ERR_OVERFLOW << std::endl;
+		std::cout << CONV_ERR_OVERFLOW << std::endl; // TODO actually throw the error
 		errno = 0;
 	}
 	return value;

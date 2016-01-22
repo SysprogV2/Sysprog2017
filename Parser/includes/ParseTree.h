@@ -11,6 +11,7 @@
 #define PARSER_INCLUDES_PARSETREE_H_
 
 #include "TokenSequence.h"
+#include "Errors.h"
 
 #define TYPE_REFERENCE_TOKEN_INT new Token (32, 0, 0)
 #define TYPE_REFERENCE_TOKEN_BRACKETS_START new Token (28, 0, 0)
@@ -31,6 +32,8 @@
 #define TYPE_REFERENCE_TOKEN_NOT_EQUALS new Token (7, 0, 0)
 #define TYPE_REFERENCE_TOKEN_AND new Token (22, 0, 0)
 #define EPSILON_TOKEN new Token (18, 0, 0)
+#define IDENTIFIER_DEFAULT_TOKEN new Token (1, 0, 0)
+#define INTEGER_DEFAULT_TOKEN new Token (2, 0, 0)
 
 #define PFR friend class Parser;
 
@@ -41,6 +44,7 @@ protected:
 	static Token* minusToken;
 	static Token* integerToken;
 	static Token* identifierToken;
+	static IntQueue* splitIndexes;
 public:
 	static void initStatic();
 	static bool isMatching(TokenSequence* sequence);
@@ -63,6 +67,7 @@ public:
 	static void initStatic();
 	static bool isMatching(TokenSequence* sequence);
     static TokenTypeRegistry* first();
+    virtual bool isEps() = 0;
 };
 
 class Decl : public ParseTree {
@@ -77,6 +82,7 @@ public:
 	static void initStatic();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	virtual bool isEps() = 0;
 };
 
 class Statements : public ParseTree {
@@ -84,6 +90,7 @@ public:
 	static void initStatic();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	virtual bool isEps() = 0;
 };
 
 class Statement : public ParseTree {
@@ -112,6 +119,7 @@ public:
 	static void initStatic();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	virtual bool isEps() = 0;
 };
 
 class OpExp : public ParseTree {
@@ -119,6 +127,7 @@ public:
 	static void initStatic();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	virtual bool isEps() = 0;
 };
 
 class Op : public ParseTree {
@@ -150,6 +159,7 @@ public:
 	DeclsSeq();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool isEps();
 	~DeclsSeq();
 	PFR
 };
@@ -160,6 +170,7 @@ public:
 	DeclsEps();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool isEps();
 	~DeclsEps();
 	PFR
 };
@@ -187,6 +198,7 @@ public:
 	ArrayIndex();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool isEps();
 	~ArrayIndex();
 	PFR
 };
@@ -197,6 +209,7 @@ public:
 	ArrayEps();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool isEps();
 	~ArrayEps();
 	PFR
 };
@@ -210,6 +223,7 @@ public:
 	StatementsSeq();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool isEps();
 	~StatementsSeq();
 	PFR
 };
@@ -220,6 +234,7 @@ public:
 	StatementsEps();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool isEps();
 	~StatementsEps();
 	PFR
 };
@@ -396,7 +411,9 @@ public:
 	IndexPosition();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool isEps();
 	~IndexPosition();
+	PFR
 };
 
 class IndexEps : public Index {
@@ -405,6 +422,7 @@ public:
 	IndexEps();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool isEps();
 	~IndexEps();
 	PFR
 };
@@ -417,6 +435,7 @@ public:
 	OpExpNext();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool isEps();
 	~OpExpNext();
 	PFR
 };
@@ -427,6 +446,7 @@ public:
 	OpExpEps();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool isEps();
 	~OpExpEps();
 	PFR
 };

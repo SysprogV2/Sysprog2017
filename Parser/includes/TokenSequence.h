@@ -27,6 +27,7 @@ private:
 	int size;
 	int capacity;
 	int increment;
+	bool tokensReferenced;
 public:
 	TokenSequence (int initialCapacity, int initialIncrement);
 	TokenSequence (TokenSequence* other);
@@ -39,7 +40,8 @@ public:
 	void setIncrement (int nextIncrement);
 	int getSize();
 	TokenSequence* splitOn (int index, TokenSequence** subsequence2);
-	~TokenSequence (bool tokensReferenced = true);
+	void prepareDelete(bool tokensReferenced);
+	~TokenSequence ();
 };
 
 class TokenTypeRegistry {
@@ -65,6 +67,29 @@ public:
 	~TokenTypeRegistry();
 };
 
-
+class IntQueue {
+private:
+	class IntLinker {
+	private:
+		int value;
+		IntLinker* previous;
+		IntLinker* next;
+	public:
+		IntLinker();
+		~IntLinker();
+		friend class IntQueue;
+	};
+	int size;
+	IntLinker* first;
+	IntLinker* last;
+public:
+	IntQueue();
+	void push(int value);
+	void undoPushing(); // title is saying what the method is meant for, however it can be used for non-fetching front delete at any time
+	int pop(); // cannot be undone because it's a delete action
+	int fetch(); // nothing to undo, only a reading action
+	int getSize();
+	~IntQueue();
+};
 
 #endif /* PARSER_INCLUDES_TOKENSEQUENCE_H_ */

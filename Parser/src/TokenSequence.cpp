@@ -13,6 +13,7 @@ TokenSequence::TokenSequence(int initialCapacity, int initialIncrement) {
 	this->sequence = new Token* [this->capacity];
 	this->size = 0;
 	this->currentPos = 0;
+	this->tokensReferenced = true;
 }
 
 void TokenSequence::add (Token* token, bool setAsCurrent) {
@@ -85,8 +86,12 @@ TokenSequence* TokenSequence::splitOn(int index, TokenSequence** subsequence2) {
 	return subsequence1;
 }
 
-TokenSequence::~TokenSequence (bool tokensReferenced) {
-	this->clear(tokensReferenced);
+void TokenSequence::prepareDelete(bool tokensReferenced) {
+	this->tokensReferenced = tokensReferenced;
+}
+
+TokenSequence::~TokenSequence () {
+	this->clear(this->tokensReferenced);
 	delete[] this->sequence;
 }
 
@@ -182,4 +187,74 @@ void TokenTypeRegistry::uniteWith(TokenTypeRegistry* other) {
 
 TokenTypeRegistry::~TokenTypeRegistry() {
 	delete[] this->tokenTypes;
+}
+
+IntQueue::IntLinker::IntLinker() {
+	this->value = 0;
+	this->next = nullptr;
+	this->previous = nullptr;
+}
+
+IntQueue::IntLinker::~IntLinker() {
+	delete this->next;
+	delete this->previous;
+}
+
+IntQueue::IntQueue() {
+	this->size = 0;
+	this->first = nullptr;
+	this->last = nullptr;
+}
+
+void IntQueue::push(int value){
+	IntLinker* temp = this->last;
+	this->last = new IntLinker();
+	this->last->value = value;
+	this->last->next = nullptr;
+	if (this->size++ == 0) {
+		this->first = this->last;
+		this->first->previous = nullptr;
+	} else {
+		temp->next = this->last;
+		this->last->previous = temp;
+	}
+}
+
+void IntQueue::undoPushing() {
+	if (this->size == 0) return;
+	if (this->size-- == 1 ) {
+		delete this->first;
+		delete this->last;
+	} else {
+		this->last = this->last->previous;
+		this->last->next->previous = nullptr;
+		delete this->last->next;
+	}
+}
+
+int IntQueue::pop() {
+	if (this->size == 0) return 0;
+	int temp = this->first->value;
+	if (this->size-- == 1 ) {
+		delete this->first;
+		delete this->last;
+	} else {
+		this->first = this->first->next;
+		this->first->previous->next = nullptr;
+		delete this->first->previous;
+	}
+	return temp;
+}
+
+int IntQueue::fetch() {
+	return this->first->value;
+}
+
+int IntQueue::getSize() {
+	return this->size;
+}
+
+IntQueue::~IntQueue() {
+	delete this->first;
+	delete this->last;
 }
