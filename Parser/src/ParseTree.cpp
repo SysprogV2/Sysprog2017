@@ -11,6 +11,9 @@ void ParseTree::initStatic() { // to be called on Parser launch
 	ParseTree::epsToken = EPSILON_TOKEN;
 	ParseTree::bracketsToken = TYPE_REFERENCE_TOKEN_BRACKETS_START;
 	ParseTree::minusToken = TYPE_REFERENCE_TOKEN_MINUS;
+	ParseTree::identifierToken = IDENTIFIER_DEFAULT_TOKEN;
+	ParseTree::integerToken = INTEGER_DEFAULT_TOKEN;
+	ParseTree::splitIndexes = new IntQueue();
 	Prog::initStatic();
 }
 
@@ -236,11 +239,13 @@ void ProgOnly::initStatic() {
 	Statements::initStatic();
 }
 
+
 bool ProgOnly::isMatching(TokenSequence* sequence) {
 	TokenSequence* sub1 = nullptr;
 	TokenSequence* sub2 = nullptr;
 	for (int i = -1; i <= sequence->getSize(); i++) {
 		sub1 = sequence->splitOn(i, &sub2);
+		ParseTree::splitIndexes->push(i);
 		if (Decls::isMatching(sub1) && Statements::isMatching(sub2)) {
 			delete sub1;
 			delete sub2;
@@ -248,6 +253,7 @@ bool ProgOnly::isMatching(TokenSequence* sequence) {
 		} else {
 			delete sub1;
 			delete sub2;
+			ParseTree::splitIndexes->undoPushing();
 		}
 	}
 	return false;
@@ -279,10 +285,11 @@ bool DeclsSeq::isMatching(TokenSequence* sequence) {
 	TokenSequence* sub2 = nullptr;
 	TokenSequence* sub3 = nullptr;
 	TokenSequence* sub4 = nullptr;
-	int semicolonTokenType = 0; // TODO change to actual type of Semicolon Token
+	const int semicolonTokenType = 23;
 	for (int i = 0; i < sequence->getSize(); i++) {
 		sub1 = sequence->splitOn(i, &sub2);
 		sub3 = sub2->splitOn(0, &sub4);
+		ParseTree::splitIndexes->push(i);
 		if (Decl::isMatching(sub1) && sub3->tokenAt(0, false)->getType() == semicolonTokenType && Decls::isMatching(sub4)) {
 			delete sub1;
 			delete sub2;
@@ -294,6 +301,7 @@ bool DeclsSeq::isMatching(TokenSequence* sequence) {
 			delete sub2;
 			delete sub3;
 			delete sub4;
+			ParseTree::splitIndexes->undoPushing();
 		}
 	}
 	return false;
@@ -306,6 +314,10 @@ DeclsSeq::DeclsSeq() {
 
 TokenTypeRegistry* DeclsSeq::first() {
 	return Decl::first(); // no Epsilon in Decl::first()
+}
+
+bool DeclsSeq::isEps() {
+	return false;
 }
 
 DeclsSeq::~DeclsSeq() {
@@ -330,6 +342,10 @@ TokenTypeRegistry* DeclsEps::first() {
 	return registry;
 }
 
+bool DeclsEps::isEps() {
+	return true;
+}
+
 DeclsEps::~DeclsEps() {}
 
 void DeclOnly::initStatic() {
@@ -339,25 +355,19 @@ void DeclOnly::initStatic() {
 
 bool DeclOnly::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 2) return false;
-	TokenSequence* subPostInt = nullptr;
-	TokenSequence* useless1 = sequence->splitOn(1, &subPostInt);
-	TokenSequence* useless2 = nullptr;
-	TokenSequence* array = subPostInt->splitOn(subPostInt->getSize() - 2, &useless2);
-	int semicolonTokenType = 0; // TODO change to actual type of Semicolon Token
+	TokenSequence* array = nullptr;
+	TokenSequence* useless1 = sequence->splitOn(1, &array);
 	bool result = sequence->tokenAt(0, false)->getType() == DeclOnly::firstToken->getType()
 			&& sequence->tokenAt(1, false)->getType() == ParseTree::identifierToken->getType()
-			&& Array::isMatching(array)
-			&& sequence->tokenAt(sequence->getSize()-1,false)->getType() == semicolonTokenType;
+			&& Array::isMatching(array);
 	delete useless1;
-	delete useless2;
-	delete subPostInt;
 	delete array;
 	return result;
 }
 
 DeclOnly::DeclOnly() {
-	this->identifier = nullptr; // will be set by Parser in the next isMatching() step
-	this->size = nullptr; // will be set by Parser in the next isMatching() step
+	this->identifier = nullptr; // will be set by Parser in the next first() step
+	this->size = nullptr; // will be set by Parser in the next first() step
 }
 
 TokenTypeRegistry* DeclOnly::first() {
@@ -376,7 +386,7 @@ void ArrayIndex::initStatic() {
 }
 
 bool ArrayIndex::isMatching(TokenSequence* sequence) {
-	int bracketsEndTokenType = 0; // TODO change to actual type of Brackets] Token
+	const int bracketsEndTokenType = 29;
 	return sequence->getSize() == 3
 			&& sequence->tokenAt(0, false)->getType() == ArrayIndex::firstToken->getType()
 			&& sequence->tokenAt(1, false)->getType() == ParseTree::integerToken->getType()
@@ -385,6 +395,10 @@ bool ArrayIndex::isMatching(TokenSequence* sequence) {
 
 ArrayIndex::ArrayIndex() {
 	this->integer = nullptr;
+}
+
+bool ArrayIndex::isEps() {
+	return false;
 }
 
 TokenTypeRegistry* ArrayIndex::first() {
@@ -414,6 +428,10 @@ TokenTypeRegistry* ArrayEps::first() {
 	return sequence;
 }
 
+bool ArrayEps::isEps() {
+	return true;
+}
+
 ArrayEps::~ArrayEps() {}
 
 void StatementsSeq::initStatic() {
@@ -426,10 +444,11 @@ bool StatementsSeq::isMatching(TokenSequence* sequence) {
 	TokenSequence* sub2 = nullptr;
 	TokenSequence* sub3 = nullptr;
 	TokenSequence* sub4 = nullptr;
-	int semicolonTokenType = 0; // TODO change to actual type of Semicolon Token
+	int semicolonTokenType = 23;
 	for (int i = 0; i < sequence->getSize(); i++) {
 		sub1 = sequence->splitOn(i, &sub2);
 		sub3 = sub2->splitOn(0, &sub4);
+		ParseTree::splitIndexes->push(i);
 		if (Statement::isMatching(sub1) && sub3->tokenAt(0, false)->getType() == semicolonTokenType && Statements::isMatching(sub4)) {
 			delete sub1;
 			delete sub2;
@@ -441,6 +460,7 @@ bool StatementsSeq::isMatching(TokenSequence* sequence) {
 			delete sub2;
 			delete sub3;
 			delete sub4;
+			ParseTree::splitIndexes->undoPushing();
 		}
 	}
 	return false;
@@ -453,6 +473,10 @@ StatementsSeq::StatementsSeq() {
 
 TokenTypeRegistry* StatementsSeq::first() {
 	return Statement::first();
+}
+
+bool StatementsSeq::isEps() {
+	return false;
 }
 
 StatementsSeq::~StatementsSeq() {
@@ -477,10 +501,14 @@ TokenTypeRegistry* StatementsEps::first() {
 	return sequence;
 }
 
+bool StatementsEps::isEps() {
+	return true;
+}
+
 StatementsEps::~StatementsEps() {}
 
 void StatementSetValue::initStatic() {
-	// TODO initialize defaultIdentifier
+	StatementSetValue::defaultIdentifier = ParseTree::identifierToken;
 	Index::initStatic();
 	Exp::initStatic();
 }
@@ -493,16 +521,32 @@ bool StatementSetValue::isMatching(TokenSequence* sequence) {
 	TokenSequence* sub4 = nullptr;
 	TokenSequence* sub5 = nullptr;
 	TokenSequence* sub6 = nullptr;
-	int paranthType = 0; // TODO set to actual Token type of "("
-	int assignType = 0; // TODO set to actual Token type of ":="
-	sub1 = sequence->splitOn(1, &sub2);
+	const int assignType = 10;
+	sub1 = sequence->splitOn(0, &sub2);
 	if (sub1->tokenAt(0, false)->getType() != StatementSetValue::defaultIdentifier->getType()) return false;
-	if (sub1->tokenAt(1, false)->getType() !=paranthType) return false;
 	for (int i = 0; i < sub2->getSize(); i++) {
 		sub3 = sub2->splitOn(i, &sub4);
 		sub5 = sub4->splitOn(0, &sub6);
-		if (Index::isMatching(sub3) && sub5->tokenAt(0, false)->getType() == assignType && Exp::isMatching(sub6)) return true;
+		ParseTree::splitIndexes->push(i);
+		if (Index::isMatching(sub3) && sub5->tokenAt(0, false)->getType() == assignType && Exp::isMatching(sub6)) {
+			delete sub1;
+			delete sub2;
+			delete sub3;
+			delete sub4;
+			delete sub5;
+			delete sub6;
+			return true;
+		}
+		else {
+			delete sub3;
+			delete sub4;
+			delete sub5;
+			delete sub6;
+			ParseTree::splitIndexes->undoPushing();
+		}
 	}
+	delete sub1;
+	delete sub2;
 	return false;
 }
 
@@ -534,8 +578,8 @@ bool StatementWrite::isMatching(TokenSequence* sequence) {
 	TokenSequence* preExp = sequence->splitOn(1, &exp);
 	TokenSequence* postExp = nullptr;
 	TokenSequence* actualExp = exp->splitOn(exp->getSize() - 2, &postExp);
-	int paranthType1 = 0; // TODO change to actual type of "("
-	int paranthType2 = 0; // TODO change to actual type of ")"
+	const int paranthType1 = 24;
+	const int paranthType2 = 25;
 	bool result = sequence->tokenAt(0, false)->getType() == StatementWrite::firstToken->getType()
 			&& sequence->tokenAt(1, false)->getType() == paranthType1
 			&& Exp::isMatching(actualExp)
@@ -569,13 +613,14 @@ bool StatementRead::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 4) return false;
 	TokenSequence* sub = nullptr;
 	TokenSequence* post = nullptr;
-	TokenSequence* pre = sequence->splitOn(1, &sub);
+	TokenSequence* pre = sequence->splitOn(2, &sub);
 	TokenSequence* core = sub->splitOn(sub->getSize()-2, &post);
-	int paranthType1 = 0; // TODO change to actual type of "("
-	int paranthType2 = 0; // TODO change to actual type of ")"
+	const int paranthType1 = 24;
+	const int paranthType2 = 25;
 	bool result = sequence->tokenAt(0, false)->getType() == StatementRead::firstToken->getType()
 				&& sequence->tokenAt(1, false)->getType() == paranthType1
-				&& Exp::isMatching(core)
+				&& sequence->tokenAt(2, false)->hasSameTypeAs(ParseTree::identifierToken)
+				&& Index::isMatching(core)
 				&& sequence->tokenAt(sequence->getSize()-1, false)->getType() == paranthType2;
 	delete sub;
 	delete pre;
@@ -610,15 +655,15 @@ bool StatementBlock::isMatching(TokenSequence* sequence) {
 	TokenSequence* brace1 = sequence->splitOn(0, &suffix);
 	TokenSequence* brace2 = nullptr;
 	TokenSequence* core = suffix->splitOn(suffix->getSize() - 2, &brace2);
-	bool isCoreExp = Exp::isMatching(core);
-	int braceCloseType = 0; // TODO set to
+	bool isCoreStatements = Statements::isMatching(core);
+	const int braceCloseType = 27;
 	delete suffix;
 	delete brace1;
 	delete core;
 	delete brace2;
 	return sequence->tokenAt(0, false)->hasSameTypeAs(StatementBlock::firstToken)
 			&& sequence->tokenAt(sequence->getSize()-1, false)->getType() == braceCloseType
-			&& isCoreExp;
+			&& isCoreStatements;
 }
 
 StatementBlock::StatementBlock() {
@@ -652,18 +697,22 @@ bool StatementIfElse::isMatching(TokenSequence* sequence) {
 	TokenSequence* endOfIf = nullptr;
 	TokenSequence* core = nullptr;
 	TokenSequence* ifStatement = nullptr;
-	int elseType = 0; // TODO type of "else"
-	int paranthStartType = 0; // TODO type of "}"
-	int paranthEndType = 0; // TODO type of ")"
+	const int elseType = 34;
+	const int paranthStartType = 24;
+	const int paranthEndType = 25;
 	bool currentOperationSucceeded = false;
 	// try to locate the Else block
 	for (int i = 1; i <= sequence->getSize(); i++) {
 		majorPrefix = sequence->splitOn(sequence->getSize()-i, &elseStatement);
+		ParseTree::splitIndexes->push(i);
 		currentOperationSucceeded = (majorPrefix->tokenAt(majorPrefix->getSize()-1, false)->getType() == elseType
 									&& Statement::isMatching(elseStatement));
 		delete elseStatement;
 		if (currentOperationSucceeded) break;
-		else delete majorPrefix;
+		else {
+			delete majorPrefix;
+			ParseTree::splitIndexes->undoPushing();
+		}
 	}
 	if (!currentOperationSucceeded) return false;
 	// try to locate If block
@@ -681,22 +730,25 @@ bool StatementIfElse::isMatching(TokenSequence* sequence) {
 	for (int i = 0; i < semiCore->getSize() - 2; i++) {
 		currentOperationSucceeded = true;
 		ifExpression = semiCore->splitOn(i, &endOfIf);
+		delete semiCore;
+		ParseTree::splitIndexes->push(i);
 		if (!Exp::isMatching(ifExpression)) {
 			delete ifExpression;
-			delete semiCore;
 			delete endOfIf;
 			currentOperationSucceeded = false;
+			ParseTree::splitIndexes->undoPushing();
 			continue;
 		}
 		delete ifExpression;
-		delete semiCore;
 		core = endOfIf->splitOn(0, &ifStatement);
 		if (core->tokenAt(0, false)->getType() != paranthEndType || !Statement::isMatching(ifStatement)) currentOperationSucceeded = false;
 		delete endOfIf;
 		delete core;
 		delete ifStatement;
 		if (currentOperationSucceeded) break;
+		else ParseTree::splitIndexes->undoPushing();
 	}
+	delete semiCore;
 	return currentOperationSucceeded;
 }
 
@@ -724,8 +776,8 @@ void StatementWhile::initStatic() {
 
 bool StatementWhile::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 6) return false;
-	int paranthStartType = 0; // TODO type of "("
-	int paranthEndType = 0; // TODO type of ")"
+	const int paranthStartType = 24;
+	const int paranthEndType = 25;
 	if (!sequence->tokenAt(0, false)->hasSameTypeAs(StatementWhile::firstToken)) return false;
 	if (sequence->tokenAt(1, false)->getType() != paranthStartType) return false;
 	TokenSequence* remainings = nullptr;
@@ -738,6 +790,7 @@ bool StatementWhile::isMatching(TokenSequence* sequence) {
 		exp = remainings->splitOn(i, &parStat);
 		paranth = parStat->splitOn(0, &statement);
 		delete parStat;
+		ParseTree::splitIndexes->push(i);
 		if (Exp::isMatching(exp)
 		    && paranth->tokenAt(0, false) == paranthEndType
 			&& Statement::isMatching(statement)) {
@@ -746,6 +799,7 @@ bool StatementWhile::isMatching(TokenSequence* sequence) {
 			delete statement;
 			return true;
 		}
+		ParseTree::splitIndexes->undoPushing();
 	}
 	return false;
 }
@@ -778,10 +832,12 @@ bool ExpOnly::isMatching(TokenSequence* sequence) {
 	bool combinationFound = false;
 	for (int i = 0; i < sequence->getSize(); i++) {
 		firstExp = sequence->splitOn(i, &operatingUnit);
+		ParseTree::splitIndexes->push(i);
 		combinationFound = (Exp2::isMatching(firstExp) && OpExp::isMatching(operatingUnit));
 		delete firstExp;
 		delete operatingUnit;
-		if (combinationFound) break;
+		if (combinationFound)break;
+		ParseTree::splitIndexes->undoPushing();
 	}
 	return combinationFound;
 }
@@ -806,7 +862,7 @@ void Exp2Nested::initStatic() {
 
 bool Exp2Nested::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 3) return false;
-	int paranthEndType = 0; // TODO type of ")"
+	const int paranthEndType = 25;
 	TokenSequence* end = nullptr;
 	TokenSequence* beginParanth = sequence->splitOn(0, &end);
 	TokenSequence* endParanth = nullptr;
@@ -839,7 +895,7 @@ Exp2Nested::~Exp2Nested() {
 }
 
 void Exp2Variable::initStatic() {
-	// TODO initialize defaultIdentifier
+	Exp2Variable::defaultIdentifier = ParseTree::identifierToken;
 }
 
 bool Exp2Variable::isMatching(TokenSequence* sequence) {
@@ -873,7 +929,7 @@ Exp2Variable::~Exp2Variable() {
 }
 
 void Exp2Constant::initStatic() {
-	// TODO initialize defaultInteger
+	Exp2Constant::defaultInteger = ParseTree::integerToken;
 }
 
 bool Exp2Constant::isMatching(TokenSequence* sequence) {
@@ -965,7 +1021,7 @@ void IndexPosition::initStatic() {
 
 bool IndexPosition::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 3) return false;
-	int bracketEndType = 0; // TODO type of ")"
+	const int bracketEndType = 29;
 	TokenSequence* end = nullptr;
 	TokenSequence* beginBracket = sequence->splitOn(0, &end);
 	TokenSequence* endBracket = nullptr;
@@ -985,6 +1041,10 @@ bool IndexPosition::isMatching(TokenSequence* sequence) {
 
 IndexPosition::IndexPosition() {
 	this->index = nullptr;
+}
+
+bool IndexPosition::isEps() {
+	return false;
 }
 
 TokenTypeRegistry* IndexPosition::first() {
@@ -1014,6 +1074,10 @@ TokenTypeRegistry* IndexEps::first() {
 	return sequence;
 }
 
+bool IndexEps::isEps() {
+	return true;
+}
+
 IndexEps::~IndexEps() {}
 
 void OpExpNext::initStatic() {
@@ -1038,6 +1102,10 @@ TokenTypeRegistry* OpExpNext::first() {
 	return Op::first();
 }
 
+bool OpExpNext::isEps() {
+	return false;
+}
+
 OpExpNext::~OpExpNext() {
 	delete this->Operator;
 	delete this->operand;
@@ -1058,6 +1126,10 @@ TokenTypeRegistry* OpExpEps::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set (ParseTree::epsToken);
 	return sequence;
+}
+
+bool OpExpEps::isEps() {
+	return true;
 }
 
 OpExpEps::~OpExpEps() {}

@@ -9,17 +9,22 @@
 #define PARSER_INCLUDES_PARSER_H_
 
 #include "ParseTree.h"
+#include "../../Scanner/includes/Scanner.h"
 
 class Parser {
 private:
 	// might be incomplete
 	TokenSequence* currentCodeSnippet;
-	TokenSequence* composeTable();
+	TokenSequence* composeTable(char* filename);
+	void buildDecl (Decl** toBuild, TokenSequence* relatedSequence);
+	void buildStatement (Statement** toBuild, TokenSequence* relatedSequence);
+	Index* buildIndex(TokenSequence* related);
+	Exp* buildExp(TokenSequence* related);
+	Exp2* buildExp2(TokenSequence* related);
 public:
-	Parser();
+	Parser(char* filename);
 	ParseTree* parse();
 	~Parser();
 };
-
 
 #endif /* PARSER_INCLUDES_PARSER_H_ */

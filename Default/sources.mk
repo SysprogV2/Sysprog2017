@@ -23,11 +23,11 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-. \
-Symboltable/src \
-Scanner/src \
-Parser/src \
-Buffer/src \
-Automat/src \
 .metadata/.plugins/org.eclipse.cdt.make.core \
+Automat/src \
+Buffer/src \
+Parser/src \
+Scanner/src \
+Symboltable/src \
+. \
 

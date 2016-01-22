@@ -4,13 +4,22 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../Parser/src/ParseTree.cpp 
+../Parser/src/Errors.cpp \
+../Parser/src/ParseTree.cpp \
+../Parser/src/Parser.cpp \
+../Parser/src/TokenSequence.cpp 
 
 OBJS += \
-./Parser/src/ParseTree.o 
+./Parser/src/Errors.o \
+./Parser/src/ParseTree.o \
+./Parser/src/Parser.o \
+./Parser/src/TokenSequence.o 
 
 CPP_DEPS += \
-./Parser/src/ParseTree.d 
+./Parser/src/Errors.d \
+./Parser/src/ParseTree.d \
+./Parser/src/Parser.d \
+./Parser/src/TokenSequence.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
