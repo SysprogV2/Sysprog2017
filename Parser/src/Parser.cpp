@@ -15,6 +15,7 @@ Parser::Parser(char* filename) {
 ParseTree* Parser::parse() {
 	if (!ProgOnly::isMatching(this->currentCodeSnippet)) {
 		throwError(INVALID_SEMANTICS);
+		std::cout << "Wrong" <<std::endl;
 	}
 	// if it does match, the entire code (in the test file) is OK and all dynamic indexes the Parser must split the sequence on are in ParseTree::splitIndexes
 	ProgOnly* prog = new ProgOnly();
@@ -32,7 +33,7 @@ ParseTree* Parser::parse() {
 			semicolon = rest0->splitOn(0, &otherDeclarations);
 			((DeclsSeq*) currentDecls)->firstDeclaration = new DeclOnly();
 			this->buildDecl(&(((DeclsSeq*)currentDecls)->firstDeclaration), singleDeclaration);
-			((DeclsSeq*) currentDecls)->restOfDeclarations = (otherDeclarations->getSize() == 0 ? (new DeclsSeq()) : (new DeclsEps()));
+			((DeclsSeq*) currentDecls)->restOfDeclarations = (otherDeclarations->getSize() == 0 ? ((Decls*)new DeclsSeq()) : ((Decls*)new DeclsEps()));
 			delete singleDeclaration;
 			delete rest0;
 			delete semicolon;
@@ -54,7 +55,7 @@ ParseTree* Parser::parse() {
 			singleStatement = statementPart->splitOn(ParseTree::splitIndexes->pop(), &rest0);
 			semicolon = rest0->splitOn(0, &otherStatements);
 			this->buildStatement(&(((StatementsSeq*)currentStatements)->firstStatement), singleStatement);
-			((StatementsSeq*) currentStatements)->restOfStatements = (otherStatements->getSize() == 0 ? (new DeclsSeq()) : (new DeclsEps()));
+			((StatementsSeq*) currentStatements)->restOfStatements = (otherStatements->getSize() == 0 ? ((Statements*)new StatementsSeq()) : ((Statements*)new StatementsEps()));
 			delete singleStatement;
 			delete rest0;
 			delete semicolon;
@@ -162,7 +163,7 @@ void Parser::buildStatement(Statement** toBuild, TokenSequence* relatedSequence)
 				singleStatement = statementCore->splitOn(ParseTree::splitIndexes->pop(), &rest0);
 				semicolon = rest0->splitOn(0, &otherStatements);
 				this->buildStatement(&(((StatementsSeq*)currentStatements)->firstStatement), singleStatement);
-				((StatementsSeq*) currentStatements)->restOfStatements = (otherStatements->getSize() == 0 ? (new DeclsSeq()) : (new DeclsEps()));
+				((StatementsSeq*) currentStatements)->restOfStatements = (otherStatements->getSize() == 0 ? ((Statements*)new StatementsSeq()) : ((Statements*)new StatementsEps()));
 				delete singleStatement;
 				delete rest0;
 				delete semicolon;

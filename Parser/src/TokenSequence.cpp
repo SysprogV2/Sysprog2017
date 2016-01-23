@@ -18,7 +18,7 @@ TokenSequence::TokenSequence(int initialCapacity, int initialIncrement) {
 
 void TokenSequence::add (Token* token, bool setAsCurrent) {
 	if (this->size == this->capacity) {
-		Token* temp[] = this->sequence;
+		Token** temp = this->sequence;
 		this->capacity += this->increment;
 		this->sequence = new Token* [this->capacity];
 		for (int i = 0; i < this->size; i++) {
@@ -137,6 +137,7 @@ bool TokenTypeRegistry::isSet (Token* token) {
 }
 
 bool TokenTypeRegistry::areSet (TokenSequence* sequence, CheckoutMode mode) {
+	int registeredTokens = 0;
 	switch (mode) {
 	case AND:
 		for (int i = 0; i < sequence->getSize(); i++) {
@@ -159,17 +160,17 @@ bool TokenTypeRegistry::areSet (TokenSequence* sequence, CheckoutMode mode) {
 		}
 		return false;
 	case XOR:
-		int registeredTokens = 0;
 		for (int i = 0; i < sequence->getSize(); i++) {
 			if (this->isSet(sequence->tokenAt(i, false))) registeredTokens++;
 		}
 		return registeredTokens % 2 == 1;
 	case XNOR:
-		int registeredTokens = 0;
 		for (int i = 0; i < sequence->getSize(); i++) {
 			if (this->isSet(sequence->tokenAt(i, false))) registeredTokens++;
 		}
 		return registeredTokens % 2 == 0;
+	default:
+		return false;
 	}
 }
 

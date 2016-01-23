@@ -423,8 +423,8 @@ bool ArrayEps::isMatching(TokenSequence* sequence) {
 ArrayEps::ArrayEps() {}
 
 TokenTypeRegistry* ArrayEps::first() {
-	TokenTypeRegistry sequence = new TokenTypeRegistry ();
-	sequence.set (ParseTree::epsToken);
+	TokenTypeRegistry *sequence = new TokenTypeRegistry ();
+	sequence->set (ParseTree::epsToken);
 	return sequence;
 }
 
@@ -596,8 +596,8 @@ StatementWrite::StatementWrite() {
 }
 
 TokenTypeRegistry* StatementWrite::first() {
-	TokenTypeRegistry sequence = new TokenTypeRegistry ();
-	sequence.set(StatementWrite::firstToken);
+	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
+	sequence->set(StatementWrite::firstToken);
 	return sequence;
 }
 
@@ -635,8 +635,8 @@ StatementRead::StatementRead() {
 }
 
 TokenTypeRegistry* StatementRead::first() {
-	TokenTypeRegistry sequence = new TokenTypeRegistry ();
-	sequence.set(StatementRead::firstToken);
+	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
+	sequence->set(StatementRead::firstToken);
 	return sequence;
 }
 
@@ -671,8 +671,8 @@ StatementBlock::StatementBlock() {
 }
 
 TokenTypeRegistry* StatementBlock::first() {
-	TokenTypeRegistry sequence = new TokenTypeRegistry();
-	sequence.set(StatementBlock::firstToken);
+	TokenTypeRegistry *sequence = new TokenTypeRegistry();
+	sequence->set(StatementBlock::firstToken);
 	return sequence;
 }
 
@@ -759,8 +759,8 @@ StatementIfElse::StatementIfElse() {
 }
 
 TokenTypeRegistry* StatementIfElse::first() {
-	TokenTypeRegistry sequence = new TokenTypeRegistry ();
-	sequence.set(StatementIfElse::firstToken);
+	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
+	sequence->set(StatementIfElse::firstToken);
 	return sequence;
 }
 
@@ -792,7 +792,7 @@ bool StatementWhile::isMatching(TokenSequence* sequence) {
 		delete parStat;
 		ParseTree::splitIndexes->push(i);
 		if (Exp::isMatching(exp)
-		    && paranth->tokenAt(0, false) == paranthEndType
+		    && paranth->tokenAt(0, false)->getType() == paranthEndType
 			&& Statement::isMatching(statement)) {
 			delete exp;
 			delete paranth;
@@ -810,8 +810,8 @@ StatementWhile::StatementWhile() {
 }
 
 TokenTypeRegistry* StatementWhile::first() {
-	TokenTypeRegistry sequence = new TokenTypeRegistry ();
-	sequence.set(StatementWhile::firstToken);
+	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
+	sequence->set(StatementWhile::firstToken);
 	return sequence;
 }
 
@@ -885,8 +885,8 @@ Exp2Nested::Exp2Nested() {
 }
 
 TokenTypeRegistry* Exp2Nested::first() {
-	TokenTypeRegistry sequence = new TokenTypeRegistry ();
-	sequence.set(Exp2Nested::firstToken);
+	TokenTypeRegistry *sequence = new TokenTypeRegistry ();
+	sequence->set(Exp2Nested::firstToken);
 	return sequence;
 }
 
@@ -974,8 +974,8 @@ Exp2NumericNegation::Exp2NumericNegation() {
 }
 
 TokenTypeRegistry* Exp2NumericNegation::first() {
-	TokenTypeRegistry sequence = new TokenTypeRegistry ();
-	sequence.set(Exp2NumericNegation::firstToken);
+	TokenTypeRegistry *sequence = new TokenTypeRegistry ();
+	sequence->set(Exp2NumericNegation::firstToken);
 	return sequence;
 }
 
@@ -1006,8 +1006,8 @@ Exp2LogicalNegation::Exp2LogicalNegation() {
 }
 
 TokenTypeRegistry* Exp2LogicalNegation::first() {
-	TokenTypeRegistry sequence = new TokenTypeRegistry ();
-	sequence.set(Exp2LogicalNegation::firstToken);
+	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
+	sequence->set(Exp2LogicalNegation::firstToken);
 	return sequence;
 }
 
@@ -1048,8 +1048,8 @@ bool IndexPosition::isEps() {
 }
 
 TokenTypeRegistry* IndexPosition::first() {
-	TokenTypeRegistry sequence = new TokenTypeRegistry ();
-	sequence.set(IndexPosition::firstToken);
+	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
+	sequence->set(IndexPosition::firstToken);
 	return sequence;
 }
 

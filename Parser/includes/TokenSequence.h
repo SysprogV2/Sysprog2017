@@ -22,7 +22,7 @@ typedef enum {
 
 class TokenSequence {
 private:
-	Token* sequence[];
+	Token** sequence;
 	int currentPos;
 	int size;
 	int capacity;
@@ -46,7 +46,7 @@ public:
 
 class TokenTypeRegistry {
 private:
-	bool tokenTypes[];
+	bool* tokenTypes;
 	const int size = 36;
 public:
 	TokenTypeRegistry();
