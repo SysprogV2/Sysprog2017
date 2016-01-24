@@ -30,6 +30,7 @@ public:
 	int hash(char *lexem);
 	SymtabEntry* insert(char *lexem, int size);
 	Information* lookup(char* lexem);
+	void attachType (char* lexem, CheckableType type);
 	void initSymbols();
 	void print();
 };

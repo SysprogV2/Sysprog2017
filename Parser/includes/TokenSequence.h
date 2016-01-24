@@ -10,6 +10,8 @@
 
 #include "../../Compatibility/compab.h"
 #include "../../Scanner/includes/Token.h"
+#include <iostream>
+#include <fstream>
 
 typedef enum {
 	AND,
@@ -19,6 +21,11 @@ typedef enum {
 	XOR,
 	XNOR
 }CheckoutMode;
+
+typedef struct {
+	char* streamID;
+	std::ofstream stream;
+}IdentifiableStream;
 
 class TokenSequence {
 private:
@@ -91,5 +98,16 @@ public:
 	int getSize();
 	~IntQueue();
 };
+
+class LabelFactory {
+private:
+	int currentLabelNo;
+public:
+	LabelFactory(int firstLabelNo);
+	int newLabel();
+	~LabelFactory();
+};
+
+const char* getFilepathByID(char* filestreamID);
 
 #endif /* PARSER_INCLUDES_TOKENSEQUENCE_H_ */

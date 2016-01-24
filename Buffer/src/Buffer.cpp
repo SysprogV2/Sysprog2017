@@ -8,6 +8,11 @@
 Buffer::~Buffer() {
 	/* Close file descriptor */
 	close(fd);
+	// Close all output filestreams and delete stream array
+	for (int i = 0; i < this->containedStreams; i++) {
+		this->outputStreams[i].stream.close();
+	}
+	delete[] this->outputStreams;
 }
 
 Buffer::Buffer(char *pathToFile) {
@@ -17,6 +22,9 @@ Buffer::Buffer(char *pathToFile) {
 	shift = 0;
 	isAnymoreToRead = true;
 	shouldLoadNewPortion = true;
+	outputStreams = new IdentifiableStream[5]; // actually a size of 2 would suffice but let's say 5 to keep it general
+	maximumOfOutstreams = 5;
+	containedStreams = 0;
 }
 
 char Buffer::getChar() {
@@ -84,3 +92,27 @@ void Buffer::allocateBufferMemory() {
 	    next = buffer1;
 }
 
+void Buffer::printInStream(char* toPrint, char* streamID) {
+	IdentifiableStream outstream;
+	bool streamFound = false;
+	// try finding a stream with the given ID in the array of stored streams
+	for (int i = 0; i < this->containedStreams; i++) {
+		if (this->outputStreams[i].streamID == streamID) {
+			outstream = this->outputStreams[i];
+			streamFound = true;
+			break;
+		}
+	}
+	if (!streamFound) {
+		// open new stream and store it, or throw an error if it cannot be stored
+		if (&& this->containedStreams < this->maximumOfOutstreams) {
+			outstream.streamID = streamID;
+			outstream.stream.open(getFilepathByID(streamID));
+			this->outputStreams[this->containedStreams++] = outstream;
+		} else {
+			// TODO throw error with message "Could not store another output filestream"
+		}
+	}
+	// print the given text into the stream
+	outstream.stream << toPrint;
+}

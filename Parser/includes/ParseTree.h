@@ -12,6 +12,8 @@
 
 #include "TokenSequence.h"
 #include "Errors.h"
+#include "../../Symboltable/includes/Symboltable.h"
+#include "../../Buffer/includes/Buffer.h"
 
 #define TYPE_REFERENCE_TOKEN_INT new Token (32, 0, 0)
 #define TYPE_REFERENCE_TOKEN_BRACKETS_START new Token (28, 0, 0)
@@ -37,6 +39,8 @@
 
 #define PFR friend class Parser;
 
+#define ERROR_EXIT this->checkingType = errorType; return false;
+
 class ParseTree {
 protected:
 	static Token* epsToken;
@@ -45,13 +49,19 @@ protected:
 	static Token* integerToken;
 	static Token* identifierToken;
 	static IntQueue* splitIndexes;
+	static Symboltable* typeTable;
+	static Buffer* codeWriter;
+	static LabelFactory* labelFactory;
+	CheckableType checkingType;
 public:
 	static void initStatic();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	static void prepareTreeOperations();
+	static void terminateTreeOperations();
 	virtual ~ParseTree() = 0;
-	// later: virtual bool typeCheck() = 0;
-	// later: virtual void makeCode() = 0;
+	virtual bool typeCheck() = 0;
+	virtual void makeCode() = 0;
 	PFR
 };
 
@@ -146,6 +156,8 @@ public:
 	ProgOnly();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~ProgOnly();
 	PFR
 };
@@ -159,6 +171,8 @@ public:
 	DeclsSeq();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	bool isEps();
 	~DeclsSeq();
 	PFR
@@ -170,6 +184,8 @@ public:
 	DeclsEps();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	bool isEps();
 	~DeclsEps();
 	PFR
@@ -185,6 +201,8 @@ public:
 	DeclOnly();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~DeclOnly();
 	PFR
 };
@@ -198,6 +216,8 @@ public:
 	ArrayIndex();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	bool isEps();
 	~ArrayIndex();
 	PFR
@@ -209,6 +229,8 @@ public:
 	ArrayEps();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	bool isEps();
 	~ArrayEps();
 	PFR
@@ -223,6 +245,8 @@ public:
 	StatementsSeq();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	bool isEps();
 	~StatementsSeq();
 	PFR
@@ -234,6 +258,8 @@ public:
 	StatementsEps();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	bool isEps();
 	~StatementsEps();
 	PFR
@@ -250,6 +276,8 @@ public:
 	StatementSetValue();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~StatementSetValue();
 	PFR
 };
@@ -263,6 +291,8 @@ public:
 	StatementWrite();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~StatementWrite();
 	PFR
 };
@@ -277,6 +307,8 @@ public:
 	StatementRead();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~StatementRead();
 	PFR
 };
@@ -290,6 +322,8 @@ public:
 	StatementBlock();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~StatementBlock();
 	PFR
 };
@@ -305,6 +339,8 @@ public:
 	StatementIfElse();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~StatementIfElse();
 	PFR
 };
@@ -319,6 +355,8 @@ public:
 	StatementWhile();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~StatementWhile();
 	PFR
 };
@@ -332,6 +370,8 @@ public:
 	ExpOnly();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~ExpOnly();
 	PFR
 };
@@ -345,6 +385,8 @@ public:
 	Exp2Nested();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~Exp2Nested();
 	PFR
 };
@@ -359,6 +401,8 @@ public:
 	Exp2Variable();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~Exp2Variable();
 	PFR
 };
@@ -372,6 +416,8 @@ public:
 	Exp2Constant();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~Exp2Constant();
 	PFR
 };
@@ -385,6 +431,8 @@ public:
 	Exp2NumericNegation();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~Exp2NumericNegation();
 	PFR
 };
@@ -398,6 +446,8 @@ public:
 	Exp2LogicalNegation();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~Exp2LogicalNegation();
 	PFR
 };
@@ -411,6 +461,8 @@ public:
 	IndexPosition();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	bool isEps();
 	~IndexPosition();
 	PFR
@@ -422,6 +474,8 @@ public:
 	IndexEps();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	bool isEps();
 	~IndexEps();
 	PFR
@@ -435,7 +489,11 @@ public:
 	OpExpNext();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	bool isEps();
+	bool isOperatorGreater();
+	bool isOperatorNotEquals();
 	~OpExpNext();
 	PFR
 };
@@ -446,6 +504,8 @@ public:
 	OpExpEps();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	bool isEps();
 	~OpExpEps();
 	PFR
@@ -459,6 +519,8 @@ public:
 	OpPlus();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~OpPlus();
 	PFR
 };
@@ -471,6 +533,8 @@ public:
 	OpMinus();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~OpMinus();
 	PFR
 };
@@ -483,6 +547,8 @@ public:
 	OpMult();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~OpMult();
 	PFR
 };
@@ -495,6 +561,8 @@ public:
 	OpDiv();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~OpDiv();
 	PFR
 };
@@ -507,6 +575,8 @@ public:
 	OpLess();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~OpLess();
 	PFR
 };
@@ -519,6 +589,8 @@ public:
 	OpGreater();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~OpGreater();
 	PFR
 };
@@ -531,6 +603,8 @@ public:
 	OpEquals();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~OpEquals();
 	PFR
 };
@@ -543,6 +617,8 @@ public:
 	OpNotEquals();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~OpNotEquals();
 	PFR
 };
@@ -555,6 +631,8 @@ public:
 	OpAnd();
 	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
+	bool typeCheck();
+	void makeCode();
 	~OpAnd();
 	PFR
 };

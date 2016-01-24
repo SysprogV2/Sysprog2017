@@ -16,6 +16,18 @@ TokenSequence::TokenSequence(int initialCapacity, int initialIncrement) {
 	this->tokensReferenced = true;
 }
 
+TokenSequence::TokenSequence(TokenSequence* other) {
+	this->capacity = other->capacity;
+	this->increment = other->increment;
+	this->sequence = new Token*[this->capacity];
+	for (int i = 0; i < other->size; i++) {
+		this->sequence[i] = other->sequence[i];
+	}
+	this->size = other->size;
+	this->currentPos = other->currentPos;
+	this->tokensReferenced = other->tokensReferenced;
+}
+
 void TokenSequence::add (Token* token, bool setAsCurrent) {
 	if (this->size == this->capacity) {
 		Token* temp[] = this->sequence;
@@ -79,10 +91,14 @@ TokenSequence* TokenSequence::splitOn(int index, TokenSequence** subsequence2) {
 	}
 	TokenSequence* subsequence1 = new TokenSequence (10, 10);
 	*subsequence2 = new TokenSequence (10, 10);
-	// TODO modify subsequences so that:
-	// - subsequence1 contains all Tokens from first (inclusive) to index (inclusive)
-	// - subsequence2 contains all Tokens from index (exclusive) to last (inclusive)
-	// - no array copy loop is involved
+	// entire array is being copied -> might be a runtime issue
+	for (int i = 0; i < this->size; i++) {
+		if (i <= index) {
+			subsequence1->add(this->sequence[i], false);
+		} else {
+			(*subsequence2)->add(this->sequence[i], false);
+		}
+	}
 	return subsequence1;
 }
 
@@ -257,4 +273,27 @@ int IntQueue::getSize() {
 IntQueue::~IntQueue() {
 	delete this->first;
 	delete this->last;
+}
+
+LabelFactory::LabelFactory(int firstLabelNo) {
+	this->currentLabelNo = firstLabelNo;
+}
+
+int LabelFactory::newLabel() {
+	return this->currentLabelNo++;
+}
+
+LabelFactory::~LabelFactory() {}
+
+const char* getFilepathByID(char* filestreamID) {
+	switch (filestreamID) {
+	case "code":
+		return "../../debug/test.code";
+	case "scan":
+		return "../../debug/output.txt";
+	// for each additional output filestream a case must be added
+	default:
+		// TODO throw error with message "Stream ID is not registered"
+		return nullptr;
+	}
 }

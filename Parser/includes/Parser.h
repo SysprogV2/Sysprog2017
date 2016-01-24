@@ -13,7 +13,6 @@
 
 class Parser {
 private:
-	// might be incomplete
 	TokenSequence* currentCodeSnippet;
 	TokenSequence* composeTable(char* filename);
 	void buildDecl (Decl** toBuild, TokenSequence* relatedSequence);

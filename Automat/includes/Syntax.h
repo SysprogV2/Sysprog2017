@@ -36,12 +36,12 @@ class Syntax {
 							 "  --*:--  ", "Prohibited", " --null-- ", "PlusToken ", // 16-19
 							 "MinusToken", "NotToken  ", "AndToken  ", "SemicolTok", // 20-23
 							 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ", // 24-27
-							 "Brackets [", "Brackets ]" ,"IfToken   ", "WhileToken"//, // 28-31
-							 //"INT-Token ", "WRITE-Toke", "ELSE-Token", "READ-Token"  // 32-35
+							 "Brackets [", "Brackets ]" ,"IfToken   ", "WhileToken", // 28-31
+							 "INT-Token ", "WRITE-Toke", "ELSE-Token", "READ-Token"  // 32-35
 	};
 	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
 
-	char* keywordsArray[KEYWORD_NUMBER * 2] = {"if", "IF", "while", "WHILE"}; /*, "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};*/
+	char* keywordsArray[KEYWORD_NUMBER * 2] = {"if", "IF", "while", "WHILE", "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};
 
 public:
 	int keywordNumber;
