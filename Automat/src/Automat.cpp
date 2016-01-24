@@ -76,7 +76,7 @@ void Automat::reset() {
 }
 
 /*
- * maps actual character to a corresponding symbol in the StateTable
+ * maps current character to a corresponding symbol in the StateTable
  * @return corresponding symbol for the StateTable
  */
 int Automat::mapCharToSymbolName(char c) {

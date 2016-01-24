@@ -340,7 +340,6 @@ Parser::~Parser() {
 	delete ParseTree::identifierToken;
 	delete ParseTree::integerToken;
 	delete ParseTree::minusToken;
-	delete ParseTree::splitIndexes;
 	delete DeclOnly::firstToken;
 	delete StatementWrite::firstToken;
 	delete StatementRead::firstToken;

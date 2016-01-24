@@ -89,7 +89,7 @@ Token *Scanner::nextToken() {
 }
 
 /*
- * determine the actual token type relying on STATE and LEXEM
+ * determine the current token type relying on STATE and LEXEM
  * @return token's type
  */
 int Scanner::mapStateToType(int state, char* lexem) {

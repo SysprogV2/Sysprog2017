@@ -8,15 +8,29 @@
 #ifndef SCANNER_INCLUDES_INFORMATION_H_
 #define SCANNER_INCLUDES_INFORMATION_H_
 
+#include "../../Symboltable/includes/Symboltable.h"
+
+typedef enum {
+	uncheckedType,
+	intType,
+	intArrayType,
+	arrayType,
+	noType,
+	errorType
+}CheckableType;
+
 class Information {
 	char* lexem;
+	CheckableType type;
 public:
 	Information();
 	Information(char* lexem);
 	virtual ~Information();
 	void setLexem(char* lexem);
 	char* getLexem();
+	CheckableType getType();
 	bool matches(char* other);
+	friend void Symboltable::attachType(char* lexem, CheckableType type);
 };
 
 

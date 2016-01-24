@@ -25,6 +25,19 @@ TokenTypeRegistry* ParseTree::first() {
 	return nullptr; // no actual first() of abstract ParseTree
 }
 
+void ParseTree::prepareTreeOperations() { // to be called before running typeCheck()
+	ParseTree::typeTable = new Symboltable();
+	ParseTree::codeWriter = new Buffer(nullptr);
+	ParseTree::labelFactory = new LabelFactory(1);
+}
+
+void ParseTree::terminateTreeOperations() { // to be called at the end of main()
+	delete ParseTree::splitIndexes;
+	delete ParseTree::typeTable;
+	delete ParseTree::codeWriter;
+	delete ParseTree::labelFactory;
+}
+
 void Prog::initStatic() {
 	ProgOnly::initStatic();
 }
@@ -262,12 +275,30 @@ bool ProgOnly::isMatching(TokenSequence* sequence) {
 ProgOnly::ProgOnly() {
 	this->declarationSegment = nullptr;
 	this->statementSegment = nullptr;
+	this->checkingType = uncheckedType;
 }
 
 TokenTypeRegistry* ProgOnly::first() {
 	TokenTypeRegistry* registry = Decls::first();
 	registry->uniteWith(Statements::first()); // Decls::first() contains Epsilon, Statements::first() too so no need to remove it before merging
 	return registry;
+}
+
+bool ProgOnly::typeCheck() {
+	if (!this->declarationSegment->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (!this->statementSegment->typeCheck()) {
+		ERROR_EXIT
+	}
+	this->checkingType = noType;
+	return true;
+}
+
+void ProgOnly::makeCode() {
+	this->declarationSegment->makeCode();
+	this->statementSegment->makeCode();
+	ParseTree::codeWriter->printInStream("STP", "code");
 }
 
 ProgOnly::~ProgOnly() {
@@ -310,10 +341,27 @@ bool DeclsSeq::isMatching(TokenSequence* sequence) {
 DeclsSeq::DeclsSeq() {
 	this->firstDeclaration = nullptr;
 	this->restOfDeclarations = nullptr;
+	this->checkingType = uncheckedType;
 }
 
 TokenTypeRegistry* DeclsSeq::first() {
-	return Decl::first(); // no Epsilon in Decl::first()
+	return Decl::first(); // no Epsilon in Decl::first() so no merging with Decls::first()
+}
+
+bool DeclsSeq::typeCheck() {
+	if (!this->firstDeclaration->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (!this->restOfDeclarations->typeCheck()) {
+		ERROR_EXIT
+	}
+	this->checkingType = noType;
+	return true;
+}
+
+void DeclsSeq::makeCode() {
+	this->firstDeclaration->makeCode();
+	this->restOfDeclarations->makeCode();
 }
 
 bool DeclsSeq::isEps() {
@@ -341,6 +389,13 @@ TokenTypeRegistry* DeclsEps::first() {
 	registry->set(DeclsEps::epsToken);
 	return registry;
 }
+
+bool DeclsEps::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void DeclsEps::makeCode() {}
 
 bool DeclsEps::isEps() {
 	return true;
@@ -376,6 +431,31 @@ TokenTypeRegistry* DeclOnly::first() {
     return sequence;
 }
 
+bool DeclOnly::typeCheck() {
+	if (!this->size->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != noType) {
+	    // TODO print error
+		ERROR_EXIT
+	}
+	if (this->size->checkingType == errorType) {
+		ERROR_EXIT
+	}
+	this->checkingType = noType;
+	if (this->size->checkingType == arrayType) {
+		ParseTree::typeTable->attachType(this->identifier->getLexem(), intArrayType);
+	} else {
+		ParseTree::typeTable->attachType(this->identifier->getLexem(), intType);
+	}
+	return true;
+}
+
+void DeclOnly::makeCode() {
+	ParseTree::codeWriter->printInStream(("DS $%s ", this->identifier->getLexem()), "code");
+	this->size->makeCode();
+}
+
 DeclOnly::~DeclOnly() {
 	delete this->identifier;
 	delete this->size;
@@ -407,6 +487,19 @@ TokenTypeRegistry* ArrayIndex::first() {
 	return sequence;
 }
 
+bool ArrayIndex::typeCheck() {
+	if (this->integer->getValue() < 0) {
+		ERROR_EXIT
+	}
+	this->checkingType = noType;
+	return true;
+}
+
+void ArrayIndex::makeCode() {
+	char* printableCode = ("%i\n", this->integer->getValue()); // must use extra variable or the compiler doesn't understand the wildcarding
+	ParseTree::codeWriter->printInStream(printableCode, "code");
+}
+
 ArrayIndex::~ArrayIndex() {
 	delete this->integer;
 }
@@ -430,6 +523,15 @@ TokenTypeRegistry* ArrayEps::first() {
 
 bool ArrayEps::isEps() {
 	return true;
+}
+
+bool ArrayEps::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void ArrayEps::makeCode() {
+	ParseTree::codeWriter->printInStream("1\n", "code");
 }
 
 ArrayEps::~ArrayEps() {}
@@ -475,6 +577,22 @@ TokenTypeRegistry* StatementsSeq::first() {
 	return Statement::first();
 }
 
+bool StatementsSeq::typeCheck() {
+	if (!this->firstStatement->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (!this->restOfStatements->typeCheck()) {
+		ERROR_EXIT
+	}
+	this->checkingType = noType;
+	return true;
+}
+
+void StatementsSeq::makeCode() {
+	this->firstStatement->makeCode();
+	this->restOfStatements->makeCode();
+}
+
 bool StatementsSeq::isEps() {
 	return false;
 }
@@ -503,6 +621,15 @@ TokenTypeRegistry* StatementsEps::first() {
 
 bool StatementsEps::isEps() {
 	return true;
+}
+
+bool StatementsEps::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void StatementsEps::makeCode() {
+	ParseTree::codeWriter->printInStream("NOP\n", "code");
 }
 
 StatementsEps::~StatementsEps() {}
@@ -562,6 +689,39 @@ TokenTypeRegistry* StatementSetValue::first() {
 	return sequence;
 }
 
+bool StatementSetValue::typeCheck() {
+	if (!this->aimValue->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (!this->index->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() == noType) {
+	    // TODO print error
+	    ERROR_EXIT
+	}
+	if (this->aimValue->checkingType != intType) {
+		// TODO print error
+		ERROR_EXIT
+	}
+	if (   (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intType
+	        || this->index->checkingType != noType)
+	    && (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intArrayType
+	        || this->index->checkingType != arrayType)) {
+	    // TODO print error
+		ERROR_EXIT
+	}
+	this->checkingType = noType;
+	return true;
+}
+
+void StatementSetValue::makeCode() {
+	this->aimValue->makeCode();
+	ParseTree::codeWriter->printInStream(("LA $%s\n", this->identifier->getLexem()), "code");
+	this->index->makeCode();
+	ParseTree::codeWriter->printInStream("STR\n", "code");
+}
+
 StatementSetValue::~StatementSetValue() {
 	delete this->identifier;
 	delete this->index;
@@ -599,6 +759,19 @@ TokenTypeRegistry* StatementWrite::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(StatementWrite::firstToken);
 	return sequence;
+}
+
+bool StatementWrite::typeCheck() {
+	if (!this->toPrint->typeCheck()) {
+		ERROR_EXIT
+	}
+	this->checkingType = noType;
+	return true;
+}
+
+void StatementWrite::makeCode() {
+	this->toPrint->makeCode();
+	ParseTree::codeWriter->printInStream("PRI\n", "code");
 }
 
 StatementWrite::~StatementWrite() {
@@ -640,6 +813,31 @@ TokenTypeRegistry* StatementRead::first() {
 	return sequence;
 }
 
+bool StatementRead::typeCheck() {
+	if (!this->index->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() == noType) {
+	    // TODO print error
+		ERROR_EXIT
+	}
+	if (   (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intType
+	        || this->index->checkingType != noType)
+	    && (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intArrayType
+	        || this->index->checkingType != arrayType)) {
+	    // TODO print error
+	    ERROR_EXIT
+	}
+	this->checkingType = noType;
+	return true;
+}
+
+void StatementRead::makeCode() {
+	ParseTree::codeWriter->printInStream(("REA\nLA $%s\n", this->identifier->getLexem()), "code");
+	this->index->makeCode();
+	ParseTree::codeWriter->printInStream("STR\n", "code");
+}
+
 StatementRead::~StatementRead() {
 	delete this->identifier;
 	delete this->index;
@@ -674,6 +872,18 @@ TokenTypeRegistry* StatementBlock::first() {
 	TokenTypeRegistry *sequence = new TokenTypeRegistry();
 	sequence->set(StatementBlock::firstToken);
 	return sequence;
+}
+
+bool StatementBlock::typeCheck() {
+	if (!this->blockContent->typeCheck()) {
+		ERROR_EXIT
+	}
+	this->checkingType = noType;
+	return true;
+}
+
+void StatementBlock::makeCode() {
+	this->blockContent->makeCode();
 }
 
 StatementBlock::~StatementBlock() {
@@ -764,6 +974,38 @@ TokenTypeRegistry* StatementIfElse::first() {
 	return sequence;
 }
 
+bool StatementIfElse::typeCheck() {
+	if (!this->condition->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (this->condition->checkingType == errorType) {
+		ERROR_EXIT
+	}
+	if (!this->thenCase->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (!this->elseCase->typeCheck()) {
+		ERROR_EXIT
+	}
+	this->checkingType = noType;
+	return true;
+}
+
+void StatementIfElse::makeCode() {
+	int label1 = ParseTree::labelFactory->newLabel();
+	char* preparedString1 = ("JIN #%i\n", label1); // for some reason strings with int wildcards must be prepared in extra variables
+	char* preparedString3 = ("#%i NOP\n", label1); // numbered after sorting by usage ocurrence
+	int label2 = ParseTree::labelFactory->newLabel();
+	char* preparedString2 = ("JMP #%i\n", label2);
+	char* preparedString4 = ("#%i NOP\n", label2);
+	this->condition->makeCode();
+	ParseTree::codeWriter->printInStream(preparedString1, "code");
+	this->thenCase->makeCode();
+	ParseTree::codeWriter->printInStream(("%s%s", preparedString2, preparedString3), "code");
+	this->elseCase->makeCode();
+	ParseTree::codeWriter->printInStream(preparedString4, "code");
+}
+
 StatementIfElse::~StatementIfElse() {
 	delete this->condition;
 	delete this->thenCase;
@@ -815,6 +1057,34 @@ TokenTypeRegistry* StatementWhile::first() {
 	return sequence;
 }
 
+bool StatementWhile::typeCheck() {
+	if (!this->condition->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (this->condition->checkingType == errorType) {
+		ERROR_EXIT
+	}
+	if (!this->loop->typeCheck()) {
+		ERROR_EXIT
+	}
+	this->checkingType = noType;
+	return true;
+}
+
+void StatementWhile::makeCode() {
+	int label1 = ParseTree::labelFactory->newLabel();
+	char* preparedString1 = ("#%i NOP\n", label1);
+	char* preparedString3 = ("JMP #%i\n", label1);
+	int label2 = ParseTree::labelFactory->newLabel();
+	char* preparedString2 = ("JIN #%i\n", label2);
+	char* preparedString4 = ("#%i NOP\n", label2);
+	ParseTree::codeWriter->printInStream(preparedString1, "code");
+	this->condition->makeCode();
+	ParseTree::codeWriter->printInStream(preparedString2, "code");
+	this->loop->makeCode();
+	ParseTree::codeWriter->printInStream(("%s%s", preparedString3, preparedString4), "code");
+}
+
 StatementWhile::~StatementWhile() {
 	delete this->condition;
 	delete this->loop;
@@ -849,6 +1119,38 @@ ExpOnly::ExpOnly() {
 
 TokenTypeRegistry* ExpOnly::first() {
 	return Exp2::first();
+}
+
+bool ExpOnly::typeCheck() {
+	if (!this->rawExpression->typeCheck()
+	 || !this->calculateWith->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (this->calculateWith->checkingType == noType
+	 || this->calculateWith->checkingType == this->rawExpression->checkingType) {
+		this->checkingType = this->rawExpression->checkingType;
+		return true;
+	}
+	ERROR_EXIT
+}
+
+void ExpOnly::makeCode() {
+	if (this->calculateWith->checkingType != noType
+	 && ((OpExpNext*)this->calculateWith)->isOperatorGreater()) {
+		this->calculateWith->makeCode();
+	}
+	this->rawExpression->makeCode();
+	if (this->calculateWith->checkingType != noType) {
+		if (!((OpExpNext*)this->calculateWith)->isOperatorGreater()) {
+			this->calculateWith->makeCode();
+			if (((OpExpNext*)this->calculateWith)->isOperatorNotEquals()) {
+				ParseTree::codeWriter->printInStream("NOT\n", "code");
+			}
+		}
+		else {
+			ParseTree::codeWriter->printInStream("LES\n", "code");
+		}
+	}
 }
 
 ExpOnly::~ExpOnly() {
@@ -890,6 +1192,15 @@ TokenTypeRegistry* Exp2Nested::first() {
 	return sequence;
 }
 
+bool Exp2Nested::typeCheck() {
+	this->checkingType = this->nestedExpression->typeCheck() ? this->nestedExpression->checkingType : errorType;
+	return this->checkingType != errorType;
+}
+
+void Exp2Nested::makeCode() {
+	this->nestedExpression->makeCode();
+}
+
 Exp2Nested::~Exp2Nested() {
 	delete this->nestedExpression;
 }
@@ -923,6 +1234,34 @@ TokenTypeRegistry* Exp2Variable::first() {
 	return sequence;
 }
 
+bool Exp2Variable::typeCheck() {
+	if (!this->index->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() == noType) {
+		// TODO print error
+	    ERROR_EXIT
+	}
+	if (   (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intType
+	        || this->index->checkingType != noType)
+	    && (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intArrayType
+	        || this->index->checkingType != arrayType)) {
+	    if (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() == intArrayType
+	    	|| this->index->checkingType == noType) {
+	    	// TODO print error
+	    }
+		ERROR_EXIT
+	}
+	this->checkingType = intType;
+	return true;
+}
+
+void Exp2Variable::makeCode() {
+	ParseTree::codeWriter->printInStream(("LA $%s\n", this->identifier->getLexem()), "code");
+	this->index->makeCode();
+	ParseTree::codeWriter->printInStream("LV\n", "code");
+}
+
 Exp2Variable::~Exp2Variable() {
 	delete this->identifier;
 	delete this->index;
@@ -945,6 +1284,16 @@ TokenTypeRegistry* Exp2Constant::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(Exp2Constant::defaultInteger);
 	return sequence;
+}
+
+bool Exp2Constant::typeCheck() {
+	this->checkingType = intType;
+	return true;
+}
+
+void Exp2Constant::makeCode() {
+	char* preparedString = ("LC %i", this->integer->getValue());
+	ParseTree::codeWriter->printInStream(preparedString, "code");
 }
 
 Exp2Constant::~Exp2Constant() {
@@ -979,6 +1328,18 @@ TokenTypeRegistry* Exp2NumericNegation::first() {
 	return sequence;
 }
 
+bool Exp2NumericNegation::typeCheck() {
+	bool result = this->toNegate->typeCheck();
+	this->checkingType = this->toNegate->checkingType;
+	return result;
+}
+
+void Exp2NumericNegation::makeCode() {
+	ParseTree::codeWriter->printInStream("LC 0\n", "code");
+	this->toNegate->makeCode();
+	ParseTree::codeWriter->printInStream("SUB\n", "code");
+}
+
 Exp2NumericNegation::~Exp2NumericNegation() {
 	delete this->toNegate;
 }
@@ -1009,6 +1370,20 @@ TokenTypeRegistry* Exp2LogicalNegation::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(Exp2LogicalNegation::firstToken);
 	return sequence;
+}
+
+bool Exp2LogicalNegation::typeCheck() {
+	if (!this->toNegate->typeCheck()
+	 || this->toNegate->checkingType != intType) {
+		ERROR_EXIT
+	}
+	this->checkingType = intType;
+	return true;
+}
+
+void Exp2LogicalNegation::makeCode() {
+	this->toNegate->makeCode();
+	ParseTree::codeWriter->printInStream("NOT\n", "code");
 }
 
 Exp2LogicalNegation::~Exp2LogicalNegation() {
@@ -1053,6 +1428,19 @@ TokenTypeRegistry* IndexPosition::first() {
 	return sequence;
 }
 
+bool IndexPosition::typeCheck() {
+	if (!this->index->typeCheck() || this->index->checkingType == errorType) {
+		ERROR_EXIT
+	}
+	this->checkingType = arrayType;
+	return true;
+}
+
+void IndexPosition::makeCode() {
+	this->index->makeCode();
+	ParseTree::codeWriter->printInStream("ADD\n", "code");
+}
+
 IndexPosition::~IndexPosition() {
 	delete this->index;
 }
@@ -1077,6 +1465,13 @@ TokenTypeRegistry* IndexEps::first() {
 bool IndexEps::isEps() {
 	return true;
 }
+
+bool IndexEps::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void IndexEps::makeCode() {}
 
 IndexEps::~IndexEps() {}
 
@@ -1106,6 +1501,30 @@ bool OpExpNext::isEps() {
 	return false;
 }
 
+bool OpExpNext::isOperatorGreater() {
+	return this->Operator->first()->isSet(nullptr); // TODO replace nullptr by ParseTree::greaterToken
+}
+
+bool OpExpNext::isOperatorNotEquals() {
+	return this->Operator->first()->isSet(nullptr); // TODO replace nullptr by ParseTree::notEqualsToken
+}
+
+bool OpExpNext::typeCheck() {
+	if (!this->Operator->typeCheck()) {
+		ERROR_EXIT
+	}
+	if (!this->operand->typeCheck()) {
+		ERROR_EXIT
+	}
+	this->checkingType = this->operand->checkingType;
+	return true;
+}
+
+void OpExpNext::makeCode() {
+	this->operand->makeCode();
+	this->Operator->makeCode();
+}
+
 OpExpNext::~OpExpNext() {
 	delete this->Operator;
 	delete this->operand;
@@ -1132,6 +1551,13 @@ bool OpExpEps::isEps() {
 	return true;
 }
 
+bool OpExpEps::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void OpExpEps::makeCode() {}
+
 OpExpEps::~OpExpEps() {}
 
 void OpPlus::initStatic() {
@@ -1148,6 +1574,15 @@ TokenTypeRegistry* OpPlus::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(OpPlus::firstToken);
 	return sequence;
+}
+
+bool OpPlus::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void OpPlus::makeCode() {
+	ParseTree::codeWriter->printInStream("ADD\n", "code");
 }
 
 OpPlus::~OpPlus() {}
@@ -1168,6 +1603,15 @@ TokenTypeRegistry* OpMinus::first() {
 	return sequence;
 }
 
+bool OpMinus::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void OpMinus::makeCode() {
+	ParseTree::codeWriter->printInStream("SUB\n", "code");
+}
+
 OpMinus::~OpMinus() {}
 
 void OpMult::initStatic() {
@@ -1184,6 +1628,15 @@ TokenTypeRegistry* OpMult::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(OpMult::firstToken);
 	return sequence;
+}
+
+bool OpMult::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void OpMult::makeCode() {
+	ParseTree::codeWriter->printInStream("MUL\n", "code");
 }
 
 OpMult::~OpMult() {}
@@ -1204,6 +1657,15 @@ TokenTypeRegistry* OpDiv::first() {
 	return sequence;
 }
 
+bool OpDiv::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void OpDiv::makeCode() {
+	ParseTree::codeWriter->printInStream("DIV\n", "code");
+}
+
 OpDiv::~OpDiv() {}
 
 void OpLess::initStatic() {
@@ -1220,6 +1682,15 @@ TokenTypeRegistry* OpLess::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(OpLess::firstToken);
 	return sequence;
+}
+
+bool OpLess::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void OpLess::makeCode() {
+	ParseTree::codeWriter->printInStream("LES\n", "code");
 }
 
 OpLess::~OpLess() {}
@@ -1240,6 +1711,13 @@ TokenTypeRegistry* OpGreater::first() {
 	return sequence;
 }
 
+bool OpGreater::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void OpGreater::makeCode() {}
+
 OpGreater::~OpGreater() {}
 
 void OpEquals::initStatic() {
@@ -1256,6 +1734,15 @@ TokenTypeRegistry* OpEquals::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(OpEquals::firstToken);
 	return sequence;
+}
+
+bool OpEquals::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void OpEquals::makeCode() {
+	ParseTree::codeWriter->printInStream("EQU\n", "code");
 }
 
 OpEquals::~OpEquals() {}
@@ -1276,6 +1763,15 @@ TokenTypeRegistry* OpNotEquals::first() {
 	return sequence;
 }
 
+bool OpNotEquals::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void OpNotEquals::makeCode() {
+	ParseTree::codeWriter->printInStream("EQU\n", "code");
+}
+
 OpNotEquals::~OpNotEquals() {}
 
 void OpAnd::initStatic() {
@@ -1292,6 +1788,15 @@ TokenTypeRegistry* OpAnd::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(OpAnd::firstToken);
 	return sequence;
+}
+
+bool OpAnd::typeCheck() {
+	this->checkingType = noType;
+	return true;
+}
+
+void OpAnd::makeCode() {
+	ParseTree::codeWriter->printInStream("AND\n", "code");
 }
 
 OpAnd::~OpAnd() {}
