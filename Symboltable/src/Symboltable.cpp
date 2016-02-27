@@ -96,3 +96,7 @@ void Symboltable::initSymbols() {
 	insert("while", 5);
 	insert("WHILE", 5);
 }
+
+void Symboltable::attachType(char* lexem, CheckableType type) {
+	this->lookup(lexem)->setType(type);
+}

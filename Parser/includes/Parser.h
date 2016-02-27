@@ -10,6 +10,7 @@
 
 #include "ParseTree.h"
 #include "../../Scanner/includes/Scanner.h"
+#include <sys/time.h>
 
 class Parser {
 private:
@@ -21,6 +22,8 @@ private:
 	Exp* buildExp(TokenSequence* related);
 	Exp2* buildExp2(TokenSequence* related);
 public:
+	Parser();
+	void setAndRunOnFile (char* filename);
 	Parser(char* filename);
 	ParseTree* parse();
 	~Parser();

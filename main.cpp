@@ -4,8 +4,7 @@
  *  Created on: Nov 11, 2015
  *      Author: arty
  */
-#include "Symboltable/includes/Symboltable.h"
-#include "Scanner/includes/Scanner.h"
+#include "Parser/includes/Parser.h"
 
 #include <sys/time.h>
 #include <iostream>
@@ -18,29 +17,31 @@ static timestamp_t
 get_timestamp ()
 {
    struct timeval now;
-   gettimeofday (&now, NULL);
+   gettimeofday (&now, nullptr);
    return  now.tv_usec + (timestamp_t)now.tv_sec * 1000000;
 }
 
 
 int main(int argc, char* argv[]) {
+	std::cout << "Compiler running now (main)\n";
     timestamp_t t0 = get_timestamp();
 
-
-    /* this code is taken from the Script*/
-    /*   (c) Prof. Dr. Thomas FuchB      */
-
 	if (argc < 1) return EXIT_FAILURE;
-	Symboltable* stab = new Symboltable();
-	Scanner* s = new Scanner(argv[1], stab);
-	Token* t;
 
-	while ((t = s->nextToken())) {
-		//memcpy(buffer, t->)
-		t->print();
+	/* unlike previous version, this is self-made,
+	 * but the test should run correctly
+	 */
+	Parser* parser = new Parser(argv[0]);
+	ParseTree* tree = parser->parse();
+	int compile_error;
+	if (tree->typeCheck()) {
+		compile_error = 0;
+		tree->makeCode();
+	} else {
+		compile_error = 1;
 	}
 	std::cout << "Time: " << (get_timestamp() - t0) / 1000000.0L << "secs"  << std::endl;
-	return EXIT_SUCCESS;
+	return compile_error;
 }
 
 

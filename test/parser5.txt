@@ -1,0 +1,18 @@
+int i;
+int prax[5];
+while (prax[4] > (3 * i)) { :* Endlosschleife oder nicht kann hier egal sein *:
+  if (i < 8) prax[2] = 5;
+  else {
+    write (prax[0] - prax[3] * i);
+    read (prax[0]);
+  }
+}
+i = prax[0] - (prax[1] / prax[2]) * prax[3] + prax[4];
+write(i);
+while (prax[1] - i) {
+  if (1) {}
+  else {}
+}
+while(0) {}
+if ((prax[0] <:> prax[1]) && (prax[2] == 7) && !prax[3] && -prax[4]) i = 4;
+else {}

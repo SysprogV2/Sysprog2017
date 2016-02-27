@@ -1,0 +1,2 @@
+arty@localhost:~/workspace/SysProg2015$ Parser/debug/ParserTest test/parser0.txt Parser/debug/out.code
+<Note: out.code is unused in main()>

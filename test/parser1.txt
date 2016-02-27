@@ -1,0 +1,33 @@
+1231245616 :* massenhaft semantische Fehler *:
+12123
+2323
+132463578333
+34534534
+45
+4545
+
+
+12345
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
++  -  *  <  =  !  &  ;  :  (  )  {  }  [  ] <:> <:as
+1234
+12345
+123453
+12345123
+
+dies ist ein :* 111 aaaa +- 1234.0 mod*: Kommentar
+print
+read
+printread
+readprint
+if
+while
+whileif
+ifwhile
+WHILEIF
+IF
+WHILe
+WHILE
+ABCDEFGHIJK&LMNOPQR
+

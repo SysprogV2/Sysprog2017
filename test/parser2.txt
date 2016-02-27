@@ -1,0 +1,6 @@
+int i = 0; :* schon Fehler! Zuweisung während Deklaration geht hier nicht *:
+while (i == 3) {
+	int y = 1 + 5;
+	int g = 10 + 1;
+	i = 3;
+}

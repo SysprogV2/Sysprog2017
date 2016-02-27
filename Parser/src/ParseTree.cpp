@@ -7,14 +7,53 @@
 
 #include "../includes/ParseTree.h"
 
+Token* ParseTree::epsToken = nullptr;
+Token* ParseTree::bracketsToken = nullptr;
+Token* ParseTree::minusToken = nullptr;
+Token* ParseTree::integerToken = nullptr;
+Token* ParseTree::identifierToken = nullptr;
+Token* ParseTree::greaterToken = nullptr;
+Token* ParseTree::notEqualsToken = nullptr;
+Token* ParseTree::failureToken = nullptr;
+IntQueue* ParseTree::splitIndexes = nullptr;
+Symboltable* ParseTree::typeTable = nullptr;
+std::ofstream ParseTree::codeOutput;
+LabelFactory* ParseTree::labelFactory = nullptr;
+Token* DeclOnly::firstToken = nullptr;
+Token* ArrayIndex::firstToken = nullptr;
+Token* StatementSetValue::defaultIdentifier = nullptr;
+Token* StatementWrite::firstToken = nullptr;
+Token* StatementRead::firstToken = nullptr;
+Token* StatementBlock::firstToken = nullptr;
+Token* StatementIfElse::firstToken = nullptr;
+Token* StatementWhile::firstToken = nullptr;
+Token* Exp2Nested::firstToken = nullptr;
+Token* Exp2Variable::defaultIdentifier = nullptr;
+Token* Exp2Constant::defaultInteger = nullptr;
+Token* Exp2NumericNegation::firstToken = nullptr;
+Token* Exp2LogicalNegation::firstToken = nullptr;
+Token* IndexPosition::firstToken = nullptr;
+Token* OpPlus::firstToken = nullptr;
+Token* OpMinus::firstToken = nullptr;
+Token* OpMult::firstToken = nullptr;
+Token* OpDiv::firstToken = nullptr;
+Token* OpLess::firstToken = nullptr;
+Token* OpGreater::firstToken = nullptr;
+Token* OpEquals::firstToken = nullptr;
+Token* OpNotEquals::firstToken = nullptr;
+Token* OpAnd::firstToken = nullptr;
+
 void ParseTree::initStatic() { // to be called on Parser launch
-	ParseTree::epsToken = EPSILON_TOKEN;
+	epsToken = EPSILON_TOKEN;
 	ParseTree::bracketsToken = TYPE_REFERENCE_TOKEN_BRACKETS_START;
 	ParseTree::minusToken = TYPE_REFERENCE_TOKEN_MINUS;
 	ParseTree::identifierToken = IDENTIFIER_DEFAULT_TOKEN;
 	ParseTree::integerToken = INTEGER_DEFAULT_TOKEN;
+	ParseTree::greaterToken = TYPE_REFERENCE_TOKEN_GREATER;
+	ParseTree::notEqualsToken = TYPE_REFERENCE_TOKEN_NOT_EQUALS;
 	ParseTree::splitIndexes = new IntQueue();
 	Prog::initStatic();
+	std::cout << "Static ParseTree initialization works\n";
 }
 
 bool ParseTree::isMatching(TokenSequence* sequence) {
@@ -27,16 +66,27 @@ TokenTypeRegistry* ParseTree::first() {
 
 void ParseTree::prepareTreeOperations() { // to be called before running typeCheck()
 	ParseTree::typeTable = new Symboltable();
-	ParseTree::codeWriter = new Buffer(nullptr);
+	ParseTree::codeOutput.open("../../debug/test.code");
 	ParseTree::labelFactory = new LabelFactory(1);
+	std::cout << "Operative initialization works\n";
 }
 
 void ParseTree::terminateTreeOperations() { // to be called at the end of main()
 	delete ParseTree::splitIndexes;
 	delete ParseTree::typeTable;
-	delete ParseTree::codeWriter;
+	ParseTree::codeOutput.close();
 	delete ParseTree::labelFactory;
 }
+
+void ParseTree::setChecktype(CheckableType type) {
+	this->checkingType = type;
+}
+
+CheckableType ParseTree::getChecktype() {
+	return this->checkingType;
+}
+
+ParseTree::~ParseTree() {}
 
 void Prog::initStatic() {
 	ProgOnly::initStatic();
@@ -254,21 +304,28 @@ void ProgOnly::initStatic() {
 
 
 bool ProgOnly::isMatching(TokenSequence* sequence) {
+	std::cout << "Starting isMatching() from ProgOnly\n";
 	TokenSequence* sub1 = nullptr;
 	TokenSequence* sub2 = nullptr;
 	for (int i = -1; i <= sequence->getSize(); i++) {
 		sub1 = sequence->splitOn(i, &sub2);
 		ParseTree::splitIndexes->push(i);
 		if (Decls::isMatching(sub1) && Statements::isMatching(sub2)) {
+			sub1->prepareDelete(true);
 			delete sub1;
+			sub2->prepareDelete(true);
 			delete sub2;
+			std::cout << "Finishing isMatching() from ProgOnly\n" << "Matching works\n";
 			return true;
 		} else {
+			sub1->prepareDelete(true);
 			delete sub1;
+			sub2->prepareDelete(true);
 			delete sub2;
 			ParseTree::splitIndexes->undoPushing();
 		}
 	}
+	std::cout << "Finishing isMatching() from ProgOnly\n" << "Matching works\n";
 	return false;
 }
 
@@ -286,19 +343,23 @@ TokenTypeRegistry* ProgOnly::first() {
 
 bool ProgOnly::typeCheck() {
 	if (!this->declarationSegment->typeCheck()) {
+		std::cout << "Type checking works\n";
 		ERROR_EXIT
 	}
 	if (!this->statementSegment->typeCheck()) {
+		std::cout << "Type checking works\n";
 		ERROR_EXIT
 	}
 	this->checkingType = noType;
+	std::cout << "Type checking works\n";
 	return true;
 }
 
 void ProgOnly::makeCode() {
 	this->declarationSegment->makeCode();
 	this->statementSegment->makeCode();
-	ParseTree::codeWriter->printInStream("STP", "code");
+	ParseTree::codeOutput << "STP\n";
+	std::cout << "Code creation works\n";
 }
 
 ProgOnly::~ProgOnly() {
@@ -312,6 +373,7 @@ void DeclsSeq::initStatic() {
 
 bool DeclsSeq::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 3) return false;
+	std::cout << "Starting isMatching() from DeclsSeq\n";
 	TokenSequence* sub1 = nullptr;
 	TokenSequence* sub2 = nullptr;
 	TokenSequence* sub3 = nullptr;
@@ -322,12 +384,21 @@ bool DeclsSeq::isMatching(TokenSequence* sequence) {
 		sub3 = sub2->splitOn(0, &sub4);
 		ParseTree::splitIndexes->push(i);
 		if (Decl::isMatching(sub1) && sub3->tokenAt(0, false)->getType() == semicolonTokenType && Decls::isMatching(sub4)) {
+			sub1->prepareDelete(true);
+			sub2->prepareDelete(true);
+			sub3->prepareDelete(true);
+			sub4->prepareDelete(true);
 			delete sub1;
 			delete sub2;
 			delete sub3;
 			delete sub4;
+			std:: cout << "Finishing isMatching() from DeclsSeq\n";
 			return true;
 		} else {
+			sub1->prepareDelete(true);
+			sub2->prepareDelete(true);
+			sub3->prepareDelete(true);
+			sub4->prepareDelete(true);
 			delete sub1;
 			delete sub2;
 			delete sub3;
@@ -335,6 +406,7 @@ bool DeclsSeq::isMatching(TokenSequence* sequence) {
 			ParseTree::splitIndexes->undoPushing();
 		}
 	}
+	std:: cout << "Finishing isMatching() from DeclsSeq\n";
 	return false;
 }
 
@@ -409,14 +481,18 @@ void DeclOnly::initStatic() {
 }
 
 bool DeclOnly::isMatching(TokenSequence* sequence) {
+	std:: cout << "Starting isMatching() from DeclOnly\n";
 	if (sequence->getSize() < 2) return false;
 	TokenSequence* array = nullptr;
 	TokenSequence* useless1 = sequence->splitOn(1, &array);
 	bool result = sequence->tokenAt(0, false)->getType() == DeclOnly::firstToken->getType()
 			&& sequence->tokenAt(1, false)->getType() == ParseTree::identifierToken->getType()
 			&& Array::isMatching(array);
+	useless1->prepareDelete(true);
+	array->prepareDelete(true);
 	delete useless1;
 	delete array;
+	std:: cout << "Finishing isMatching() from DeclOnly\n";
 	return result;
 }
 
@@ -436,14 +512,14 @@ bool DeclOnly::typeCheck() {
 		ERROR_EXIT
 	}
 	if (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != noType) {
-	    // TODO print error
+		std::cerr << "error line " << this->identifier->getLine() << " column " << this->identifier->getColumn() << ": identifier already defined\n";
 		ERROR_EXIT
 	}
-	if (this->size->checkingType == errorType) {
+	if (this->size->getChecktype() == errorType) {
 		ERROR_EXIT
 	}
 	this->checkingType = noType;
-	if (this->size->checkingType == arrayType) {
+	if (this->size->getChecktype() == arrayType) {
 		ParseTree::typeTable->attachType(this->identifier->getLexem(), intArrayType);
 	} else {
 		ParseTree::typeTable->attachType(this->identifier->getLexem(), intType);
@@ -452,7 +528,7 @@ bool DeclOnly::typeCheck() {
 }
 
 void DeclOnly::makeCode() {
-	ParseTree::codeWriter->printInStream(("DS $%s ", this->identifier->getLexem()), "code");
+	ParseTree::codeOutput << "DS $" << this->identifier->getLexem() << ' ';
 	this->size->makeCode();
 }
 
@@ -489,6 +565,7 @@ TokenTypeRegistry* ArrayIndex::first() {
 
 bool ArrayIndex::typeCheck() {
 	if (this->integer->getValue() < 0) {
+		std::cerr << "error line " << this->integer->getLine() << " column " << this->integer->getColumn() << ": no valid dimension\n";
 		ERROR_EXIT
 	}
 	this->checkingType = noType;
@@ -496,8 +573,7 @@ bool ArrayIndex::typeCheck() {
 }
 
 void ArrayIndex::makeCode() {
-	char* printableCode = ("%i\n", this->integer->getValue()); // must use extra variable or the compiler doesn't understand the wildcarding
-	ParseTree::codeWriter->printInStream(printableCode, "code");
+	ParseTree::codeOutput << this->integer->getValue() << '\n';
 }
 
 ArrayIndex::~ArrayIndex() {
@@ -531,7 +607,7 @@ bool ArrayEps::typeCheck() {
 }
 
 void ArrayEps::makeCode() {
-	ParseTree::codeWriter->printInStream("1\n", "code");
+	ParseTree::codeOutput << "1\n";
 }
 
 ArrayEps::~ArrayEps() {}
@@ -542,6 +618,7 @@ void StatementsSeq::initStatic() {
 
 bool StatementsSeq::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 3) return false;
+	std:: cout << "Starting isMatching() from StatementsSeq\n";
 	TokenSequence* sub1 = nullptr;
 	TokenSequence* sub2 = nullptr;
 	TokenSequence* sub3 = nullptr;
@@ -552,12 +629,21 @@ bool StatementsSeq::isMatching(TokenSequence* sequence) {
 		sub3 = sub2->splitOn(0, &sub4);
 		ParseTree::splitIndexes->push(i);
 		if (Statement::isMatching(sub1) && sub3->tokenAt(0, false)->getType() == semicolonTokenType && Statements::isMatching(sub4)) {
+			sub1->prepareDelete(true);
+			sub2->prepareDelete(true);
+			sub3->prepareDelete(true);
+			sub4->prepareDelete(true);
 			delete sub1;
 			delete sub2;
 			delete sub3;
 			delete sub4;
+			std:: cout << "Finishing isMatching() from StatementsSeq\n";
 			return true;
 		} else {
+			sub1->prepareDelete(true);
+		    sub2->prepareDelete(true);
+		    sub3->prepareDelete(true);
+		    sub4->prepareDelete(true);
 			delete sub1;
 			delete sub2;
 			delete sub3;
@@ -565,6 +651,7 @@ bool StatementsSeq::isMatching(TokenSequence* sequence) {
 			ParseTree::splitIndexes->undoPushing();
 		}
 	}
+	std:: cout << "Finishing isMatching() from StatementsSeq\n";
 	return false;
 }
 
@@ -629,7 +716,7 @@ bool StatementsEps::typeCheck() {
 }
 
 void StatementsEps::makeCode() {
-	ParseTree::codeWriter->printInStream("NOP\n", "code");
+	ParseTree::codeOutput << "NOP\n";
 }
 
 StatementsEps::~StatementsEps() {}
@@ -642,6 +729,7 @@ void StatementSetValue::initStatic() {
 
 bool StatementSetValue::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 3) return false;
+	std:: cout << "Starting isMatching() from StatementSetValue\n";
 	TokenSequence* sub1 = nullptr;
 	TokenSequence* sub2 = nullptr;
 	TokenSequence* sub3 = nullptr;
@@ -656,15 +744,26 @@ bool StatementSetValue::isMatching(TokenSequence* sequence) {
 		sub5 = sub4->splitOn(0, &sub6);
 		ParseTree::splitIndexes->push(i);
 		if (Index::isMatching(sub3) && sub5->tokenAt(0, false)->getType() == assignType && Exp::isMatching(sub6)) {
+			sub1->prepareDelete(true);
+			sub2->prepareDelete(true);
+			sub3->prepareDelete(true);
+			sub4->prepareDelete(true);
+			sub5->prepareDelete(true);
+			sub6->prepareDelete(true);
 			delete sub1;
 			delete sub2;
 			delete sub3;
 			delete sub4;
 			delete sub5;
 			delete sub6;
+			std:: cout << "Finishing isMatching() from StatementSetValue\n";
 			return true;
 		}
 		else {
+			sub3->prepareDelete(true);
+			sub4->prepareDelete(true);
+			sub5->prepareDelete(true);
+			sub6->prepareDelete(true);
 			delete sub3;
 			delete sub4;
 			delete sub5;
@@ -672,8 +771,11 @@ bool StatementSetValue::isMatching(TokenSequence* sequence) {
 			ParseTree::splitIndexes->undoPushing();
 		}
 	}
+	sub1->prepareDelete(true);
+	sub2->prepareDelete(true);
 	delete sub1;
 	delete sub2;
+	std:: cout << "Finishing isMatching() from StatementSetValue\n";
 	return false;
 }
 
@@ -697,18 +799,18 @@ bool StatementSetValue::typeCheck() {
 		ERROR_EXIT
 	}
 	if (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() == noType) {
-	    // TODO print error
+	    std::cerr << "error line " << this->identifier->getLine() << " column " << this->identifier->getColumn() << ": identifier not defined\n";
 	    ERROR_EXIT
 	}
-	if (this->aimValue->checkingType != intType) {
-		// TODO print error
+	if (this->aimValue->getChecktype() != intType) {
+		std::cerr << "error line " << this->identifier->getLine() << " column " << this->identifier->getColumn() << ": cannot assign arrays\n";
 		ERROR_EXIT
 	}
 	if (   (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intType
-	        || this->index->checkingType != noType)
+	        || this->index->getChecktype() != noType)
 	    && (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intArrayType
-	        || this->index->checkingType != arrayType)) {
-	    // TODO print error
+	        || this->index->getChecktype() != arrayType)) {
+	    std::cerr << "error line " << this->identifier->getLine() << " column " << this->identifier->getColumn() << ": incompatible types\n";
 		ERROR_EXIT
 	}
 	this->checkingType = noType;
@@ -717,9 +819,9 @@ bool StatementSetValue::typeCheck() {
 
 void StatementSetValue::makeCode() {
 	this->aimValue->makeCode();
-	ParseTree::codeWriter->printInStream(("LA $%s\n", this->identifier->getLexem()), "code");
+	ParseTree::codeOutput << "LA $" << this->identifier->getLexem() << '\n';
 	this->index->makeCode();
-	ParseTree::codeWriter->printInStream("STR\n", "code");
+	ParseTree::codeOutput << "STR\n";
 }
 
 StatementSetValue::~StatementSetValue() {
@@ -734,6 +836,7 @@ void StatementWrite::initStatic() {
 
 bool StatementWrite::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 4) return false;
+	std:: cout << "Starting isMatching() from StatementWrite\n";
 	TokenSequence* exp = nullptr;
 	TokenSequence* preExp = sequence->splitOn(1, &exp);
 	TokenSequence* postExp = nullptr;
@@ -744,10 +847,15 @@ bool StatementWrite::isMatching(TokenSequence* sequence) {
 			&& sequence->tokenAt(1, false)->getType() == paranthType1
 			&& Exp::isMatching(actualExp)
 			&& sequence->tokenAt(sequence->getSize()-1, false)->getType() == paranthType2;
+	exp->prepareDelete(true);
+	actualExp->prepareDelete(true);
+	preExp->prepareDelete(true);
+	postExp->prepareDelete(true);
 	delete exp;
 	delete actualExp;
 	delete preExp;
 	delete postExp;
+	std:: cout << "Finishing isMatching() from StatementWrite\n";
 	return result;
 }
 
@@ -771,7 +879,7 @@ bool StatementWrite::typeCheck() {
 
 void StatementWrite::makeCode() {
 	this->toPrint->makeCode();
-	ParseTree::codeWriter->printInStream("PRI\n", "code");
+	ParseTree::codeOutput << "PRI\n";
 }
 
 StatementWrite::~StatementWrite() {
@@ -784,6 +892,7 @@ void StatementRead::initStatic() {
 
 bool StatementRead::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 4) return false;
+	std:: cout << "Starting isMatching() from StatementRead\n";
 	TokenSequence* sub = nullptr;
 	TokenSequence* post = nullptr;
 	TokenSequence* pre = sequence->splitOn(2, &sub);
@@ -795,10 +904,15 @@ bool StatementRead::isMatching(TokenSequence* sequence) {
 				&& sequence->tokenAt(2, false)->hasSameTypeAs(ParseTree::identifierToken)
 				&& Index::isMatching(core)
 				&& sequence->tokenAt(sequence->getSize()-1, false)->getType() == paranthType2;
+	sub->prepareDelete(true);
+	pre->prepareDelete(true);
+	core->prepareDelete(true);
+	post->prepareDelete(true);
 	delete sub;
 	delete pre;
 	delete core;
 	delete post;
+	std:: cout << "Finishing isMatching() from StatementRead\n";
 	return result;
 }
 
@@ -818,14 +932,14 @@ bool StatementRead::typeCheck() {
 		ERROR_EXIT
 	}
 	if (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() == noType) {
-	    // TODO print error
+	    std::cerr << "error line " << this->identifier->getLine() << " column " << this->identifier->getColumn() << ": identifier not defined\n";
 		ERROR_EXIT
 	}
 	if (   (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intType
-	        || this->index->checkingType != noType)
+	        || this->index->getChecktype() != noType)
 	    && (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intArrayType
-	        || this->index->checkingType != arrayType)) {
-	    // TODO print error
+	        || this->index->getChecktype() != arrayType)) {
+	    std::cerr << "error line " << this->identifier->getLine() << " column " << this->identifier->getColumn() << ": incompatible types\n";
 	    ERROR_EXIT
 	}
 	this->checkingType = noType;
@@ -833,9 +947,9 @@ bool StatementRead::typeCheck() {
 }
 
 void StatementRead::makeCode() {
-	ParseTree::codeWriter->printInStream(("REA\nLA $%s\n", this->identifier->getLexem()), "code");
+	ParseTree::codeOutput << "REA\nLA $" << this->identifier->getLexem() << '\n';
 	this->index->makeCode();
-	ParseTree::codeWriter->printInStream("STR\n", "code");
+	ParseTree::codeOutput << "STR\n";
 }
 
 StatementRead::~StatementRead() {
@@ -849,16 +963,22 @@ void StatementBlock::initStatic() {
 
 bool StatementBlock::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 2) return false;
+	std:: cout << "Starting isMatching() from StatementBlock\n";
 	TokenSequence* suffix = nullptr;
 	TokenSequence* brace1 = sequence->splitOn(0, &suffix);
 	TokenSequence* brace2 = nullptr;
 	TokenSequence* core = suffix->splitOn(suffix->getSize() - 2, &brace2);
 	bool isCoreStatements = Statements::isMatching(core);
 	const int braceCloseType = 27;
+	suffix->prepareDelete(true);
+	brace1->prepareDelete(true);
+	core->prepareDelete(true);
+	brace2->prepareDelete(true);
 	delete suffix;
 	delete brace1;
 	delete core;
 	delete brace2;
+	std:: cout << "Finishing isMatching() from StatementBlock\n";
 	return sequence->tokenAt(0, false)->hasSameTypeAs(StatementBlock::firstToken)
 			&& sequence->tokenAt(sequence->getSize()-1, false)->getType() == braceCloseType
 			&& isCoreStatements;
@@ -896,6 +1016,7 @@ void StatementIfElse::initStatic() {
 
 bool StatementIfElse::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 9) return false;
+	std:: cout << "Starting isMatching() from StatementIfElse\n";
 	// all necessary variables
 	TokenSequence* majorPrefix = nullptr;
 	TokenSequence* elseStatement = nullptr;
@@ -917,9 +1038,11 @@ bool StatementIfElse::isMatching(TokenSequence* sequence) {
 		ParseTree::splitIndexes->push(i);
 		currentOperationSucceeded = (majorPrefix->tokenAt(majorPrefix->getSize()-1, false)->getType() == elseType
 									&& Statement::isMatching(elseStatement));
+		elseStatement->prepareDelete(true);
 		delete elseStatement;
 		if (currentOperationSucceeded) break;
 		else {
+			majorPrefix->prepareDelete(true);
 			delete majorPrefix;
 			ParseTree::splitIndexes->undoPushing();
 		}
@@ -927,38 +1050,51 @@ bool StatementIfElse::isMatching(TokenSequence* sequence) {
 	if (!currentOperationSucceeded) return false;
 	// try to locate If block
 	ifAndItsStatement = majorPrefix->splitOn(majorPrefix->getSize() - 3, &elsePart);
+	majorPrefix->prepareDelete(true);
 	delete majorPrefix;
+	elsePart->prepareDelete(true);
 	delete elsePart;
 	if (!ifAndItsStatement->tokenAt(0, false)->hasSameTypeAs(StatementIfElse::firstToken) || ifAndItsStatement->tokenAt(1, false)->getType() != paranthStartType) {
+		ifAndItsStatement->prepareDelete(true);
 		delete ifAndItsStatement;
+		std:: cout << "Finishing isMatching() from StatementIfElse\n";
 		return false;
 	}
 	// final check: Can a constellation matching the "EXP)STATEMENT" pattern be found?
 	ifPart = ifAndItsStatement->splitOn(1, &semiCore);
+	ifAndItsStatement->prepareDelete(true);
 	delete ifAndItsStatement;
+	ifPart->prepareDelete(true);
 	delete ifPart;
 	for (int i = 0; i < semiCore->getSize() - 2; i++) {
 		currentOperationSucceeded = true;
 		ifExpression = semiCore->splitOn(i, &endOfIf);
-		delete semiCore;
 		ParseTree::splitIndexes->push(i);
 		if (!Exp::isMatching(ifExpression)) {
+			ifExpression->prepareDelete(true);
 			delete ifExpression;
+			endOfIf->prepareDelete(true);
 			delete endOfIf;
 			currentOperationSucceeded = false;
 			ParseTree::splitIndexes->undoPushing();
 			continue;
 		}
+		ifExpression->prepareDelete(true);
 		delete ifExpression;
 		core = endOfIf->splitOn(0, &ifStatement);
 		if (core->tokenAt(0, false)->getType() != paranthEndType || !Statement::isMatching(ifStatement)) currentOperationSucceeded = false;
+		endOfIf->prepareDelete(true);
 		delete endOfIf;
+		core->prepareDelete(true);
 		delete core;
+		ifStatement->prepareDelete(true);
 		delete ifStatement;
 		if (currentOperationSucceeded) break;
 		else ParseTree::splitIndexes->undoPushing();
 	}
+	semiCore->prepareDelete(true);
 	delete semiCore;
+	std:: cout << "Finishing isMatching() from StatementIfElse\n";
 	return currentOperationSucceeded;
 }
 
@@ -978,7 +1114,7 @@ bool StatementIfElse::typeCheck() {
 	if (!this->condition->typeCheck()) {
 		ERROR_EXIT
 	}
-	if (this->condition->checkingType == errorType) {
+	if (this->condition->getChecktype() == errorType) {
 		ERROR_EXIT
 	}
 	if (!this->thenCase->typeCheck()) {
@@ -993,17 +1129,13 @@ bool StatementIfElse::typeCheck() {
 
 void StatementIfElse::makeCode() {
 	int label1 = ParseTree::labelFactory->newLabel();
-	char* preparedString1 = ("JIN #%i\n", label1); // for some reason strings with int wildcards must be prepared in extra variables
-	char* preparedString3 = ("#%i NOP\n", label1); // numbered after sorting by usage ocurrence
 	int label2 = ParseTree::labelFactory->newLabel();
-	char* preparedString2 = ("JMP #%i\n", label2);
-	char* preparedString4 = ("#%i NOP\n", label2);
 	this->condition->makeCode();
-	ParseTree::codeWriter->printInStream(preparedString1, "code");
+	ParseTree::codeOutput << "JIN #" << label1 << '\n';
 	this->thenCase->makeCode();
-	ParseTree::codeWriter->printInStream(("%s%s", preparedString2, preparedString3), "code");
+	ParseTree::codeOutput << "JMP #" << label2 << "\n#" << label1 << " NOP\n";
 	this->elseCase->makeCode();
-	ParseTree::codeWriter->printInStream(preparedString4, "code");
+	ParseTree::codeOutput << '#' << label2 << " NOP\n";
 }
 
 StatementIfElse::~StatementIfElse() {
@@ -1018,6 +1150,7 @@ void StatementWhile::initStatic() {
 
 bool StatementWhile::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 6) return false;
+	std::cout << "Starting isMatching() from StatementWhile\n";
 	const int paranthStartType = 24;
 	const int paranthEndType = 25;
 	if (!sequence->tokenAt(0, false)->hasSameTypeAs(StatementWhile::firstToken)) return false;
@@ -1028,21 +1161,37 @@ bool StatementWhile::isMatching(TokenSequence* sequence) {
 	TokenSequence* parStat = nullptr;
 	TokenSequence* paranth = nullptr;
 	TokenSequence* statement = nullptr;
+	whileBeginning->prepareDelete(true);
+	delete whileBeginning;
 	for (int i = 0; i < remainings->getSize()-1; i++) {
 		exp = remainings->splitOn(i, &parStat);
 		paranth = parStat->splitOn(0, &statement);
+		parStat->prepareDelete(true);
 		delete parStat;
 		ParseTree::splitIndexes->push(i);
 		if (Exp::isMatching(exp)
 		    && paranth->tokenAt(0, false)->getType() == paranthEndType
 			&& Statement::isMatching(statement)) {
+			exp->prepareDelete(true);
 			delete exp;
+			paranth->prepareDelete(true);
 			delete paranth;
+			statement->prepareDelete(true);
 			delete statement;
+			std::cout << "Finishing isMatching() from StatementWhile\n";
 			return true;
 		}
+		exp->prepareDelete(true);
+		delete exp;
+		paranth->prepareDelete(true);
+		delete paranth;
+		statement->prepareDelete(true);
+		delete statement;
 		ParseTree::splitIndexes->undoPushing();
 	}
+	remainings->prepareDelete(true);
+	delete remainings;
+	std::cout << "Finishing isMatching() from StatementWhile\n";
 	return false;
 }
 
@@ -1061,7 +1210,7 @@ bool StatementWhile::typeCheck() {
 	if (!this->condition->typeCheck()) {
 		ERROR_EXIT
 	}
-	if (this->condition->checkingType == errorType) {
+	if (this->condition->getChecktype() == errorType) {
 		ERROR_EXIT
 	}
 	if (!this->loop->typeCheck()) {
@@ -1073,16 +1222,12 @@ bool StatementWhile::typeCheck() {
 
 void StatementWhile::makeCode() {
 	int label1 = ParseTree::labelFactory->newLabel();
-	char* preparedString1 = ("#%i NOP\n", label1);
-	char* preparedString3 = ("JMP #%i\n", label1);
 	int label2 = ParseTree::labelFactory->newLabel();
-	char* preparedString2 = ("JIN #%i\n", label2);
-	char* preparedString4 = ("#%i NOP\n", label2);
-	ParseTree::codeWriter->printInStream(preparedString1, "code");
+	ParseTree::codeOutput << '#' << label1 << " NOP\n";
 	this->condition->makeCode();
-	ParseTree::codeWriter->printInStream(preparedString2, "code");
+	ParseTree::codeOutput << "JIN #" << label2 << '\n';
 	this->loop->makeCode();
-	ParseTree::codeWriter->printInStream(("%s%s", preparedString3, preparedString4), "code");
+	ParseTree::codeOutput << "JMP #" << label1 << "\n#" << label2 << " NOP\n";
 }
 
 StatementWhile::~StatementWhile() {
@@ -1097,6 +1242,7 @@ void ExpOnly::initStatic() {
 
 bool ExpOnly::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 1) return false;
+	std::cout << "Starting isMatching() from ExpOnly\n";
 	TokenSequence* firstExp = nullptr;
 	TokenSequence* operatingUnit = nullptr;
 	bool combinationFound = false;
@@ -1104,11 +1250,14 @@ bool ExpOnly::isMatching(TokenSequence* sequence) {
 		firstExp = sequence->splitOn(i, &operatingUnit);
 		ParseTree::splitIndexes->push(i);
 		combinationFound = (Exp2::isMatching(firstExp) && OpExp::isMatching(operatingUnit));
+		firstExp->prepareDelete(true);
 		delete firstExp;
+		operatingUnit->prepareDelete(true);
 		delete operatingUnit;
 		if (combinationFound)break;
 		ParseTree::splitIndexes->undoPushing();
 	}
+	std::cout << "Finishing isMatching() from ExpOnly\n";
 	return combinationFound;
 }
 
@@ -1126,29 +1275,29 @@ bool ExpOnly::typeCheck() {
 	 || !this->calculateWith->typeCheck()) {
 		ERROR_EXIT
 	}
-	if (this->calculateWith->checkingType == noType
-	 || this->calculateWith->checkingType == this->rawExpression->checkingType) {
-		this->checkingType = this->rawExpression->checkingType;
+	if (this->calculateWith->getChecktype() == noType
+	 || this->calculateWith->getChecktype() == this->rawExpression->getChecktype()) {
+		this->checkingType = this->rawExpression->getChecktype();
 		return true;
 	}
 	ERROR_EXIT
 }
 
 void ExpOnly::makeCode() {
-	if (this->calculateWith->checkingType != noType
+	if (this->calculateWith->getChecktype() != noType
 	 && ((OpExpNext*)this->calculateWith)->isOperatorGreater()) {
 		this->calculateWith->makeCode();
 	}
 	this->rawExpression->makeCode();
-	if (this->calculateWith->checkingType != noType) {
+	if (this->calculateWith->getChecktype() != noType) {
 		if (!((OpExpNext*)this->calculateWith)->isOperatorGreater()) {
 			this->calculateWith->makeCode();
 			if (((OpExpNext*)this->calculateWith)->isOperatorNotEquals()) {
-				ParseTree::codeWriter->printInStream("NOT\n", "code");
+				ParseTree::codeOutput << "NOT\n";
 			}
 		}
 		else {
-			ParseTree::codeWriter->printInStream("LES\n", "code");
+			ParseTree::codeOutput << "LES\n";
 		}
 	}
 }
@@ -1164,21 +1313,31 @@ void Exp2Nested::initStatic() {
 
 bool Exp2Nested::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 3) return false;
+	std::cout << "Starting isMatching() from Exp2Nested\n";
 	const int paranthEndType = 25;
 	TokenSequence* end = nullptr;
 	TokenSequence* beginParanth = sequence->splitOn(0, &end);
 	TokenSequence* endParanth = nullptr;
 	TokenSequence* subexp = end->splitOn(end->getSize() - 2, &endParanth);
+	end->prepareDelete(true);
 	delete end;
 	if (beginParanth->tokenAt(0, false)->hasSameTypeAs(Exp2Nested::firstToken) && Exp::isMatching(subexp) && endParanth->tokenAt(0, false)->getType() == paranthEndType) {
+		beginParanth->prepareDelete(true);
 		delete beginParanth;
+		subexp->prepareDelete(true);
 		delete subexp;
+		endParanth->prepareDelete(true);
 		delete endParanth;
+		std::cout << "Finishing isMatching() from Exp2Nested\n";
 		return true;
 	}
+	beginParanth->prepareDelete(true);
 	delete beginParanth;
+	subexp->prepareDelete(true);
 	delete subexp;
+	endParanth->prepareDelete(true);
 	delete endParanth;
+	std::cout << "Finishing isMatching() from Exp2Nested\n";
 	return false;
 }
 
@@ -1193,7 +1352,7 @@ TokenTypeRegistry* Exp2Nested::first() {
 }
 
 bool Exp2Nested::typeCheck() {
-	this->checkingType = this->nestedExpression->typeCheck() ? this->nestedExpression->checkingType : errorType;
+	this->checkingType = this->nestedExpression->typeCheck() ? this->nestedExpression->getChecktype() : errorType;
 	return this->checkingType != errorType;
 }
 
@@ -1212,14 +1371,20 @@ void Exp2Variable::initStatic() {
 bool Exp2Variable::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 1) return false;
 	if (!sequence->tokenAt(0, false)->hasSameTypeAs(Exp2Variable::defaultIdentifier)) return false;
+	std::cout << "Starting isMatching() from Exp2Variable\n";
 	TokenSequence* notCheckedYet = nullptr;
 	TokenSequence* precedingIdentifier = sequence->splitOn(0, &notCheckedYet);
+	precedingIdentifier->prepareDelete(true);
 	delete precedingIdentifier;
 	if (Index::isMatching(notCheckedYet)) {
+		notCheckedYet->prepareDelete(true);
 		delete notCheckedYet;
+		std::cout << "Finishing isMatching() from Exp2Variable\n";
 		return true;
 	}
+	notCheckedYet->prepareDelete(true);
 	delete notCheckedYet;
+	std::cout << "Finishing isMatching() from Exp2Variable\n";
 	return false;
 }
 
@@ -1239,16 +1404,16 @@ bool Exp2Variable::typeCheck() {
 		ERROR_EXIT
 	}
 	if (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() == noType) {
-		// TODO print error
+		std::cerr << "error line " << this->identifier->getLine() << " column " << this->identifier->getColumn() << ": identifier not defined\n";
 	    ERROR_EXIT
 	}
 	if (   (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intType
-	        || this->index->checkingType != noType)
+	        || this->index->getChecktype() != noType)
 	    && (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() != intArrayType
-	        || this->index->checkingType != arrayType)) {
+	        || this->index->getChecktype() != arrayType)) {
 	    if (ParseTree::typeTable->lookup(this->identifier->getLexem())->getType() == intArrayType
-	    	|| this->index->checkingType == noType) {
-	    	// TODO print error
+	    	|| this->index->getChecktype() == noType) {
+	    	std::cerr << "error line " << this->identifier->getLine() << " column " << this->identifier->getColumn() << ": not a primitive type\n";
 	    }
 		ERROR_EXIT
 	}
@@ -1257,9 +1422,9 @@ bool Exp2Variable::typeCheck() {
 }
 
 void Exp2Variable::makeCode() {
-	ParseTree::codeWriter->printInStream(("LA $%s\n", this->identifier->getLexem()), "code");
+	ParseTree::codeOutput << "LA $" << this->identifier->getLexem() << '\n';
 	this->index->makeCode();
-	ParseTree::codeWriter->printInStream("LV\n", "code");
+	ParseTree::codeOutput << "LV\n";
 }
 
 Exp2Variable::~Exp2Variable() {
@@ -1292,8 +1457,7 @@ bool Exp2Constant::typeCheck() {
 }
 
 void Exp2Constant::makeCode() {
-	char* preparedString = ("LC %i", this->integer->getValue());
-	ParseTree::codeWriter->printInStream(preparedString, "code");
+	ParseTree::codeOutput << "LC " << this->integer->getValue();
 }
 
 Exp2Constant::~Exp2Constant() {
@@ -1307,14 +1471,20 @@ void Exp2NumericNegation::initStatic() {
 bool Exp2NumericNegation::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 2) return false;
 	if (!sequence->tokenAt(0, false)->hasSameTypeAs(Exp2NumericNegation::firstToken)) return false;
+	std::cout << "Starting isMatching() from Exp2NumericNegation\n";
 	TokenSequence* notCheckedYet = nullptr;
 	TokenSequence* precedingNegator = sequence->splitOn(0, &notCheckedYet);
+	precedingNegator->prepareDelete(true);
 	delete precedingNegator;
 	if (Exp2::isMatching(notCheckedYet)) {
+		notCheckedYet->prepareDelete(true);
 		delete notCheckedYet;
+		std::cout << "Finishing isMatching() from Exp2NumericNegation\n";
 		return true;
 	}
+	notCheckedYet->prepareDelete(true);
 	delete notCheckedYet;
+	std::cout << "Finishing isMatching() from Exp2NumericNegation\n";
 	return false;
 }
 
@@ -1330,14 +1500,14 @@ TokenTypeRegistry* Exp2NumericNegation::first() {
 
 bool Exp2NumericNegation::typeCheck() {
 	bool result = this->toNegate->typeCheck();
-	this->checkingType = this->toNegate->checkingType;
+	this->checkingType = this->toNegate->getChecktype();
 	return result;
 }
 
 void Exp2NumericNegation::makeCode() {
-	ParseTree::codeWriter->printInStream("LC 0\n", "code");
+	ParseTree::codeOutput << "LC 0\n";
 	this->toNegate->makeCode();
-	ParseTree::codeWriter->printInStream("SUB\n", "code");
+	ParseTree::codeOutput << "SUB\n";
 }
 
 Exp2NumericNegation::~Exp2NumericNegation() {
@@ -1351,14 +1521,20 @@ void Exp2LogicalNegation::initStatic() {
 bool Exp2LogicalNegation::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 2) return false;
 	if (!sequence->tokenAt(0, false)->hasSameTypeAs(Exp2LogicalNegation::firstToken)) return false;
+	std::cout << "Starting isMatching() from Exp2LogicalNegation\n";
 	TokenSequence* notCheckedYet = nullptr;
 	TokenSequence* precedingNegator = sequence->splitOn(0, &notCheckedYet);
+	precedingNegator->prepareDelete(true);
 	delete precedingNegator;
 	if (Exp2::isMatching(notCheckedYet)) {
+		notCheckedYet->prepareDelete(true);
 		delete notCheckedYet;
+		std::cout << "Finishing isMatching() from Exp2LogicalNegation\n";
 		return true;
 	}
+	notCheckedYet->prepareDelete(true);
 	delete notCheckedYet;
+	std::cout << "Finishing isMatching() from Exp2LogicalNegation\n";
 	return false;
 }
 
@@ -1374,7 +1550,7 @@ TokenTypeRegistry* Exp2LogicalNegation::first() {
 
 bool Exp2LogicalNegation::typeCheck() {
 	if (!this->toNegate->typeCheck()
-	 || this->toNegate->checkingType != intType) {
+	 || this->toNegate->getChecktype() != intType) {
 		ERROR_EXIT
 	}
 	this->checkingType = intType;
@@ -1383,7 +1559,7 @@ bool Exp2LogicalNegation::typeCheck() {
 
 void Exp2LogicalNegation::makeCode() {
 	this->toNegate->makeCode();
-	ParseTree::codeWriter->printInStream("NOT\n", "code");
+	ParseTree::codeOutput << "NOT\n";
 }
 
 Exp2LogicalNegation::~Exp2LogicalNegation() {
@@ -1396,6 +1572,7 @@ void IndexPosition::initStatic() {
 
 bool IndexPosition::isMatching(TokenSequence* sequence) {
 	if (sequence->getSize() < 3) return false;
+	std::cout << "Starting isMatching() from IndexPosition\n";
 	const int bracketEndType = 29;
 	TokenSequence* end = nullptr;
 	TokenSequence* beginBracket = sequence->splitOn(0, &end);
@@ -1403,14 +1580,22 @@ bool IndexPosition::isMatching(TokenSequence* sequence) {
 	TokenSequence* subexp = end->splitOn(end->getSize() - 2, &endBracket);
 	delete end;
 	if (beginBracket->tokenAt(0, false)->hasSameTypeAs(IndexPosition::firstToken) && Exp::isMatching(subexp) && endBracket->tokenAt(0, false)->getType() == bracketEndType) {
+		beginBracket->prepareDelete(true);
+		subexp->prepareDelete(true);
+		endBracket->prepareDelete(true);
 		delete beginBracket;
 		delete subexp;
 		delete endBracket;
+		std::cout << "Finishing isMatching() from IndexPosition\n";
 		return true;
 	}
+	beginBracket->prepareDelete(true);
+	subexp->prepareDelete(true);
+	endBracket->prepareDelete(true);
 	delete beginBracket;
 	delete subexp;
 	delete endBracket;
+	std::cout << "Finishing isMatching() from IndexPosition\n";
 	return false;
 }
 
@@ -1429,7 +1614,7 @@ TokenTypeRegistry* IndexPosition::first() {
 }
 
 bool IndexPosition::typeCheck() {
-	if (!this->index->typeCheck() || this->index->checkingType == errorType) {
+	if (!this->index->typeCheck() || this->index->getChecktype() == errorType) {
 		ERROR_EXIT
 	}
 	this->checkingType = arrayType;
@@ -1438,7 +1623,7 @@ bool IndexPosition::typeCheck() {
 
 void IndexPosition::makeCode() {
 	this->index->makeCode();
-	ParseTree::codeWriter->printInStream("ADD\n", "code");
+	ParseTree::codeOutput << "ADD\n";
 }
 
 IndexPosition::~IndexPosition() {
@@ -1480,11 +1665,15 @@ void OpExpNext::initStatic() {
 }
 
 bool OpExpNext::isMatching(TokenSequence* sequence) {
+	std::cout << "Starting isMatching() from OpExpNext\n";
 	TokenSequence* expCandidate = nullptr;
 	TokenSequence* opCandidate = sequence->splitOn(0, &expCandidate); // as OP is always 1 Token
 	bool result = Op::isMatching(opCandidate) && Exp::isMatching(expCandidate);
+	opCandidate->prepareDelete(true);
 	delete opCandidate;
+	expCandidate->prepareDelete(true);
 	delete expCandidate;
+	std::cout << "Finishing isMatching() from OpExpNext\n";
 	return result;
 }
 
@@ -1502,11 +1691,11 @@ bool OpExpNext::isEps() {
 }
 
 bool OpExpNext::isOperatorGreater() {
-	return this->Operator->first()->isSet(nullptr); // TODO replace nullptr by ParseTree::greaterToken
+	return this->Operator->first()->isSet(ParseTree::greaterToken);
 }
 
 bool OpExpNext::isOperatorNotEquals() {
-	return this->Operator->first()->isSet(nullptr); // TODO replace nullptr by ParseTree::notEqualsToken
+	return this->Operator->first()->isSet(ParseTree::notEqualsToken);
 }
 
 bool OpExpNext::typeCheck() {
@@ -1516,7 +1705,7 @@ bool OpExpNext::typeCheck() {
 	if (!this->operand->typeCheck()) {
 		ERROR_EXIT
 	}
-	this->checkingType = this->operand->checkingType;
+	this->checkingType = this->operand->getChecktype();
 	return true;
 }
 
@@ -1582,7 +1771,7 @@ bool OpPlus::typeCheck() {
 }
 
 void OpPlus::makeCode() {
-	ParseTree::codeWriter->printInStream("ADD\n", "code");
+	ParseTree::codeOutput << "ADD\n";
 }
 
 OpPlus::~OpPlus() {}
@@ -1609,7 +1798,7 @@ bool OpMinus::typeCheck() {
 }
 
 void OpMinus::makeCode() {
-	ParseTree::codeWriter->printInStream("SUB\n", "code");
+	ParseTree::codeOutput << "SUB\n";
 }
 
 OpMinus::~OpMinus() {}
@@ -1636,7 +1825,7 @@ bool OpMult::typeCheck() {
 }
 
 void OpMult::makeCode() {
-	ParseTree::codeWriter->printInStream("MUL\n", "code");
+	ParseTree::codeOutput << "MUL\n";
 }
 
 OpMult::~OpMult() {}
@@ -1663,7 +1852,7 @@ bool OpDiv::typeCheck() {
 }
 
 void OpDiv::makeCode() {
-	ParseTree::codeWriter->printInStream("DIV\n", "code");
+	ParseTree::codeOutput << "DIV\n";
 }
 
 OpDiv::~OpDiv() {}
@@ -1690,13 +1879,13 @@ bool OpLess::typeCheck() {
 }
 
 void OpLess::makeCode() {
-	ParseTree::codeWriter->printInStream("LES\n", "code");
+	ParseTree::codeOutput << "LES\n";
 }
 
 OpLess::~OpLess() {}
 
 void OpGreater::initStatic() {
-	OpGreater::firstToken = TYPE_REFERENCE_TOKEN_GREATER;
+	OpGreater::firstToken = ParseTree::greaterToken;
 }
 
 bool OpGreater::isMatching(TokenSequence* sequence) {
@@ -1720,8 +1909,8 @@ void OpGreater::makeCode() {}
 
 OpGreater::~OpGreater() {}
 
-void OpEquals::initStatic() {
-	OpEquals::firstToken = TYPE_REFERENCE_TOKEN_EQUALS;
+ void OpEquals::initStatic() {
+	 firstToken = TYPE_REFERENCE_TOKEN_EQUALS;
 }
 
 bool OpEquals::isMatching(TokenSequence* sequence) {
@@ -1742,13 +1931,13 @@ bool OpEquals::typeCheck() {
 }
 
 void OpEquals::makeCode() {
-	ParseTree::codeWriter->printInStream("EQU\n", "code");
+	ParseTree::codeOutput << "EQU\n";
 }
 
 OpEquals::~OpEquals() {}
 
 void OpNotEquals::initStatic() {
-	OpNotEquals::firstToken = TYPE_REFERENCE_TOKEN_NOT_EQUALS;
+	OpNotEquals::firstToken = ParseTree::notEqualsToken;
 }
 
 bool OpNotEquals::isMatching(TokenSequence* sequence) {
@@ -1769,7 +1958,7 @@ bool OpNotEquals::typeCheck() {
 }
 
 void OpNotEquals::makeCode() {
-	ParseTree::codeWriter->printInStream("EQU\n", "code");
+	ParseTree::codeOutput << "EQU\n";
 }
 
 OpNotEquals::~OpNotEquals() {}
@@ -1796,7 +1985,7 @@ bool OpAnd::typeCheck() {
 }
 
 void OpAnd::makeCode() {
-	ParseTree::codeWriter->printInStream("AND\n", "code");
+	ParseTree::codeOutput << "AND\n";
 }
 
 OpAnd::~OpAnd() {}

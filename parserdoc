@@ -1,0 +1,107 @@
+Der Parser ist der zweite Teil des Compiler-Projekts und
+ist für die semantische Überprüfung des Codes und auch
+für das Kompilieren zuständig - anders als bei
+handelsüblichen Compilern, die hierfür oft eine eigene
+große Komponente haben. Im Folgenden werden die einzelnen
+Teile des Parsers beschrieben, die wir implementiert
+haben.
+
+
+
+1) Parser.h und Parser.cpp
+
+Der Parser ist die steuernde Kernkomponente. Er lässt den
+Scanner Tokens erzeugen und baut eine Sequenz daraus, auf
+der das System bequem arbeiten kann. Darüber hinaus
+initiiert der Parser den Regelprüfungs-Prozess und baut
+auf Basis des Ergebnisses den ParseTree auf.
+
+
+
+2) ParseTree.h und ParseTree.cpp
+
+Die Steuerung des Vorgangs liegt zwar hauptsächlich im
+Parser und in der Main, aber die meisten Berechnungen
+laufen im ParseTree ab. Der ParseTree ist als Interface-
+System nach dem Schema für differenzierte Knoten-Klassen
+aufgebaut. Die Regelprüfung findet in den statischen
+isMatching()-Methoden statt, die sich gegenseitig
+aufrufen. Während der Regelprüfung werden die Indexe, an
+denen die Sequenz aufgespalten werden muss, bereits
+vorberechnet und statischim ParseTree gespeichert, sodass
+der Parser beim Aufbau des ParseTrees diese Information
+nur noch abrufen muss.
+
+In der isMatching()-Methode der ParseTree-Klasse Statement
+tritt bislang ein Fehler auf. Das System bricht mit der
+Meldung "Double free or corruption" ab, obwohl in allen
+Statement-Klassen sichergestellt wird, dass nur Non-Nullpointer
+freigegeben werden und die Tokens in den Sequenzen (die noch
+in anderen Sequenzen referenziert sind) nicht mit freigegeben
+werden. Der Grund dafür ist nicht bekannt.
+
+Der fertige ParseTree hat mit den virtuellen Methoden
+TypeCheck() und makeCode() die Werkzeuge für die weiteren
+Verarbeitungsschritte. Hierbei sei bemerkt, dass dank des
+Aufbaus mit differenzierten Knoten-Klassen der Code im
+Skript beinahe 1:1 übernommen werden konnte.
+
+
+
+3) TokenSequence.h und TokenSequence.cpp
+
+Während der ParseTree den Großteil der Berechnugsarbeit
+übernimmt und der Parser den Berechnungsprozess
+koordiniert, versorgt das TokenSequence Modul die anderen
+Komponenten mit hilfreichen Datenstrukturen. Es umfasst
+neben der TokenSequence Klasse, einer ArrayList für
+Tokens, die zusätzlich eine Split-Funktionalität
+bereitstellt, auch die Klassen TokenTypeRegistry,
+IntQueue und LabelFactory.
+
+Die TokenTypeRegistry ist eine Art Menge von Token-Typen,
+die zusätzlich neben Einzel-Token-Operationen (setzen,
+löschen, umschalten) auch Operationen anbietet, die es
+ermöglichen, ganze Sequenzen zu setzen, zu löschen oder
+umzuschalten. Darüber hinaus liefert diese Klasse
+Operationen, um Tokens und sogar ganze Sequenzen
+abzufragen, wobei für Sequenzen zwischen verschiedenen
+logischen Verknüpfungen ausgewählt werden kann.
+Zusätzlich ist es möglich, Registries mengentechnisch zu
+schneiden oder zu vereinigen, wobei das Ergebnis in der
+Registry steht, auf der die Operation aufgerufen wurde.
+
+Die IntQueue ist eine einfache Queue für Int-Werte, die
+vom ParseTree zum Speichern der Indexe verwendet wird.
+Sie ermöglicht neben dem gewöhnlichen Push und Pop auch
+ein Multi-Layer Undo für Push-Operationen sowie eine
+nicht-löschende Version von pop() namens fetch().
+
+Die LabelFactory fällt hierbei etwas aus der Reihe, da
+sie im Grunde keine wirkliche Datenstruktur ist, sondern
+einfach nur automatisch aufsteigende Int-Werte
+produziert, die als Code Labels oder auch als IDs
+verwendet werden können. Hierbei kann der Startwert
+vorgegeben werden. Dafür eine eigene Klase zu bauen, ist
+eigentlich ein Overhead, aber ermöglicht eine
+übersichtlichere Struktur.
+
+
+
+4) Änderungen an Scanner-Komponenten
+
+In der Komponente Syntax, die die Zustandstabelle für
+den Scanner-Automaten enthält, mussten im Keyword-
+Verzeichnis die neuen Keywords ELSE, WRITE, READ und INT
+hinzugefügt sowie für die zugehörigen Tokens passende
+String-Bezeichner angelegt werden.
+
+Die Komponente Information speichert nun zusätzlich
+einen typeCheck()-spezifischen Token-Typ. Für diesen
+Typen wird außerdem ein Enum angelegt.
+
+Ursprünglich war geplant, den Buffer den Dateizugriff
+für das Schreiben des Codes übernehmen zu lassen. Da
+das allerdings zu Problemen geführt hat (zyklisches
+Include), wird der dafür benötigte Stream stattdessen
+statisch im ParseTree gespeichert.

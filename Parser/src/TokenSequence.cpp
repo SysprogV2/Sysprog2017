@@ -112,6 +112,7 @@ TokenSequence::~TokenSequence () {
 }
 
 TokenTypeRegistry::TokenTypeRegistry() {
+	this->size = 36;
 	this->tokenTypes = new bool [this->size];
 	for (int i = 0; i < this->size; i++) {
 		this->tokenTypes[i] = false;
@@ -240,8 +241,10 @@ void IntQueue::push(int value){
 void IntQueue::undoPushing() {
 	if (this->size == 0) return;
 	if (this->size-- == 1 ) {
+		std::cout << "Dangerous spot in IntQueue started\n";
 		delete this->first;
-		delete this->last;
+		//delete this->last;
+		std::cout << "Dangerous spot passed without error\n";
 	} else {
 		this->last = this->last->previous;
 		this->last->next->previous = nullptr;
@@ -254,7 +257,7 @@ int IntQueue::pop() {
 	int temp = this->first->value;
 	if (this->size-- == 1 ) {
 		delete this->first;
-		delete this->last;
+		//delete this->last;
 	} else {
 		this->first = this->first->next;
 		this->first->previous->next = nullptr;
@@ -273,7 +276,7 @@ int IntQueue::getSize() {
 
 IntQueue::~IntQueue() {
 	delete this->first;
-	delete this->last;
+	//delete this->last;
 }
 
 LabelFactory::LabelFactory(int firstLabelNo) {
@@ -286,15 +289,3 @@ int LabelFactory::newLabel() {
 
 LabelFactory::~LabelFactory() {}
 
-const char* getFilepathByID(char* filestreamID) {
-	switch (filestreamID) {
-	case "code":
-		return "../../debug/test.code";
-	case "scan":
-		return "../../debug/output.txt";
-	// for each additional output filestream a case must be added
-	default:
-		// TODO throw error with message "Stream ID is not registered"
-		return nullptr;
-	}
-}
