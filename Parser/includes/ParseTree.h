@@ -15,6 +15,9 @@
 #include "../../Symboltable/includes/Symboltable.h"
 #include "../../Buffer/includes/Buffer.h"
 
+#include <iostream>
+#include <fstream>
+
 #define TYPE_REFERENCE_TOKEN_INT new Token (32, 0, 0)
 #define TYPE_REFERENCE_TOKEN_BRACKETS_START new Token (28, 0, 0)
 #define TYPE_REFERENCE_TOKEN_WRITE new Token (33, 0, 0)
@@ -48,9 +51,12 @@ protected:
 	static Token* minusToken;
 	static Token* integerToken;
 	static Token* identifierToken;
+	static Token* greaterToken;
+	static Token* notEqualsToken;
+	static Token* failureToken;
 	static IntQueue* splitIndexes;
 	static Symboltable* typeTable;
-	static Buffer* codeWriter;
+	static std::ofstream codeOutput;
 	static LabelFactory* labelFactory;
 	CheckableType checkingType;
 public:
@@ -62,6 +68,8 @@ public:
 	virtual ~ParseTree() = 0;
 	virtual bool typeCheck() = 0;
 	virtual void makeCode() = 0;
+	void setChecktype (CheckableType type);
+	CheckableType getChecktype();
 	PFR
 };
 

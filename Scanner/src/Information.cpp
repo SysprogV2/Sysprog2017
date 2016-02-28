@@ -38,3 +38,11 @@ bool Information::matches(char* other) {
 	}
 	return true;
 }
+
+CheckableType Information::getType() {
+	return this->type;
+}
+
+void Information::setType(CheckableType type) {
+	this->type = type;
+}

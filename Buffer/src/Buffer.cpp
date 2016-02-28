@@ -8,26 +8,21 @@
 Buffer::~Buffer() {
 	/* Close file descriptor */
 	close(fd);
-	// Close all output filestreams and delete stream array
-	for (int i = 0; i < this->containedStreams; i++) {
-		this->outputStreams[i].stream.close();
-	}
-	delete[] this->outputStreams;
 }
 
 Buffer::Buffer(char *pathToFile) {
+	std::cout << "Starts running Buffer constructor\n";
 	filename = pathToFile;
 	fd = open(filename, O_RDONLY, O_DIRECT); // TODO find a Windows replacement for O_DIRECT and define it as O_DIRECT in compab.h
 	allocateBufferMemory();
 	shift = 0;
 	isAnymoreToRead = true;
 	shouldLoadNewPortion = true;
-	outputStreams = new IdentifiableStream[5]; // actually a size of 2 would suffice but let's say 5 to keep it general
-	maximumOfOutstreams = 5;
-	containedStreams = 0;
+	std::cout << "Finishes running Buffer constructor\n";
 }
 
 char Buffer::getChar() {
+	//std::cout << "Starts running getChar()\n";
 	if (isAnymoreToRead) {
 		if (next == terminator1) {
 			theEndOfPrevBuffer = --next;
@@ -42,14 +37,17 @@ char Buffer::getChar() {
 		}
 	} else {
 		if (byte_read == 0) {
+			//std::cout << "Finishes running getChar()\n";
 			return '\0';
 		}
 	}
 	shift++;
+	//std::cout << "Finishes running getChar()\n";
 	return next++[0];
 }
 
 void Buffer::ungetChar(int back) {
+	//std::cout << "Starts running ungetChar()\n";
 	next -= back;
 	shift -= back;
 	if (shift < 0) {
@@ -58,10 +56,12 @@ void Buffer::ungetChar(int back) {
 		next -= (shift) * sizeof(char);
 		shouldLoadNewPortion = false;
 	}
+	//std::cout << "Finishes running ungetChar()\n";
 }
 
 /* Load given buffer with a content of a textfile */
 void Buffer::load(void * someBuffer) {
+	std::cout << "Starts running load()\n";
 	byte_read = read(fd, someBuffer, (BUFFER_SIZE / 2) - 1);
 	if (byte_read < (signed) ((BUFFER_SIZE / 2) - 1) && byte_read >= 0) {
 		char * tmp = (char *) someBuffer;
@@ -69,50 +69,33 @@ void Buffer::load(void * someBuffer) {
 		tmp[byte_read] = '\0';
 		isAnymoreToRead = false;
 	}
+	if (byte_read < 0) std::cout << "is this the segfault?";
 	shift = 0;
+	std::cout << "Finishes running load()\n";
 }
 
 void Buffer::allocateBufferMemory() {
-		void *tmp1;
-		int error = posix_memalign(&tmp1, BUFFER_ALIGNMENT, BUFFER_SIZE);
-		if (error != 0) {
-		    std::cout << "Couldn't allocate memory. Exiting..." << std::endl;
-		    exit(EXIT_FAILURE);
-		}
+	std::cout << "Starts running allocateBufferMemory()\n";
+	void *tmp1;
+	int error = posix_memalign(&tmp1, BUFFER_ALIGNMENT, BUFFER_SIZE); // problem might be here
+	if (error != 0) {
+	    std::cout << "Couldn't allocate memory. Exiting..." << std::endl;
+	    exit(EXIT_FAILURE);
+	}
+	std::cout << (int)tmp1 << '\n';
+	buffer1 = (char *) tmp1; // problem might be here
+	std::cout << (int)buffer1 << '\n';
+	terminator1 = buffer1 + ((BUFFER_SIZE / 2) - 1) * sizeof(char); // problem might be here
+	std::cout << (int)terminator1 << '\n';
+	terminator1[0] = '\0';
 
-		buffer1 = (char *) tmp1;
-		terminator1 = buffer1 + ((BUFFER_SIZE / 2) - 1) * sizeof(char);
-		terminator1[0] = '\0';
+	buffer2 = terminator1 + sizeof(char);
+	terminator2 = buffer2 + ((BUFFER_SIZE / 2) - 1) * sizeof(char);
+	terminator2[0] = '\0';
 
-		buffer2 = terminator1 + sizeof(char);
-		terminator2 = buffer2 + ((BUFFER_SIZE / 2) - 1) * sizeof(char);
-		terminator2[0] = '\0';
-
-	    load(buffer1);
-	    next = buffer1;
+	load(buffer1);
+	next = buffer1;
+	std::cout << (int)terminator1 << '\n'; // result: terminator1 not properly initialized
+	std::cout << "Finishes running allocateBufferMemory()\n";
 }
 
-void Buffer::printInStream(char* toPrint, char* streamID) {
-	IdentifiableStream outstream;
-	bool streamFound = false;
-	// try finding a stream with the given ID in the array of stored streams
-	for (int i = 0; i < this->containedStreams; i++) {
-		if (this->outputStreams[i].streamID == streamID) {
-			outstream = this->outputStreams[i];
-			streamFound = true;
-			break;
-		}
-	}
-	if (!streamFound) {
-		// open new stream and store it, or throw an error if it cannot be stored
-		if (&& this->containedStreams < this->maximumOfOutstreams) {
-			outstream.streamID = streamID;
-			outstream.stream.open(getFilepathByID(streamID));
-			this->outputStreams[this->containedStreams++] = outstream;
-		} else {
-			// TODO throw error with message "Could not store another output filestream"
-		}
-	}
-	// print the given text into the stream
-	outstream.stream << toPrint;
-}

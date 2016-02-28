@@ -6,7 +6,7 @@
  */
 
 #include "../includes/Token.h"
-//#include "../../Automat/includes/Syntax.h"
+
 #include <iostream>
 #include <errno.h>
 Token::Token(int type, int line, int column) {
@@ -40,7 +40,12 @@ void Token::setInformation(Information* info) {
 }
 
 int Token::getType(){
-	return tType;
+
+	std::cout << "debuging *** Token::getType STRT" << std::endl;
+	std::cout << tType << std::endl;
+	int toReturn = tType;
+	std::cout << "debuging *** Token::getType END" << std::endl;
+	return toReturn;
 }
 
 char* Token::getLexem() {

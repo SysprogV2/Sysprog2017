@@ -20,8 +20,6 @@
 #include <malloc.h>
 #include "../../Compatibility/compab.h"
 
-#include "../../Parser/includes/TokenSequence.h"
-
 #define BUFFER_SIZE 2048
 #define BUFFER_ALIGNMENT 4096
 
@@ -41,10 +39,6 @@ class Buffer {
     bool shouldLoadNewPortion;
 
     char *currentWorkingBuffer;
-
-    IdentifiableStream outputStreams[];
-    int maximumOfOutstreams;
-    int containedStreams;
 public:
 	~Buffer();
 	Buffer(char *pathToFile);
@@ -52,7 +46,6 @@ public:
 	void ungetChar(int back);
 	void load(void * someBuffer);
 	void allocateBufferMemory();
-	void printInStream(char* toPrint, char* streamID);
 };
 
 

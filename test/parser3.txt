@@ -1,0 +1,12 @@
+int i;
+int prax[5];
+int i[7]; :* einziger Fehler *:
+while (prax[4] > (3 * i)) { :* Endlosschleife oder nicht kann hier egal sein *:
+  if (i < 8) prax[2] = 5;
+  else {
+    write (prax[0] - prax[3] * i);
+    read (prax[0]);
+  }
+}
+i = prax[0] - (prax[1] / prax[2]) * prax[3] + prax[4];
+write(i);
