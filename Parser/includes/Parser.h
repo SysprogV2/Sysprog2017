@@ -14,13 +14,7 @@
 
 class Parser {
 private:
-	TokenSequence* currentCodeSnippet;
-	TokenSequence* composeTable(char* filename);
-	void buildDecl (Decl** toBuild, TokenSequence* relatedSequence);
-	void buildStatement (Statement** toBuild, TokenSequence* relatedSequence);
-	Index* buildIndex(TokenSequence* related);
-	Exp* buildExp(TokenSequence* related);
-	Exp2* buildExp2(TokenSequence* related);
+	Scanner* scanner;
 public:
 	Parser();
 	void setAndRunOnFile (char* filename);

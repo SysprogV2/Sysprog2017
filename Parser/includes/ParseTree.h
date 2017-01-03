@@ -40,8 +40,6 @@
 #define IDENTIFIER_DEFAULT_TOKEN new Token (1, 0, 0)
 #define INTEGER_DEFAULT_TOKEN new Token (2, 0, 0)
 
-#define PFR friend class Parser;
-
 #define ERROR_EXIT this->checkingType = errorType; return false;
 
 class ParseTree {
@@ -61,7 +59,6 @@ protected:
 	CheckableType checkingType;
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	static void prepareTreeOperations();
 	static void terminateTreeOperations();
@@ -70,20 +67,18 @@ public:
 	virtual void makeCode() = 0;
 	void setChecktype (CheckableType type);
 	CheckableType getChecktype();
-	PFR
+
 };
 
 class Prog : public ParseTree {
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 };
 
 class Decls : public ParseTree {
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
     static TokenTypeRegistry* first();
     virtual bool isEps() = 0;
 };
@@ -91,14 +86,12 @@ public:
 class Decl : public ParseTree {
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
     static TokenTypeRegistry* first();
 };
 
 class Array : public ParseTree {
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	virtual bool isEps() = 0;
 };
@@ -106,7 +99,6 @@ public:
 class Statements : public ParseTree {
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	virtual bool isEps() = 0;
 };
@@ -114,28 +106,24 @@ public:
 class Statement : public ParseTree {
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 };
 
 class Exp : public ParseTree {
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 };
 
 class Exp2 : public ParseTree {
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 };
 
 class Index : public ParseTree {
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	virtual bool isEps() = 0;
 };
@@ -143,7 +131,6 @@ public:
 class OpExp : public ParseTree {
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	virtual bool isEps() = 0;
 };
@@ -151,7 +138,6 @@ public:
 class Op : public ParseTree {
 public:
 	static void initStatic();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 };
 
@@ -162,12 +148,11 @@ private:
 public:
 	static void initStatic();
 	ProgOnly();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~ProgOnly();
-	PFR
+
 };
 
 class DeclsSeq : public Decls {
@@ -177,26 +162,24 @@ private:
 public:
 	static void initStatic();
 	DeclsSeq();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	bool isEps();
 	~DeclsSeq();
-	PFR
+
 };
 
 class DeclsEps : public Decls {
 public:
 	static void initStatic();
 	DeclsEps();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	bool isEps();
 	~DeclsEps();
-	PFR
+
 };
 
 class DeclOnly : public Decl {
@@ -207,12 +190,11 @@ private:
 public:
 	static void initStatic();
 	DeclOnly();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~DeclOnly();
-	PFR
+
 };
 
 class ArrayIndex : public Array {
@@ -222,26 +204,24 @@ private:
 public:
 	static void initStatic();
 	ArrayIndex();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	bool isEps();
 	~ArrayIndex();
-	PFR
+
 };
 
 class ArrayEps : public Array {
 public:
 	static void initStatic();
 	ArrayEps();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	bool isEps();
 	~ArrayEps();
-	PFR
+
 };
 
 class StatementsSeq : public Statements {
@@ -251,26 +231,24 @@ private:
 public:
 	static void initStatic();
 	StatementsSeq();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	bool isEps();
 	~StatementsSeq();
-	PFR
+
 };
 
 class StatementsEps : public Statements {
 public:
 	static void initStatic();
 	StatementsEps();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	bool isEps();
 	~StatementsEps();
-	PFR
+
 };
 
 class StatementSetValue : public Statement {
@@ -282,12 +260,11 @@ private:
 public:
 	static void initStatic();
 	StatementSetValue();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementSetValue();
-	PFR
+
 };
 
 class StatementWrite : public Statement {
@@ -297,12 +274,11 @@ private:
 public:
 	static void initStatic();
 	StatementWrite();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementWrite();
-	PFR
+
 };
 
 class StatementRead : public Statement {
@@ -313,12 +289,11 @@ private:
 public:
 	static void initStatic();
 	StatementRead();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementRead();
-	PFR
+
 };
 
 class StatementBlock : public Statement {
@@ -328,12 +303,11 @@ private:
 public:
 	static void initStatic();
 	StatementBlock();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementBlock();
-	PFR
+
 };
 
 class StatementIfElse : public Statement {
@@ -345,12 +319,11 @@ private:
 public:
 	static void initStatic();
 	StatementIfElse();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementIfElse();
-	PFR
+
 };
 
 class StatementWhile : public Statement {
@@ -361,12 +334,11 @@ private:
 public:
 	static void initStatic();
 	StatementWhile();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementWhile();
-	PFR
+
 };
 
 class ExpOnly : public Exp {
@@ -376,12 +348,11 @@ private:
 public:
 	static void initStatic();
 	ExpOnly();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~ExpOnly();
-	PFR
+
 };
 
 class Exp2Nested : public Exp2 {
@@ -391,12 +362,11 @@ private:
 public:
 	static void initStatic();
 	Exp2Nested();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~Exp2Nested();
-	PFR
+
 };
 
 class Exp2Variable : public Exp2 {
@@ -407,12 +377,11 @@ private:
 public:
 	static void initStatic();
 	Exp2Variable();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~Exp2Variable();
-	PFR
+
 };
 
 class Exp2Constant : public Exp2 {
@@ -422,12 +391,11 @@ private:
 public:
 	static void initStatic();
 	Exp2Constant();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~Exp2Constant();
-	PFR
+
 };
 
 class Exp2NumericNegation : public Exp2 {
@@ -437,12 +405,11 @@ private:
 public:
 	static void initStatic();
 	Exp2NumericNegation();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~Exp2NumericNegation();
-	PFR
+
 };
 
 class Exp2LogicalNegation : public Exp2 {
@@ -452,12 +419,11 @@ private:
 public:
 	static void initStatic();
 	Exp2LogicalNegation();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~Exp2LogicalNegation();
-	PFR
+
 };
 
 class IndexPosition : public Index {
@@ -467,26 +433,24 @@ private:
 public:
 	static void initStatic();
 	IndexPosition();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	bool isEps();
 	~IndexPosition();
-	PFR
+
 };
 
 class IndexEps : public Index {
 public:
 	static void initStatic();
 	IndexEps();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	bool isEps();
 	~IndexEps();
-	PFR
+
 };
 
 class OpExpNext : public OpExp {
@@ -495,7 +459,6 @@ class OpExpNext : public OpExp {
 public:
 	static void initStatic();
 	OpExpNext();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -503,20 +466,19 @@ public:
 	bool isOperatorGreater();
 	bool isOperatorNotEquals();
 	~OpExpNext();
-	PFR
+
 };
 
 class OpExpEps : public OpExp {
 public:
 	static void initStatic();
 	OpExpEps();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	bool isEps();
 	~OpExpEps();
-	PFR
+
 };
 
 class OpPlus : public Op {
@@ -525,12 +487,11 @@ private:
 public:
 	static void initStatic();
 	OpPlus();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpPlus();
-	PFR
+
 };
 
 class OpMinus : public Op {
@@ -539,12 +500,11 @@ private:
 public:
 	static void initStatic();
 	OpMinus();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpMinus();
-	PFR
+
 };
 
 class OpMult : public Op {
@@ -553,12 +513,11 @@ private:
 public:
 	static void initStatic();
 	OpMult();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpMult();
-	PFR
+
 };
 
 class OpDiv : public Op {
@@ -567,12 +526,11 @@ private:
 public:
 	static void initStatic();
 	OpDiv();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpDiv();
-	PFR
+
 };
 
 class OpLess : public Op {
@@ -581,12 +539,11 @@ private:
 public:
 	static void initStatic();
 	OpLess();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpLess();
-	PFR
+
 };
 
 class OpGreater : public Op {
@@ -595,12 +552,11 @@ private:
 public:
 	static void initStatic();
 	OpGreater();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpGreater();
-	PFR
+
 };
 
 class OpEquals : public Op {
@@ -609,12 +565,11 @@ private:
 public:
 	static void initStatic();
 	OpEquals();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpEquals();
-	PFR
+
 };
 
 class OpNotEquals : public Op {
@@ -623,12 +578,11 @@ private:
 public:
 	static void initStatic();
 	OpNotEquals();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpNotEquals();
-	PFR
+
 };
 
 class OpAnd : public Op {
@@ -637,12 +591,11 @@ private:
 public:
 	static void initStatic();
 	OpAnd();
-	static bool isMatching(TokenSequence* sequence);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpAnd();
-	PFR
+
 };
 
 #endif /* PARSER_INCLUDES_PARSETREE_H_ */
