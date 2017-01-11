@@ -4,7 +4,7 @@
  *  Created on: Oct 28, 2015
  *      Author: arty
  */
-
+#define __WIN32__
 #include "../includes/StringTab.h"
 
 StringTab::StringTab() {

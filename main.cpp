@@ -1,3 +1,5 @@
+#define __WIN32__
+
 /*
  * main.cpp
  *
@@ -27,11 +29,12 @@ int main(int argc, char* argv[]) {
     timestamp_t t0 = get_timestamp();
 
 	if (argc < 1) return EXIT_FAILURE;
+	char* fileIn = argv[0];
 
 	/* unlike previous version, this is self-made,
 	 * but the test should run correctly
 	 */
-	Parser* parser = new Parser(argv[0]);
+	Parser* parser = new Parser(fileIn);
 	ParseTree* tree = parser->parse();
 	int compile_error;
 	if (tree->typeCheck()) {

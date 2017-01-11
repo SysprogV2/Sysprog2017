@@ -6,7 +6,7 @@
  */
 
 
-#include "Errors.h"
+#include "../includes/Errors.h"
 
 void throwError(ErrorType type) {
 	char* errorString = "Error: %s", errorTypeToString(type);

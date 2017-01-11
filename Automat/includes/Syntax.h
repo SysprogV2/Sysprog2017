@@ -29,19 +29,23 @@ class Syntax {
 				/* PRH */	{PROH_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z}
 	};
 	char* ttypeString[STATES_NUMBER + KEYWORD_NUMBER] = {
-							 "Start     ", "Identifier", "Integer   ", "Less      ", //  0- 3
-							 "Greater   ", "Colon     ", "Equals    ", "<:>-sign  ", //  4- 7
-							 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ", //  8-11
-							 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ", // 12-15
-							 "  --*:--  ", "Prohibited", " --null-- ", "PlusToken ", // 16-19
-							 "MinusToken", "NotToken  ", "AndToken  ", "SemicolTok", // 20-23
-							 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ", // 24-27
-							 "Brackets [", "Brackets ]" ,"IfToken   ", "WhileToken", // 28-31
-							 "INT-Token ", "WRITE-Toke", "ELSE-Token", "READ-Token"  // 32-35
+			(char *) "Start     ", (char *) "Identifier", (char *) "Integer   ", (char *) "Less      ", //  0- 3
+			(char *) "Greater   ", (char *) "Colon     ", (char *) "Equals    ", (char *) "<:>-sign  ", //  4- 7
+			(char *) "  --<:--  ", (char *) "<:>       ", (char *) "Assignment", (char *) " --eof--  ", //  8-11
+			(char *) "Whitespace", (char *) "Multipl   ", (char *) "  --:*--  ", (char *) " --comm-- ", // 12-15
+			(char *) "  --*:--  ", (char *) "Prohibited", (char *) " --null-- ", (char *) "PlusToken ", // 16-19
+			(char *) "MinusToken", (char *) "NotToken  ", (char *) "AndToken  ", (char *) "SemicolTok", // 20-23
+			(char *) "Paranth ( ", (char *) "Paranth ) ", (char *) "Braces {  ", (char *) "Braces }  ", // 24-27
+			(char *) "Brackets [", (char *) "Brackets ]", (char *) "IfToken   ", (char *) "WhileToken", // 28-31
+			(char *) "INT-Token ", (char *) "WRITE-Toke", (char *) "ELSE-Token", (char *) "READ-Token"  // 32-35
 	};
 	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
 
-	char* keywordsArray[KEYWORD_NUMBER * 2] = {"if", "IF", "while", "WHILE", "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};
+	char* keywordsArray[KEYWORD_NUMBER * 2] = {(char *) "if", (char *) "IF", (char *) "while", (char *) "WHILE", (char *) "int", (char *) "INT", (char *) "write", (char *) "WRITE",
+											   (char *) "else",
+											   (char *) "ELSE",
+											   (char *) "read",
+											   (char *) "READ"};
 
 public:
 	int keywordNumber;

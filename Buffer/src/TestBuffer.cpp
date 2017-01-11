@@ -2,7 +2,6 @@
 #include "../../Automat/includes/Automat.h"
 #include <iostream>
 
-
 int main(int argc, char **argv) {
 	char* filename;
 	if (argc > 0) {

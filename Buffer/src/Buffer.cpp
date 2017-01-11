@@ -4,6 +4,7 @@
  *  Created on: Sep 26, 2012
  *      Author: knad0001
  */
+#define __WIN32__
 #include "../includes/Buffer.h"
 Buffer::~Buffer() {
 	/* Close file descriptor */
@@ -82,11 +83,11 @@ void Buffer::allocateBufferMemory() {
 	    std::cout << "Couldn't allocate memory. Exiting..." << std::endl;
 	    exit(EXIT_FAILURE);
 	}
-	std::cout << (int)tmp1 << '\n';
+	std::cout << *((int *)tmp1) << '\n';
 	buffer1 = (char *) tmp1; // problem might be here
-	std::cout << (int)buffer1 << '\n';
+	std::cout << *((int *)buffer1) << '\n';
 	terminator1 = buffer1 + ((BUFFER_SIZE / 2) - 1) * sizeof(char); // problem might be here
-	std::cout << (int)terminator1 << '\n';
+	std::cout << *((int *)terminator1) << '\n';
 	terminator1[0] = '\0';
 
 	buffer2 = terminator1 + sizeof(char);
@@ -95,7 +96,7 @@ void Buffer::allocateBufferMemory() {
 
 	load(buffer1);
 	next = buffer1;
-	std::cout << (int)terminator1 << '\n'; // result: terminator1 not properly initialized
+	std::cout << *((int *)terminator1) << '\n'; // result: terminator1 not properly initialized
 	std::cout << "Finishes running allocateBufferMemory()\n";
 }
 

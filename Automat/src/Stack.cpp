@@ -1,3 +1,5 @@
+#define __WIN32__
+
 /*
  * Stack.cpp
  *
@@ -12,7 +14,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#include "../../Compatibility/compab.h"
+#include "../../SharedLibraries/includes/compab.h"
 
 Stack::Stack() {
 	stackHead = 0;

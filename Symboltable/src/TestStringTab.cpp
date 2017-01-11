@@ -2,25 +2,25 @@
 #include <iostream>
 int main(int argc, char **argv) {
 	StringTab * st = new StringTab();
-	char * c1 = "reallyreal";
+	char * c1 = (char *) "reallyreal";
 	int c1len = 10;
-	char * c2 = "a";
+	char * c2 = (char *) "a";
 	int c2len = 1;
-	char * c3 = "b";
+	char * c3 = (char *) "b";
 	int c3len = 1;
-	char * c4 = "c";
+	char * c4 = (char *) "c";
 	int c4len = 1;
-	char * c5 = "d";
+	char * c5 = (char *) "d";
 	int c5len = 1;
-	char * c6 = "mio moi mio";
+	char * c6 = (char *) "mio moi mio";
 	int c6len = 11;
-	char * c7 = "RACINGTEAM";
+	char * c7 = (char *) "RACINGTEAM";
 	int c7len = 10;
-	char * c8 = "trytohandleths";
+	char * c8 = (char *) "trytohandleths";
 	int c8len = 14;
-	char * c9 = "not impressed at all";
+	char * c9 = (char *) "not impressed at all";
 	int c9len = 20;
-	char * c10 = "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallyString";
+	char * c10 = (char *) "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallyString";
 	int c10len = 67;
 
 
