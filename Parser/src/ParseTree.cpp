@@ -235,13 +235,19 @@ TokenTypeRegistry* ProgOnly::first() {
 ProgOnly::ProgOnly(Scanner* scanner) {
 	if (true) { // TODO fetch next token without consuming it and check if it's in DeclsSeq::first()
 		this->declarationSegment = new DeclsSeq(scanner);
-	} else {
+	} else if (true) { // TODO fetch next token without consuming it and check if it's in DeclsEps::first()
 		this->declarationSegment = new DeclsEps(scanner);
+	} else {
+		// TODO print error properly
+		exit(1);
 	}
 	if (true) { // TODO fetch next token without consuming it and check if it's in StatementsSeq::first()
 		this->statementSegment = new StatementsSeq(scanner);
-	} else {
+	} else if (true) { // TODO fetch next token without consuming it and check if it's in StatementsEps::first()
 		this->statementSegment = new StatementsEps(scanner);
+	} else {
+		// TODO print error properly
+		exit(1);
 	}
 }
 
@@ -279,6 +285,22 @@ TokenTypeRegistry* DeclsSeq::first() {
 	return Decl::first(); // no Epsilon in Decl::first() so no merging with Decls::first()
 }
 
+DeclsSeq::DeclsSeq(Scanner* scanner) {
+	this->firstDeclaration = new DeclOnly(scanner);
+	if (scanner->nextToken()->getType() != 23) {
+		// TODO print error properly
+		exit(1);
+	}
+	if (true) { // TODO fetch next token without consuming it and check if it's in DeclsSeq::first()
+		this->restOfDeclarations = new DeclsSeq(scanner);
+	} else if (true) { // TODO fetch next token without consuming it and check if it's in DeclsEps::first()
+		this->restOfDeclarations = new DeclsEps(scanner);
+	} else {
+		// TODO print error properly
+		exit(1);
+	}
+}
+
 bool DeclsSeq::typeCheck() {
 	if (!this->firstDeclaration->typeCheck()) {
 		ERROR_EXIT
@@ -310,6 +332,10 @@ TokenTypeRegistry* DeclsEps::first() {
 	TokenTypeRegistry* registry = new TokenTypeRegistry();
 	registry->set(DeclsEps::epsToken);
 	return registry;
+}
+
+DeclsEps::DeclsEps(Scanner* scanner) {
+	 // empty string representative, doesn't make much sense to check anything here
 }
 
 bool DeclsEps::typeCheck() {
