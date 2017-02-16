@@ -1013,6 +1013,38 @@ TokenTypeRegistry* ExpOnly::first() {
 	return Exp2::first();
 }
 
+ExpOnly::ExpOnly(Scanner* scanner) {
+	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
+	switch(tokenType) {
+	case 24:
+		this->rawExpression = new Exp2Nested(scanner);
+		break;
+	case 1:
+		this->rawExpression = new Exp2Variable(scanner);
+		break;
+	case 2:
+		this->rawExpression = new Exp2Constant(scanner);
+		break;
+	case 20:
+		this->rawExpression = new Exp2NumericNegation(scanner);
+		break;
+	case 21:
+		this->rawExpression = new Exp2LogicalNegation(scanner);
+		break;
+	default:
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (true) { // TODO fetch next token without consuming it and check if it's in OpExpNext::first()
+		this->calculateWith = new OpExpNext(scanner);
+	} else if (true) { // TODO fetch next token without consuming it and check if it's in OpExpEps::first()
+		this->calculateWith = new OpExpEps(scanner);
+	} else {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool ExpOnly::typeCheck() {
 	if (!this->rawExpression->typeCheck()
 	 || !this->calculateWith->typeCheck()) {
