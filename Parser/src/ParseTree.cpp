@@ -494,6 +494,45 @@ TokenTypeRegistry* StatementsSeq::first() {
 	return Statement::first();
 }
 
+StatementsSeq::StatementsSeq(Scanner* scanner) {
+	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
+	switch (tokenType) {
+	case 1:
+		this->firstStatement = new StatementSetValue(scanner);
+		break;
+	case 33:
+		this->firstStatement = new StatementWrite(scanner);
+		break;
+	case 35:
+		this->firstStatement = new StatementRead(scanner);
+		break;
+	case 26:
+		this->firstStatement = new StatementBlock(scanner);
+		break;
+	case 30:
+		this->firstStatement = new StatementIfElse(scanner);
+		break;
+	case 31:
+		this->firstStatement = new StatementWhile(scanner);
+		break;
+	default:
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (scanner->nextToken()->getType() != 23) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (true) { // TODO fetch next token without consuming it and check if it's in StatementsSeq::first()
+		this->restOfStatements = new StatementsSeq(scanner);
+	} else if (true) { // TODO fetch next token without consuming it and check if it's in StatementsEps::first()
+		this->restOfStatements = new StatementsEps(scanner);
+	} else {
+		// TODO print error properly
+		exit(1);
+	}
+}
+
 bool StatementsSeq::typeCheck() {
 	if (!this->firstStatement->typeCheck()) {
 		ERROR_EXIT
@@ -525,6 +564,10 @@ TokenTypeRegistry* StatementsEps::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set (ParseTree::epsToken);
 	return sequence;
+}
+
+StatementsEps::StatementsEps(Scanner* scanner) {
+	// empty string representative, doesn't make much sense to check anything here
 }
 
 bool StatementsEps::isEps() {
