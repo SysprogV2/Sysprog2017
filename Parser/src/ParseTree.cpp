@@ -426,6 +426,22 @@ TokenTypeRegistry* ArrayIndex::first() {
 	return sequence;
 }
 
+ArrayIndex::ArrayIndex(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 28) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	this->integer = scanner->nextToken();
+	if (this->integer->getType() != 2) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (scanner->nextToken()->getType() != 29) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool ArrayIndex::typeCheck() {
 	if (this->integer->getValue() < 0) {
 		std::cerr << "error line " << this->integer->getLine() << " column " << this->integer->getColumn() << ": no valid dimension\n";
@@ -449,6 +465,10 @@ TokenTypeRegistry* ArrayEps::first() {
 	TokenTypeRegistry *sequence = new TokenTypeRegistry ();
 	sequence->set (ParseTree::epsToken);
 	return sequence;
+}
+
+ArrayEps::ArrayEps(Scanner* scanner) {
+	// empty string representative, doesn't make much sense to check anything here
 }
 
 bool ArrayEps::isEps() {
