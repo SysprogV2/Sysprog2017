@@ -232,6 +232,19 @@ TokenTypeRegistry* ProgOnly::first() {
 	return registry;
 }
 
+ProgOnly::ProgOnly(Scanner* scanner) {
+	if (true) { // TODO fetch next token without consuming it and check if it's in DeclsSeq::first()
+		this->declarationSegment = new DeclsSeq(scanner);
+	} else {
+		this->declarationSegment = new DeclsEps(scanner);
+	}
+	if (true) { // TODO fetch next token without consuming it and check if it's in StatementsSeq::first()
+		this->statementSegment = new StatementsSeq(scanner);
+	} else {
+		this->statementSegment = new StatementsEps(scanner);
+	}
+}
+
 bool ProgOnly::typeCheck() {
 	if (!this->declarationSegment->typeCheck()) {
 		std::cout << "Type checking works\n";
