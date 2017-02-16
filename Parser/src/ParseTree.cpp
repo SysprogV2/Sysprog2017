@@ -362,6 +362,26 @@ TokenTypeRegistry* DeclOnly::first() {
     return sequence;
 }
 
+DeclOnly::DeclOnly(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 32) {
+		// TODO print error properly
+		exit(1);
+	}
+	if (true) { // TODO fetch next token without consuming it and check if it's in ArrayIndex::first()
+		this->size = new ArrayIndex(scanner);
+	} else if (true) { // TODO fetch next token without consuming it and check if it's in ArrayEps::first()
+		this->size = new ArrayEps(scanner);
+	} else {
+		// TODO print error properly
+		exit(1);
+	}
+	this->identifier = scanner->nextToken();
+	if (this->identifier->getType() != 1) {
+		// TODO print error properly
+		exit(1);
+	}
+}
+
 bool DeclOnly::typeCheck() {
 	if (!this->size->typeCheck()) {
 		ERROR_EXIT
