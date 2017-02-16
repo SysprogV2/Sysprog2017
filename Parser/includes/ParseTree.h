@@ -40,7 +40,7 @@
 #define IDENTIFIER_DEFAULT_TOKEN new Token (1, 0, 0)
 #define INTEGER_DEFAULT_TOKEN new Token (2, 0, 0)
 
-#define ERROR_EXIT this->checkingType = errorType; return false;
+#define ERROR_EXIT this->checkingType = errorType; return false; // in typeCheck()
 
 class ParseTree {
 protected:
@@ -147,7 +147,7 @@ private:
 	Statements* statementSegment;
 public:
 	static void initStatic();
-	ProgOnly();
+	ProgOnly(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -161,7 +161,7 @@ private:
 	Decls* restOfDeclarations;
 public:
 	static void initStatic();
-	DeclsSeq();
+	DeclsSeq(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -173,7 +173,7 @@ public:
 class DeclsEps : public Decls {
 public:
 	static void initStatic();
-	DeclsEps();
+	DeclsEps(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -189,7 +189,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	DeclOnly();
+	DeclOnly(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -203,7 +203,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	ArrayIndex();
+	ArrayIndex(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -215,7 +215,7 @@ public:
 class ArrayEps : public Array {
 public:
 	static void initStatic();
-	ArrayEps();
+	ArrayEps(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -230,7 +230,7 @@ private:
 	Statements* restOfStatements;
 public:
 	static void initStatic();
-	StatementsSeq();
+	StatementsSeq(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -242,7 +242,7 @@ public:
 class StatementsEps : public Statements {
 public:
 	static void initStatic();
-	StatementsEps();
+	StatementsEps(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -259,7 +259,7 @@ private:
 	static Token* defaultIdentifier;
 public:
 	static void initStatic();
-	StatementSetValue();
+	StatementSetValue(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -273,7 +273,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	StatementWrite();
+	StatementWrite(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -288,7 +288,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	StatementRead();
+	StatementRead(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -302,7 +302,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	StatementBlock();
+	StatementBlock(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -318,7 +318,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	StatementIfElse();
+	StatementIfElse(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -333,7 +333,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	StatementWhile();
+	StatementWhile(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -347,7 +347,7 @@ private:
 	OpExp* calculateWith;
 public:
 	static void initStatic();
-	ExpOnly();
+	ExpOnly(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -361,7 +361,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	Exp2Nested();
+	Exp2Nested(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -376,7 +376,7 @@ private:
 	static Token* defaultIdentifier;
 public:
 	static void initStatic();
-	Exp2Variable();
+	Exp2Variable(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -390,7 +390,7 @@ private:
 	static Token* defaultInteger;
 public:
 	static void initStatic();
-	Exp2Constant();
+	Exp2Constant(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -404,7 +404,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	Exp2NumericNegation();
+	Exp2NumericNegation(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -418,7 +418,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	Exp2LogicalNegation();
+	Exp2LogicalNegation(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -432,7 +432,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	IndexPosition();
+	IndexPosition(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -444,7 +444,7 @@ public:
 class IndexEps : public Index {
 public:
 	static void initStatic();
-	IndexEps();
+	IndexEps(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -458,7 +458,7 @@ class OpExpNext : public OpExp {
 	Exp* operand;
 public:
 	static void initStatic();
-	OpExpNext();
+	OpExpNext(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -472,7 +472,7 @@ public:
 class OpExpEps : public OpExp {
 public:
 	static void initStatic();
-	OpExpEps();
+	OpExpEps(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -486,7 +486,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	OpPlus();
+	OpPlus(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -499,7 +499,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	OpMinus();
+	OpMinus(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -512,7 +512,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	OpMult();
+	OpMult(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -525,7 +525,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	OpDiv();
+	OpDiv(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -538,7 +538,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	OpLess();
+	OpLess(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -551,7 +551,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	OpGreater();
+	OpGreater(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -564,7 +564,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	OpEquals();
+	OpEquals(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -577,7 +577,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	OpNotEquals();
+	OpNotEquals(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -590,7 +590,7 @@ private:
 	static Token* firstToken;
 public:
 	static void initStatic();
-	OpAnd();
+	OpAnd(Scanner* scanner);
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();

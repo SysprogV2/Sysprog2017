@@ -16,8 +16,6 @@ class Parser {
 private:
 	Scanner* scanner;
 public:
-	Parser();
-	void setAndRunOnFile (char* filename);
 	Parser(char* filename);
 	ParseTree* parse();
 	~Parser();
