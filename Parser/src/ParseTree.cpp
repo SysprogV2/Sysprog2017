@@ -597,6 +597,27 @@ TokenTypeRegistry* StatementSetValue::first() {
 	return sequence;
 }
 
+StatementSetValue::StatementSetValue(Scanner* scanner) {
+	this->identifier = scanner->nextToken();
+	if (this->identifier->getType() != 1) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (true) { // TODO fetch next token without consuming it and check if it's in IndexPosition::first()
+		this->index = new IndexPosition(scanner);
+	} else if (true) { // TODO fetch next token without consuming it and check if it's in IndexEps::first()
+		this->index = new IndexEps(scanner);
+	} else {
+		// TODO print error properly
+		exit(1);
+	}
+	if (scanner->nextToken()->getType() != 10) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	this->aimValue = new ExpOnly(scanner);
+}
+
 bool StatementSetValue::typeCheck() {
 	if (!this->aimValue->typeCheck()) {
 		ERROR_EXIT
@@ -646,6 +667,22 @@ TokenTypeRegistry* StatementWrite::first() {
 	return sequence;
 }
 
+StatementWrite::StatementWrite(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 33) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (scanner->nextToken()->getType() != 24) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	this->toPrint = new ExpOnly(scanner);
+	if (scanner->nextToken()->getType() != 25) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool StatementWrite::typeCheck() {
 	if (!this->toPrint->typeCheck()) {
 		ERROR_EXIT
@@ -671,6 +708,34 @@ TokenTypeRegistry* StatementRead::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(StatementRead::firstToken);
 	return sequence;
+}
+
+StatementRead::StatementRead(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 35) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (scanner->nextToken()->getType() != 24) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	this->identifier = scanner->nextToken();
+	if (this->identifier->getType() != 1) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (true) { // TODO fetch next token without consuming it and check if it's in IndexPosition::first()
+		this->index = new IndexPosition(scanner);
+	} else if (true) { // TODO fetch next token without consuming it and check if it's in IndexEps::first()
+		this->index = new IndexEps(scanner);
+	} else {
+		// TODO print error properly
+		exit(1);
+	}
+	if (scanner->nextToken()->getType() != 25) {
+		// TODO print error cleanly
+		exit(1);
+	}
 }
 
 bool StatementRead::typeCheck() {
@@ -713,6 +778,25 @@ TokenTypeRegistry* StatementBlock::first() {
 	return sequence;
 }
 
+StatementBlock::StatementBlock(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 26) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (true) { // TODO fetch next token without consuming it and check if it's in StatementsSeq::first()
+		this->blockContent = new StatementsSeq(scanner);
+	} else if (true) { // TODO fetch next token without consuming it and check if it's in StatementsEps::first()
+		this->blockContent = new StatementsEps(scanner);
+	} else {
+		// TODO print error properly
+		exit(1);
+	}
+	if (scanner->nextToken()->getType() != 27) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool StatementBlock::typeCheck() {
 	if (!this->blockContent->typeCheck()) {
 		ERROR_EXIT
@@ -737,6 +821,74 @@ TokenTypeRegistry* StatementIfElse::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(StatementIfElse::firstToken);
 	return sequence;
+}
+
+StatementIfElse::StatementIfElse(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 30) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (scanner->nextToken()->getType() != 24) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	this->condition = new ExpOnly(scanner);
+	if (scanner->nextToken()->getType() != 25) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
+	switch (tokenType) {
+	case 1:
+		this->thenCase = new StatementSetValue(scanner);
+		break;
+	case 33:
+		this->thenCase = new StatementWrite(scanner);
+		break;
+	case 35:
+		this->thenCase = new StatementRead(scanner);
+		break;
+	case 26:
+		this->thenCase = new StatementBlock(scanner);
+		break;
+	case 30:
+		this->thenCase = new StatementIfElse(scanner);
+		break;
+	case 31:
+		this->thenCase = new StatementWhile(scanner);
+		break;
+	default:
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (scanner->nextToken()->getType() != 34) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
+	switch (tokenType) {
+	case 1:
+		this->elseCase = new StatementSetValue(scanner);
+		break;
+	case 33:
+		this->elseCase = new StatementWrite(scanner);
+		break;
+	case 35:
+		this->elseCase = new StatementRead(scanner);
+		break;
+	case 26:
+		this->elseCase = new StatementBlock(scanner);
+		break;
+	case 30:
+		this->elseCase = new StatementIfElse(scanner);
+		break;
+	case 31:
+		this->elseCase = new StatementWhile(scanner);
+		break;
+	default:
+		// TODO print error cleanly
+		exit(1);
+	}
 }
 
 bool StatementIfElse::typeCheck() {
@@ -781,6 +933,46 @@ TokenTypeRegistry* StatementWhile::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(StatementWhile::firstToken);
 	return sequence;
+}
+
+StatementWhile::StatementWhile(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 31) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (scanner->nextToken()->getType() != 24) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	this->condition = new ExpOnly(scanner);
+	if (scanner->nextToken()->getType() != 25) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
+	switch (tokenType) {
+	case 1:
+		this->loop = new StatementSetValue(scanner);
+		break;
+	case 33:
+		this->loop = new StatementWrite(scanner);
+		break;
+	case 35:
+		this->loop = new StatementRead(scanner);
+		break;
+	case 26:
+		this->loop = new StatementBlock(scanner);
+		break;
+	case 30:
+		this->loop = new StatementIfElse(scanner);
+		break;
+	case 31:
+		this->loop = new StatementWhile(scanner);
+		break;
+	default:
+		// TODO print error cleanly
+		exit(1);
+	}
 }
 
 bool StatementWhile::typeCheck() {
