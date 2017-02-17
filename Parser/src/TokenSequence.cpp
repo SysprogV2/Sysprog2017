@@ -203,6 +203,19 @@ void TokenTypeRegistry::uniteWith(TokenTypeRegistry* other) {
 	}
 }
 
+char* TokenTypeRegistry::allSetTokenNames() {
+	char* names = "";
+	for (int i = 0; i < this->size; i++) {
+		if (this->tokenTypes[i]) {
+			if (names != "") {
+				names = names + ", ";
+			}
+			names = names + Token::nameOf(i);
+		}
+	}
+	return names;
+}
+
 TokenTypeRegistry::~TokenTypeRegistry() {
 	delete[] this->tokenTypes;
 }

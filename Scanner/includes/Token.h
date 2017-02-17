@@ -17,6 +17,7 @@ class Token {
 	char symbol;
 	const char signArray[SIGN_ARRAY_SZ] = {'+','-','!','&',';','(',')','{','}','[',']'};
 public:
+	static char* nameOf(int tokenType);
 	Token(int type, int line, int column);
 	Token(int state, int l, int c, Information* info);
 	virtual ~Token();

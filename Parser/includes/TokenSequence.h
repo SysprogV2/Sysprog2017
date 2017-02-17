@@ -66,6 +66,7 @@ public:
 	// set operations do not alter the argument (only the call Registry)
 	void intersectWith (TokenTypeRegistry* other);
 	void uniteWith (TokenTypeRegistry* other);
+	char* allSetTokenNames();
 	~TokenTypeRegistry();
 };
 

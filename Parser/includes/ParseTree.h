@@ -14,6 +14,7 @@
 #include "Errors.h"
 #include "../../Symboltable/includes/Symboltable.h"
 #include "../../Buffer/includes/Buffer.h"
+#include "../../Scanner/includes/Scanner.h"
 
 #include <iostream>
 #include <fstream>
