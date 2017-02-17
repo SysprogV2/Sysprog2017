@@ -1092,6 +1092,18 @@ TokenTypeRegistry* Exp2Nested::first() {
 	return sequence;
 }
 
+Exp2Nested::Exp2Nested(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 24) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	this->nestedExpression = new ExpOnly(scanner);
+	if (scanner->nextToken()->getType() != 25) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool Exp2Nested::typeCheck() {
 	this->checkingType = this->nestedExpression->typeCheck() ? this->nestedExpression->getChecktype() : errorType;
 	return this->checkingType != errorType;
@@ -1113,6 +1125,22 @@ TokenTypeRegistry* Exp2Variable::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(Exp2Variable::defaultIdentifier);
 	return sequence;
+}
+
+Exp2Variable::Exp2Variable(Scanner* scanner) {
+	this->identifier = scanner->nextToken();
+	if (this->identifier->getType() != 1) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	if (true) { // TODO fetch next token without consuming it and check if it's in IndexPosition::first()
+		this->index = new IndexPosition(scanner);
+	} else if (true) { // TODO fetch next token without consuming it and check if it's in IndexEps::first()
+		this->index = new IndexEps(scanner);
+	} else {
+		// TODO print error properly
+		exit(1);
+	}
 }
 
 bool Exp2Variable::typeCheck() {
@@ -1158,6 +1186,14 @@ TokenTypeRegistry* Exp2Constant::first() {
 	return sequence;
 }
 
+Exp2Constant::Exp2Constant(Scanner* scanner) {
+	this->integer = scanner->nextToken();
+	if (this->integer->getType() != 2) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool Exp2Constant::typeCheck() {
 	this->checkingType = intType;
 	return true;
@@ -1179,6 +1215,34 @@ TokenTypeRegistry* Exp2NumericNegation::first() {
 	TokenTypeRegistry *sequence = new TokenTypeRegistry ();
 	sequence->set(Exp2NumericNegation::firstToken);
 	return sequence;
+}
+
+Exp2NumericNegation::Exp2NumericNegation(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 20) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
+	switch(tokenType) {
+	case 24:
+		this->toNegate = new Exp2Nested(scanner);
+		break;
+	case 1:
+		this->toNegate = new Exp2Variable(scanner);
+		break;
+	case 2:
+		this->toNegate = new Exp2Constant(scanner);
+		break;
+	case 20:
+		this->toNegate = new Exp2NumericNegation(scanner);
+		break;
+	case 21:
+		this->toNegate = new Exp2LogicalNegation(scanner);
+		break;
+	default:
+		// TODO print error cleanly
+		exit(1);
+	}
 }
 
 bool Exp2NumericNegation::typeCheck() {
@@ -1205,6 +1269,34 @@ TokenTypeRegistry* Exp2LogicalNegation::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(Exp2LogicalNegation::firstToken);
 	return sequence;
+}
+
+Exp2LogicalNegation::Exp2LogicalNegation(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 21) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
+	switch(tokenType) {
+	case 24:
+		this->toNegate = new Exp2Nested(scanner);
+		break;
+	case 1:
+		this->toNegate = new Exp2Variable(scanner);
+		break;
+	case 2:
+		this->toNegate = new Exp2Constant(scanner);
+		break;
+	case 20:
+		this->toNegate = new Exp2NumericNegation(scanner);
+		break;
+	case 21:
+		this->toNegate = new Exp2LogicalNegation(scanner);
+		break;
+	default:
+		// TODO print error cleanly
+		exit(1);
+	}
 }
 
 bool Exp2LogicalNegation::typeCheck() {
