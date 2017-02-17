@@ -1498,6 +1498,13 @@ TokenTypeRegistry* OpPlus::first() {
 	return sequence;
 }
 
+OpPlus::OpPlus(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 19) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool OpPlus::typeCheck() {
 	this->checkingType = noType;
 	return true;
@@ -1517,6 +1524,13 @@ TokenTypeRegistry* OpMinus::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(OpMinus::firstToken);
 	return sequence;
+}
+
+OpMinus::OpMinus(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 20) {
+		// TODO print error cleanly
+		exit(1);
+	}
 }
 
 bool OpMinus::typeCheck() {
@@ -1540,6 +1554,13 @@ TokenTypeRegistry* OpMult::first() {
 	return sequence;
 }
 
+OpMult::OpMult(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 13) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool OpMult::typeCheck() {
 	this->checkingType = noType;
 	return true;
@@ -1559,6 +1580,13 @@ TokenTypeRegistry* OpDiv::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(OpDiv::firstToken);
 	return sequence;
+}
+
+OpDiv::OpDiv(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 5) {
+		// TODO print error cleanly
+		exit(1);
+	}
 }
 
 bool OpDiv::typeCheck() {
@@ -1582,6 +1610,13 @@ TokenTypeRegistry* OpLess::first() {
 	return sequence;
 }
 
+OpLess::OpLess(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 3) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool OpLess::typeCheck() {
 	this->checkingType = noType;
 	return true;
@@ -1603,6 +1638,13 @@ TokenTypeRegistry* OpGreater::first() {
 	return sequence;
 }
 
+OpGreater::OpGreater(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 4) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool OpGreater::typeCheck() {
 	this->checkingType = noType;
 	return true;
@@ -1622,6 +1664,13 @@ TokenTypeRegistry* OpEquals::first() {
 	return sequence;
 }
 
+OpEquals::OpEquals(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 6) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool OpEquals::typeCheck() {
 	this->checkingType = noType;
 	return true;
@@ -1637,7 +1686,12 @@ void OpNotEquals::initStatic() {
 	OpNotEquals::firstToken = ParseTree::notEqualsToken;
 }
 
-OpNotEquals::OpNotEquals() {}
+OpNotEquals::OpNotEquals(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 7) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
 
 TokenTypeRegistry* OpNotEquals::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
@@ -1660,7 +1714,12 @@ void OpAnd::initStatic() {
 	OpAnd::firstToken = TYPE_REFERENCE_TOKEN_AND;
 }
 
-OpAnd::OpAnd() {}
+OpAnd::OpAnd(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 22) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
 
 TokenTypeRegistry* OpAnd::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
