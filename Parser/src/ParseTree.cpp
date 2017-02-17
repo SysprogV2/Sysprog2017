@@ -1393,6 +1393,43 @@ TokenTypeRegistry* OpExpNext::first() {
 	return Op::first();
 }
 
+OpExpNext::OpExpNext(Scanner* scanner) {
+	int tokenType = 0;
+	switch(tokenType) {
+	case 19:
+		this->Operator = new OpPlus(scanner);
+		break;
+	case 20:
+		this->Operator = new OpMinus(scanner);
+		break;
+	case 13:
+		this->Operator = new OpMult(scanner);
+		break;
+	case 5:
+		this->Operator = new OpDiv(scanner);
+		break;
+	case 3:
+		this->Operator = new OpLess(scanner);
+		break;
+	case 4:
+		this->Operator = new OpGreater(scanner);
+		break;
+	case 6:
+		this->Operator = new OpEquals(scanner);
+		break;
+	case 7:
+		this->Operator = new OpNotEquals(scanner);
+		break;
+	case 22:
+		this->Operator = new OpAnd(scanner);
+		break;
+	default:
+		// TODO print error cleanly
+		exit(1);
+	}
+	this->operand = new ExpOnly(scanner);
+}
+
 bool OpExpNext::isEps() {
 	return false;
 }
@@ -1432,6 +1469,10 @@ TokenTypeRegistry* OpExpEps::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set (ParseTree::epsToken);
 	return sequence;
+}
+
+OpExpEps::OpExpEps(Scanner* scanner) {
+	// empty string representative, doesn't make much sense to check anything here
 }
 
 bool OpExpEps::isEps() {
