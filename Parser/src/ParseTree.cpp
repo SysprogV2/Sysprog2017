@@ -1331,6 +1331,18 @@ TokenTypeRegistry* IndexPosition::first() {
 	return sequence;
 }
 
+IndexPosition::IndexPosition(Scanner* scanner) {
+	if (scanner->nextToken()->getType() != 28) {
+		// TODO print error cleanly
+		exit(1);
+	}
+	this->index = new ExpOnly(scanner);
+	if (scanner->nextToken()->getType() != 29) {
+		// TODO print error cleanly
+		exit(1);
+	}
+}
+
 bool IndexPosition::typeCheck() {
 	if (!this->index->typeCheck() || this->index->getChecktype() == errorType) {
 		ERROR_EXIT
@@ -1358,6 +1370,10 @@ TokenTypeRegistry* IndexEps::first() {
 
 bool IndexEps::isEps() {
 	return true;
+}
+
+IndexEps::IndexEps(Scanner* scanner) {
+	// empty string representative, doesn't make much sense to check anything here
 }
 
 bool IndexEps::typeCheck() {
