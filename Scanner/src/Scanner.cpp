@@ -14,6 +14,14 @@ Scanner::Scanner(char *filename) {
 	automat = new Automat();
 	syntax = new Syntax();
 	stab = nullptr;
+	cToken = nullptr;
+	idenInt =  new TokenTypeRegistry();
+	Token* idenToken = new Token(1, 0, 0);
+	Token* intToken = new Token (2, 0, 0);
+	idenInt->set(idenToken);
+	idenInt->set(intToken);
+	delete idenToken;
+	delete intToken;
 }
 
 Scanner::Scanner(char *filename, Symboltable* st) {
@@ -21,12 +29,22 @@ Scanner::Scanner(char *filename, Symboltable* st) {
 	buffer = new Buffer(filename);
 	automat = new Automat();
 	syntax = new Syntax();
+	cToken = nullptr;
+	idenInt =  new TokenTypeRegistry();
+	Token* idenToken = new Token(1, 0, 0);
+	Token* intToken = new Token (2, 0, 0);
+	idenInt->set(idenToken);
+	idenInt->set(intToken);
+	delete idenToken;
+	delete intToken;
 }
 
 Scanner::~Scanner() {
 	delete buffer;
 	delete automat;
 	delete syntax;
+	if (!this->idenInt->isSet(this->cToken)) delete this->cToken;
+	delete this->idenInt;
 }
 
 /*
@@ -89,8 +107,14 @@ Token *Scanner::nextToken() {
 	if (currentChar == '\0') {
 		return nullptr;
 	} else {
+		if (!this->idenInt->isSet(this->cToken)) delete this->cToken;
+		this->cToken = t;
 		return t;
 	}
+}
+
+Token* Scanner::currentToken() {
+	return this->cToken;
 }
 
 /*

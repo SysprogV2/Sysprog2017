@@ -233,17 +233,17 @@ TokenTypeRegistry* ProgOnly::first() {
 }
 
 ProgOnly::ProgOnly(Scanner* scanner) {
-	if (true) { // TODO fetch next token without consuming it and check if it's in DeclsSeq::first()
+	if (DeclsSeq::first()->isSet(scanner->nextToken())) {
 		this->declarationSegment = new DeclsSeq(scanner);
-	} else if (true) { // TODO fetch next token without consuming it and check if it's in DeclsEps::first()
+	} else if (DeclsEps::first()->isSet(scanner->currentToken())) {
 		this->declarationSegment = new DeclsEps(scanner);
 	} else {
 		// TODO print error properly
 		exit(1);
 	}
-	if (true) { // TODO fetch next token without consuming it and check if it's in StatementsSeq::first()
+	if (StatementsSeq::first()->isSet(scanner->nextToken())) {
 		this->statementSegment = new StatementsSeq(scanner);
-	} else if (true) { // TODO fetch next token without consuming it and check if it's in StatementsEps::first()
+	} else if (StatementsEps::first()->isSet(scanner->currentToken())) {
 		this->statementSegment = new StatementsEps(scanner);
 	} else {
 		// TODO print error properly
@@ -291,9 +291,9 @@ DeclsSeq::DeclsSeq(Scanner* scanner) {
 		// TODO print error properly
 		exit(1);
 	}
-	if (true) { // TODO fetch next token without consuming it and check if it's in DeclsSeq::first()
+	if (DeclsSeq::first()->isSet(scanner->nextToken())) {
 		this->restOfDeclarations = new DeclsSeq(scanner);
-	} else if (true) { // TODO fetch next token without consuming it and check if it's in DeclsEps::first()
+	} else if (DeclsEps::first()->isSet(scanner->currentToken())) {
 		this->restOfDeclarations = new DeclsEps(scanner);
 	} else {
 		// TODO print error properly
@@ -363,13 +363,13 @@ TokenTypeRegistry* DeclOnly::first() {
 }
 
 DeclOnly::DeclOnly(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 32) {
+	if (scanner->currentToken()->getType() != 32) {
 		// TODO print error properly
 		exit(1);
 	}
-	if (true) { // TODO fetch next token without consuming it and check if it's in ArrayIndex::first()
+	if (ArrayIndex::first()->isSet(scanner->nextToken())) {
 		this->size = new ArrayIndex(scanner);
-	} else if (true) { // TODO fetch next token without consuming it and check if it's in ArrayEps::first()
+	} else if (ArrayEps::first()->isSet(scanner->currentToken())) {
 		this->size = new ArrayEps(scanner);
 	} else {
 		// TODO print error properly
@@ -427,7 +427,7 @@ TokenTypeRegistry* ArrayIndex::first() {
 }
 
 ArrayIndex::ArrayIndex(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 28) {
+	if (scanner->currentToken()->getType() != 28) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -495,8 +495,7 @@ TokenTypeRegistry* StatementsSeq::first() {
 }
 
 StatementsSeq::StatementsSeq(Scanner* scanner) {
-	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
-	switch (tokenType) {
+	switch (scanner->currentToken()->getType()) {
 	case 1:
 		this->firstStatement = new StatementSetValue(scanner);
 		break;
@@ -523,9 +522,9 @@ StatementsSeq::StatementsSeq(Scanner* scanner) {
 		// TODO print error cleanly
 		exit(1);
 	}
-	if (true) { // TODO fetch next token without consuming it and check if it's in StatementsSeq::first()
+	if (StatementsSeq::first()->isSet(scanner->nextToken())) {
 		this->restOfStatements = new StatementsSeq(scanner);
-	} else if (true) { // TODO fetch next token without consuming it and check if it's in StatementsEps::first()
+	} else if (StatementsEps::first()->isSet(scanner->currentToken())) {
 		this->restOfStatements = new StatementsEps(scanner);
 	} else {
 		// TODO print error properly
@@ -598,14 +597,14 @@ TokenTypeRegistry* StatementSetValue::first() {
 }
 
 StatementSetValue::StatementSetValue(Scanner* scanner) {
-	this->identifier = scanner->nextToken();
+	this->identifier = scanner->currentToken();
 	if (this->identifier->getType() != 1) {
 		// TODO print error cleanly
 		exit(1);
 	}
-	if (true) { // TODO fetch next token without consuming it and check if it's in IndexPosition::first()
+	if (IndexPosition::first()->isSet(scanner->nextToken())) {
 		this->index = new IndexPosition(scanner);
-	} else if (true) { // TODO fetch next token without consuming it and check if it's in IndexEps::first()
+	} else if (IndexEps::first()->isSet(scanner->currentToken())) {
 		this->index = new IndexEps(scanner);
 	} else {
 		// TODO print error properly
@@ -668,7 +667,7 @@ TokenTypeRegistry* StatementWrite::first() {
 }
 
 StatementWrite::StatementWrite(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 33) {
+	if (scanner->currentToken()->getType() != 33) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -711,7 +710,7 @@ TokenTypeRegistry* StatementRead::first() {
 }
 
 StatementRead::StatementRead(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 35) {
+	if (scanner->currentToken()->getType() != 35) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -724,9 +723,9 @@ StatementRead::StatementRead(Scanner* scanner) {
 		// TODO print error cleanly
 		exit(1);
 	}
-	if (true) { // TODO fetch next token without consuming it and check if it's in IndexPosition::first()
+	if (IndexPosition::first()->isSet(scanner->nextToken())) {
 		this->index = new IndexPosition(scanner);
-	} else if (true) { // TODO fetch next token without consuming it and check if it's in IndexEps::first()
+	} else if (IndexEps::first()->isSet(scanner->currentToken())) {
 		this->index = new IndexEps(scanner);
 	} else {
 		// TODO print error properly
@@ -779,13 +778,13 @@ TokenTypeRegistry* StatementBlock::first() {
 }
 
 StatementBlock::StatementBlock(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 26) {
+	if (scanner->currentToken()->getType() != 26) {
 		// TODO print error cleanly
 		exit(1);
 	}
-	if (true) { // TODO fetch next token without consuming it and check if it's in StatementsSeq::first()
+	if (StatementsSeq::first()->isSet(scanner->nextToken())) {
 		this->blockContent = new StatementsSeq(scanner);
-	} else if (true) { // TODO fetch next token without consuming it and check if it's in StatementsEps::first()
+	} else if (StatementsEps::first()->isSet(scanner->currentToken())) {
 		this->blockContent = new StatementsEps(scanner);
 	} else {
 		// TODO print error properly
@@ -824,7 +823,7 @@ TokenTypeRegistry* StatementIfElse::first() {
 }
 
 StatementIfElse::StatementIfElse(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 30) {
+	if (scanner->currentToken()->getType() != 30) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -837,8 +836,7 @@ StatementIfElse::StatementIfElse(Scanner* scanner) {
 		// TODO print error cleanly
 		exit(1);
 	}
-	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
-	switch (tokenType) {
+	switch (scanner->nextToken()->getType()) {
 	case 1:
 		this->thenCase = new StatementSetValue(scanner);
 		break;
@@ -865,8 +863,7 @@ StatementIfElse::StatementIfElse(Scanner* scanner) {
 		// TODO print error cleanly
 		exit(1);
 	}
-	tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
-	switch (tokenType) {
+	switch (scanner->nextToken()->getType()) {
 	case 1:
 		this->elseCase = new StatementSetValue(scanner);
 		break;
@@ -936,7 +933,7 @@ TokenTypeRegistry* StatementWhile::first() {
 }
 
 StatementWhile::StatementWhile(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 31) {
+	if (scanner->currentToken()->getType() != 31) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -949,8 +946,7 @@ StatementWhile::StatementWhile(Scanner* scanner) {
 		// TODO print error cleanly
 		exit(1);
 	}
-	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
-	switch (tokenType) {
+	switch (scanner->nextToken()->getType()) {
 	case 1:
 		this->loop = new StatementSetValue(scanner);
 		break;
@@ -1014,8 +1010,7 @@ TokenTypeRegistry* ExpOnly::first() {
 }
 
 ExpOnly::ExpOnly(Scanner* scanner) {
-	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
-	switch(tokenType) {
+	switch(scanner->nextToken()->getType()) {
 	case 24:
 		this->rawExpression = new Exp2Nested(scanner);
 		break;
@@ -1035,9 +1030,9 @@ ExpOnly::ExpOnly(Scanner* scanner) {
 		// TODO print error cleanly
 		exit(1);
 	}
-	if (true) { // TODO fetch next token without consuming it and check if it's in OpExpNext::first()
+	if (OpExpNext::first()->isSet(scanner->nextToken())) {
 		this->calculateWith = new OpExpNext(scanner);
-	} else if (true) { // TODO fetch next token without consuming it and check if it's in OpExpEps::first()
+	} else if (OpExpEps::first()->isSet(scanner->currentToken())) {
 		this->calculateWith = new OpExpEps(scanner);
 	} else {
 		// TODO print error cleanly
@@ -1093,7 +1088,7 @@ TokenTypeRegistry* Exp2Nested::first() {
 }
 
 Exp2Nested::Exp2Nested(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 24) {
+	if (scanner->currentToken()->getType() != 24) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -1128,14 +1123,14 @@ TokenTypeRegistry* Exp2Variable::first() {
 }
 
 Exp2Variable::Exp2Variable(Scanner* scanner) {
-	this->identifier = scanner->nextToken();
+	this->identifier = scanner->currentToken();
 	if (this->identifier->getType() != 1) {
 		// TODO print error cleanly
 		exit(1);
 	}
-	if (true) { // TODO fetch next token without consuming it and check if it's in IndexPosition::first()
+	if (IndexPosition::first()->isSet(scanner->nextToken())) {
 		this->index = new IndexPosition(scanner);
-	} else if (true) { // TODO fetch next token without consuming it and check if it's in IndexEps::first()
+	} else if (IndexEps::first()->isSet(scanner->currentToken())) {
 		this->index = new IndexEps(scanner);
 	} else {
 		// TODO print error properly
@@ -1176,10 +1171,6 @@ Exp2Variable::~Exp2Variable() {
 	delete this->index;
 }
 
-Exp2Constant::Exp2Constant() {
-	this->integer = nullptr;
-}
-
 TokenTypeRegistry* Exp2Constant::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
 	sequence->set(Exp2Constant::defaultInteger);
@@ -1187,7 +1178,7 @@ TokenTypeRegistry* Exp2Constant::first() {
 }
 
 Exp2Constant::Exp2Constant(Scanner* scanner) {
-	this->integer = scanner->nextToken();
+	this->integer = scanner->currentToken();
 	if (this->integer->getType() != 2) {
 		// TODO print error cleanly
 		exit(1);
@@ -1218,12 +1209,11 @@ TokenTypeRegistry* Exp2NumericNegation::first() {
 }
 
 Exp2NumericNegation::Exp2NumericNegation(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 20) {
+	if (scanner->currentToken()->getType() != 20) {
 		// TODO print error cleanly
 		exit(1);
 	}
-	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
-	switch(tokenType) {
+	switch(scanner->nextToken()->getType()) {
 	case 24:
 		this->toNegate = new Exp2Nested(scanner);
 		break;
@@ -1272,12 +1262,11 @@ TokenTypeRegistry* Exp2LogicalNegation::first() {
 }
 
 Exp2LogicalNegation::Exp2LogicalNegation(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 21) {
+	if (scanner->currentToken()->getType() != 21) {
 		// TODO print error cleanly
 		exit(1);
 	}
-	int tokenType = 0; // TODO fetch token from scanner without consuming it and assign it to tokenType
-	switch(tokenType) {
+	switch(scanner->nextToken()->getType()) {
 	case 24:
 		this->toNegate = new Exp2Nested(scanner);
 		break;
@@ -1332,7 +1321,7 @@ TokenTypeRegistry* IndexPosition::first() {
 }
 
 IndexPosition::IndexPosition(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 28) {
+	if (scanner->currentToken()->getType() != 28) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -1394,8 +1383,7 @@ TokenTypeRegistry* OpExpNext::first() {
 }
 
 OpExpNext::OpExpNext(Scanner* scanner) {
-	int tokenType = 0;
-	switch(tokenType) {
+	switch(scanner->currentToken()->getType()) {
 	case 19:
 		this->Operator = new OpPlus(scanner);
 		break;
@@ -1499,7 +1487,7 @@ TokenTypeRegistry* OpPlus::first() {
 }
 
 OpPlus::OpPlus(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 19) {
+	if (scanner->currentToken()->getType() != 19) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -1527,7 +1515,7 @@ TokenTypeRegistry* OpMinus::first() {
 }
 
 OpMinus::OpMinus(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 20) {
+	if (scanner->currentToken()->getType() != 20) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -1555,7 +1543,7 @@ TokenTypeRegistry* OpMult::first() {
 }
 
 OpMult::OpMult(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 13) {
+	if (scanner->currentToken()->getType() != 13) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -1583,7 +1571,7 @@ TokenTypeRegistry* OpDiv::first() {
 }
 
 OpDiv::OpDiv(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 5) {
+	if (scanner->currentToken()->getType() != 5) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -1611,7 +1599,7 @@ TokenTypeRegistry* OpLess::first() {
 }
 
 OpLess::OpLess(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 3) {
+	if (scanner->currentToken()->getType() != 3) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -1639,7 +1627,7 @@ TokenTypeRegistry* OpGreater::first() {
 }
 
 OpGreater::OpGreater(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 4) {
+	if (scanner->currentToken()->getType() != 4) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -1665,7 +1653,7 @@ TokenTypeRegistry* OpEquals::first() {
 }
 
 OpEquals::OpEquals(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 6) {
+	if (scanner->currentToken()->getType() != 6) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -1687,7 +1675,7 @@ void OpNotEquals::initStatic() {
 }
 
 OpNotEquals::OpNotEquals(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 7) {
+	if (scanner->currentToken()->getType() != 7) {
 		// TODO print error cleanly
 		exit(1);
 	}
@@ -1715,7 +1703,7 @@ void OpAnd::initStatic() {
 }
 
 OpAnd::OpAnd(Scanner* scanner) {
-	if (scanner->nextToken()->getType() != 22) {
+	if (scanner->currentToken()->getType() != 22) {
 		// TODO print error cleanly
 		exit(1);
 	}
