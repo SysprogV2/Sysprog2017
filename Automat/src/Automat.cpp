@@ -54,12 +54,14 @@ int Automat::read(char currentChar) {
 
 /*
  * only the following states are NOT final:
+ * AND1_Z									<- was added
  * START_STATE, __<:__STATE, COMMENT_STATE
  * OPENING_COMMENT_STATE, END_OF_FILE_STATE
  */
 bool Automat::isFinal(int someState) {
     return (someState != Syntax::STRT_Z &&
     		someState != Syntax::LCLN_Z &&
+    		//someState != Syntax::AND1_Z &&  //<- was added
 			someState != Syntax::COMM_Z &&
 			someState != Syntax::OPNC_Z &&
 			someState != Syntax::EOF_Z);
@@ -88,6 +90,7 @@ int Automat::mapCharToSymbolName(char c) {
     else if (c == '*')    		{  return Syntax::MULT_SYMB; }
     else if (c == ':')    		{  return Syntax::COLON_SYMB; }
     else if (c == '=')    		{  return Syntax::EQUALS_SYMB; }
+    else if (c == '&')    		{  return Syntax::AND_SYMB; } // add '&' index retrieval 
     else if (syntax->isPacked(c) > 0) {  return Syntax::REST_SYMB; }
     else if (c == '\0')   		{  return Syntax::EOF_SYMB; }
     else                  		{  return Syntax::PROH_SYMB; }

@@ -5,7 +5,8 @@
 #define CLSC_Z 16
 int main (int argc, char* argv[]){
 	Automat* automat = new Automat();
-	char* input = "foo:=12<:10000\0";
+	//char* input = "foo:=12<:>10000def9000=+700+ilee*goofy+doom+%+&&#mor&e!again\0";
+	char* input = "foo:=12&&word&an&&&&&other+word\0";
 
 	int i = 0;
 	char c = input[i];

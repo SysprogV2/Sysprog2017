@@ -7,39 +7,42 @@
 
 #ifndef AUTOMAT_INCLUDES_SYNTAX_H_
 #define AUTOMAT_INCLUDES_SYNTAX_H_
-#define SIGN_ARRAY_SZ 11
-#define STATETABLE_WIDTH 18
-#define STATETABLE_HEIGHT 11
+#define SIGN_ARRAY_SZ 10     // we removed one char from @signArray (see below)
+#define STATETABLE_WIDTH 20  // we added 2 new states for compounded token &&: '&' and '&&'
+#define STATETABLE_HEIGHT 12 // we added one char '&' to table to look for compounded t0ken '&&'
 #define KEYWORD_NUMBER 6
 #define STATES_NUMBER STATETABLE_WIDTH + STATETABLE_HEIGHT + 1
 class Syntax {
 
-	int stateTable[STATETABLE_HEIGHT][STATETABLE_WIDTH] = {
-				/*            STRT    ID       INT	  < 		>      :	   =	 <ANY>	   <:	  <:>	   :=      Eof     WSP     *       :*   <comment>  *:    PROH_Z */
-				/* a-Z */	{IDEN_Z, IDEN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/* 0-9 */	{INTG_Z, IDEN_Z, INTG_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/*  *  */	{MULT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, OPNC_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, COMM_Z, COMM_Z, STRT_Z, STRT_Z},
-				/*  <  */ 	{LESS_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/*  >  */	{GREA_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, LCLL_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/*  :  */ 	{COLN_Z, STRT_Z, STRT_Z, LCLN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, CLSC_Z, STRT_Z, STRT_Z},
-				/*  =  */ 	{EQLS_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, ASSG_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/* RST */	{ASGN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/* EOF */	{EOF_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/* WSP */	{WSP_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/* PRH */	{PROH_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z}
-	};
+	int stateTable[STATETABLE_HEIGHT][STATETABLE_WIDTH] = {									// two new states  ->   /--------------\	
+				/*            STRT    ID       INT	  < 		>      :	   =	 <ANY>	   <:	  <:>	   :=      &      &&      Eof     WSP     *       :*   <comment>  *:    PROH_Z */
+				/* a-Z */	{IDEN_Z, IDEN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+				/* 0-9 */	{INTG_Z, IDEN_Z, INTG_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+				/*  *  */	{MULT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, OPNC_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, COMM_Z, COMM_Z, STRT_Z, STRT_Z},
+				/*  <  */ 	{LESS_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+				/*  >  */	{GREA_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, LCLL_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+				/*  :  */ 	{COLN_Z, STRT_Z, STRT_Z, LCLN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, CLSC_Z, STRT_Z, STRT_Z},
+				/*  =  */ 	{EQLS_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, ASSG_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+	/*  added new	&  */   {AND1_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, AND2_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+				/* RST */	{ASGN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+				/* EOF */	{EOF_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+				/* WSP */	{WSP_Z,  STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  STRT_Z, STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
+				/* PRH */	{PROH_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z}
+	};//+sdf&eileen
 	char* ttypeString[STATES_NUMBER + KEYWORD_NUMBER] = {
 							 "Start     ", "Identifier", "Integer   ", "Less      ", //  0- 3
 							 "Greater   ", "Colon     ", "Equals    ", "<:>-sign  ", //  4- 7
 							 "  --<:--  ", "<:>       ", "Assignment", " --eof--  ", //  8-11
 							 "Whitespace", "Multipl   ", "  --:*--  ", " --comm-- ", // 12-15
 							 "  --*:--  ", "Prohibited", " --null-- ", "PlusToken ", // 16-19
-							 "MinusToken", "NotToken  ", "AndToken  ", "SemicolTok", // 20-23
-							 "Paranth ( ", "Paranth ) ", "Braces {  ", "Braces }  ", // 24-27
-							 "Brackets [", "Brackets ]" ,"IfToken   ", "WhileToken", // 28-31
-							 "INT-Token ", "WRITE-Toke", "ELSE-Token", "READ-Token"  // 32-35
+							 "MinusToken", "NotToken  ", "SglAndTok ", "DblAndTok ", // 20-23  replace '&' with SglAndTok and replace '&&' with DblAndTok
+							 "SemicolTok", "Paranth ( ", "Paranth ) ", "Braces {  ", // 24-27 all tokens starting from this line have incremented index from now on
+							 "Braces }  ", "Brackets [", "Brackets ]" ,"IfToken   ", // 28-31
+							 "WhileToken", "INT-Token ", "WRITE-Toke", "ELSE-Token", // 32-35
+							 "READ-Token" 
 	};
-	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', '&', ';', '(', ')','{', '}', '[', ']'};
+	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', ';', '(', ')','{', '}', '[', ']'}; // remove '&' since its got replaced by '&&' 
+		// and doesnt belogn to the set of _single chars_
 
 	char* keywordsArray[KEYWORD_NUMBER * 2] = {"if", "IF", "while", "WHILE", "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};
 
@@ -47,7 +50,9 @@ public:
 	int keywordNumber;
 	enum States {STRT_Z, IDEN_Z, INTG_Z, LESS_Z,
 				 GREA_Z, COLN_Z, EQLS_Z, ASGN_Z,
-				 LCLN_Z, LCLL_Z, ASSG_Z, EOF_Z,
+				 LCLN_Z, LCLL_Z, ASSG_Z, 
+				 AND1_Z, AND2_Z,				       // add two states for '&' and '&&'
+				 EOF_Z,
 				 WSP_Z,  MULT_Z, OPNC_Z, COMM_Z,
 				 CLSC_Z, PROH_Z, NULL_STATE, PLUS_Z,
 				 MIN_Z,  NOT_Z,  AND_Z,  SEMI_Z,
@@ -56,7 +61,7 @@ public:
 				 INTKEY_Z, WRITE_Z, ELSE_Z, READ_Z
 	};
 	enum Symbols {ANY_LETTER, ANY_DIGIT, MULT_SYMB, LESS_SYMB,
-	    		  GREATER_SYMB, COLON_SYMB, EQUALS_SYMB, REST_SYMB,
+	    		  GREATER_SYMB, COLON_SYMB, EQUALS_SYMB, AND_SYMB, REST_SYMB,  // add AND_SYMB ('&') since it's part of a compound '&&' token
 				  EOF_SYMB, WHITESPACE_SYMB, PROH_SYMB};
 	Syntax();
 	virtual ~Syntax();
