@@ -1,101 +1,166 @@
-/*
- * Buffer.cpp
- *
- *  Created on: Sep 26, 2012
- *      Author: knad0001
- */
-#include "../includes/Buffer.h"
-Buffer::~Buffer() {
-	/* Close file descriptor */
-	close(fd);
+#include "Buffer.h"
+
+
+int Buffer::getFileLength(ifstream *fileStream) {
+	int pos = (int) fileStream->tellg();
+	fileStream->seekg(0, ios_base::end);
+	int length = (int) fileStream->tellg();
+	fileStream->seekg(pos, ios_base::beg);
+	return length;
 }
 
-Buffer::Buffer(char *pathToFile) {
-	std::cout << "Starts running Buffer constructor\n";
-	filename = pathToFile;
-	fd = open(filename, O_RDONLY, O_DIRECT); // TODO find a Windows replacement for O_DIRECT and define it as O_DIRECT in compab.h
-	allocateBufferMemory();
-	shift = 0;
-	isAnymoreToRead = true;
-	shouldLoadNewPortion = true;
-	std::cout << "Finishes running Buffer constructor\n";
+Buffer::Buffer(char *file, int size, int segments) {
+	if (segments < 1) {
+		printf("A buffer can't have less than 1 segment. Given segments: %d\n", segments);
+		throw;
+	}
+
+	_bufferSize = size;
+	_file = file;
+	_segments = segments;
+
+	_buffer = new char[size];
+	for (int i = 0; i < _bufferSize; i++) {
+		_buffer[i] = '\0';
+	}
+
+	_loadedSegments = new int[segments];
+	for (int i = 0; i < segments; i++) {
+		_loadedSegments[i] = -1;
+	}
+
+	//open the file to get file length, then close it again
+	ifstream *fileStream = new ifstream();
+	fileStream->open(_file);
+	_fileLength = getFileLength(fileStream);
+	fileStream->close();
+
+	_fileSegmentLength = _bufferSize / _segments;
+}
+
+int Buffer::getSegmentNumber(int position) {
+	return position / _fileSegmentLength;
+}
+
+void Buffer::loadSegment(int segment, int loadToPosition) {
+	//printf("Loading segment %d to position %d\n", segment, loadToPosition);
+	//char **actualPosition = (char **) (&_buffer + (_fileSegmentLength * loadToPosition));
+
+
+
+	int fileSegmentStartPos = segment * _fileSegmentLength;
+	char *innerBuffer = new char[_fileSegmentLength];
+
+	ifstream *fileStream = new ifstream();
+	fileStream->open(_file);
+	fileStream->seekg(fileSegmentStartPos, ios::beg);
+	fileStream->read(innerBuffer, _fileSegmentLength);
+	int readChars = (int) fileStream->gcount();
+	fileStream->close();
+
+	int bufferIndexStart = _fileSegmentLength * loadToPosition;
+
+	for (int i = 0; i < _fileSegmentLength && i < readChars; i++) {
+		_buffer[bufferIndexStart + i] = innerBuffer[i];
+	}
+
+	_loadedSegments[loadToPosition] = segment;
+
+	delete[] innerBuffer;
+}
+
+int Buffer::getBufferPosition(int position) {
+	int segment = getSegmentNumber(position);
+
+	int firstFreeSegment = -1;
+	int lowestSegment = -1;
+	int highestSegment = -1;
+
+	for (int i = 0; i < _segments; i++) {
+		// get first free segment
+		if (_loadedSegments[i] == -1 && firstFreeSegment == -1) {
+			firstFreeSegment = i;
+		}
+
+		// get lowest segment
+		if (lowestSegment == -1 || _loadedSegments[i] < _loadedSegments[lowestSegment]) {
+			lowestSegment = i;
+		}
+
+		// get highest segment
+		if (highestSegment == -1 || _loadedSegments[i] > _loadedSegments[highestSegment]) {
+			highestSegment = i;
+		}
+
+		// Segment already loaded, so just take it
+		if (_loadedSegments[i] == segment) {
+			return (i * _fileSegmentLength) + (position % _fileSegmentLength);
+		}
+	}
+
+	//Segment not yet loaded:
+
+	// take a free segment slot, if one is found
+	if (firstFreeSegment != -1) {
+		loadSegment(segment, firstFreeSegment);
+		return (firstFreeSegment * _fileSegmentLength) + (position % _fileSegmentLength);
+	}
+
+	// overwrite the lowest segment slot, if segment number is higher than all loaded segments
+	if (segment > _loadedSegments[highestSegment]) {
+		loadSegment(segment, lowestSegment);
+		return (lowestSegment * _fileSegmentLength) + (position % _fileSegmentLength);
+	}
+
+	// overwrite the highest segment slot, if segment number is lower than all loaded segments
+	if (segment < _loadedSegments[lowestSegment]) {
+		loadSegment(segment, highestSegment);
+		return (highestSegment * _fileSegmentLength) + (position % _fileSegmentLength);
+	}
+
+	printf("Unexpected Error! No segment slot found to overwrite! This should never happen. Maybe zero or negative segment count?\n");
+	return -1;
+}
+
+char Buffer::_getChar(int position) {
+	if (position < 0 || position >= _fileLength) {
+		printf("Can't get char at position %d\n", position);
+		throw;
+	}
+
+	return _buffer[getBufferPosition(position)];
+}
+
+int Buffer::getPosition() {
+	return _fileCurrentPos;
 }
 
 char Buffer::getChar() {
-	//std::cout << "Starts running getChar()\n";
-	if (isAnymoreToRead) {
-		if (next == terminator1) {
-			theEndOfPrevBuffer = --next;
-			if (shouldLoadNewPortion) load(buffer2);
-			next = buffer2;
-			shouldLoadNewPortion = true; // perhaps better: shouldLoadNewPortion = isAnymoreToRead;
-		} else if (next == terminator2) {
-			theEndOfPrevBuffer = --next;
-			if (shouldLoadNewPortion) load(buffer1);
-			next = buffer1;
-			shouldLoadNewPortion = true; // perhaps better: shouldLoadNewPortion = isAnymoreToRead;
-		}
-	} else {
-		if (byte_read == 0) {
-			//std::cout << "Finishes running getChar()\n";
-			return '\0';
-		}
-	}
-	shift++;
-	//std::cout << "Finishes running getChar()\n";
-	return next++[0];
+	return _getChar(_fileCurrentPos++);
 }
 
-void Buffer::ungetChar(int back) {
-	//std::cout << "Starts running ungetChar()\n";
-	next -= back;
-	shift -= back;
-	if (shift < 0) {
-		shift++;
-		next = theEndOfPrevBuffer;
-		next -= (shift) * sizeof(char);
-		shouldLoadNewPortion = false;
-	}
-	//std::cout << "Finishes running ungetChar()\n";
+char Buffer::ungetChar() {
+	return _getChar(--_fileCurrentPos);
 }
 
-/* Load given buffer with a content of a textfile */
-void Buffer::load(void * someBuffer) {
-	std::cout << "Starts running load()\n";
-	byte_read = read(fd, someBuffer, (BUFFER_SIZE / 2) - 1);
-	if (byte_read < (signed) ((BUFFER_SIZE / 2) - 1) && byte_read >= 0) {
-		char * tmp = (char *) someBuffer;
-		tmp[byte_read++] = '\n';
-		tmp[byte_read] = '\0';
-		isAnymoreToRead = false;
-	}
-	if (byte_read < 0) std::cout << "is this the segfault?";
-	shift = 0;
-	std::cout << "Finishes running load()\n";
+char Buffer::ungetChar(int back) {
+	return _getChar(_fileCurrentPos -= back);
+}
+
+void Buffer::load(void *somebuffer) {
+	return;
 }
 
 void Buffer::allocateBufferMemory() {
-	std::cout << "Starts running allocateBufferMemory()\n";
-	void *tmp1;
-	int error = posix_memalign(&tmp1, BUFFER_ALIGNMENT, BUFFER_SIZE); // problem might be here
-	if (error != 0) {
-	    std::cout << "Couldn't allocate memory. Exiting..." << std::endl;
-	    exit(EXIT_FAILURE);
-	}
-	std::cout << (int)tmp1 << '\n';
-	buffer1 = (char *) tmp1; // problem might be here
-	std::cout << (int)buffer1 << '\n';
-	terminator1 = buffer1 + ((BUFFER_SIZE / 2) - 1) * sizeof(char); // problem might be here
-	std::cout << (int)terminator1 << '\n';
-	terminator1[0] = '\0';
-
-	buffer2 = terminator1 + sizeof(char);
-	terminator2 = buffer2 + ((BUFFER_SIZE / 2) - 1) * sizeof(char);
-	terminator2[0] = '\0';
-
-	load(buffer1);
-	next = buffer1;
-	std::cout << (int)terminator1 << '\n'; // result: terminator1 not properly initialized
-	std::cout << "Finishes running allocateBufferMemory()\n";
+	return;
 }
 
+bool Buffer::isEnd() {
+	bool end = _fileCurrentPos >= _fileLength;
+	return end;
+}
+
+Buffer::~Buffer() {
+	delete[] _buffer;
+	delete[] _loadedSegments;
+}
