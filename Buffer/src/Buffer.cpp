@@ -1,4 +1,4 @@
-#include "Buffer.h"
+#include "../includes/Buffer.h"
 
 
 int Buffer::getFileLength(ifstream *fileStream) {
