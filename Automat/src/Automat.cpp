@@ -85,8 +85,7 @@ int Automat::mapCharToSymbolName(char c) {
     if (isLetter(c))      		{  return Syntax::ANY_LETTER; }
     else if (isWspace(c)) 		{  return Syntax::WHITESPACE_SYMB; }
     else if (isDigit(c))  		{  return Syntax::ANY_DIGIT; }
-    else if (c == '<')    		{  return Syntax::LESS_SYMB; }
-    else if (c == '>')    		{  return Syntax::GREATER_SYMB; }
+	// dont need them anymore
     else if (c == '*')    		{  return Syntax::MULT_SYMB; }
     else if (c == ':')    		{  return Syntax::COLON_SYMB; }
     else if (c == '=')    		{  return Syntax::EQUALS_SYMB; }
