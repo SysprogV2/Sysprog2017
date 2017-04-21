@@ -2,7 +2,7 @@
 #ifndef Token_H_
 #define Token_H_
 
-#include <string.h> // TODO: DELETE THIS LATER!!! Prohibited library!
+//#include <string.h> // TODO: DELETE THIS LATER!!! Prohibited library!
 #include <stdlib.h>  // for strtol()
 #include "Information.h"
 #include "../../Compatibility/compab.h"

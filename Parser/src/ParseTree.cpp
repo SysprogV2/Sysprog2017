@@ -58,6 +58,28 @@ TokenTypeRegistry* ParseTree::first() {
 	return nullptr; // no actual first() of abstract ParseTree
 }
 
+void ParseTree::cleanupStatic() {
+	delete ParseTree::bracketsToken;
+	delete ParseTree::epsToken;
+	delete ParseTree::identifierToken;
+	delete ParseTree::integerToken;
+	delete ParseTree::minusToken;
+	delete DeclOnly::firstToken;
+	delete StatementWrite::firstToken;
+	delete StatementRead::firstToken;
+	delete StatementBlock::firstToken;
+	delete StatementIfElse::firstToken;
+	delete StatementWhile::firstToken;
+	delete Exp2Nested::firstToken;
+	delete Exp2LogicalNegation::firstToken;
+	delete OpPlus::firstToken;
+	delete OpMult::firstToken;
+	delete OpDiv::firstToken;
+	delete OpLess::firstToken;
+	delete OpEquals::firstToken;
+	delete OpAnd::firstToken;
+}
+
 void ParseTree::prepareTreeOperations() { // to be called before running typeCheck()
 	ParseTree::typeTable = new Symboltable();
 	ParseTree::codeOutput.open("../../debug/test.code");

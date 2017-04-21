@@ -63,6 +63,7 @@ public:
 	static TokenTypeRegistry* first();
 	static void prepareTreeOperations();
 	static void terminateTreeOperations();
+	static void cleanupStatic();
 	virtual ~ParseTree() = 0;
 	virtual bool typeCheck() = 0;
 	virtual void makeCode() = 0;
@@ -195,7 +196,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~DeclOnly();
-
+	friend class ParseTree;
 };
 
 class ArrayIndex : public Array {
@@ -210,6 +211,7 @@ public:
 	void makeCode();
 	bool isEps();
 	~ArrayIndex();
+	friend class ParseTree;
 
 };
 
@@ -265,6 +267,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~StatementSetValue();
+	friend class ParseTree;
 
 };
 
@@ -279,6 +282,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~StatementWrite();
+	friend class ParseTree;
 
 };
 
@@ -294,6 +298,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~StatementRead();
+	friend class ParseTree;
 
 };
 
@@ -308,6 +313,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~StatementBlock();
+	friend class ParseTree;
 
 };
 
@@ -324,6 +330,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~StatementIfElse();
+	friend class ParseTree;
 
 };
 
@@ -339,6 +346,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~StatementWhile();
+	friend class ParseTree;
 
 };
 
@@ -367,6 +375,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~Exp2Nested();
+	friend class ParseTree;
 
 };
 
@@ -382,6 +391,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~Exp2Variable();
+	friend class ParseTree;
 
 };
 
@@ -396,6 +406,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~Exp2Constant();
+	friend class ParseTree;
 
 };
 
@@ -410,6 +421,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~Exp2NumericNegation();
+	friend class ParseTree;
 
 };
 
@@ -424,6 +436,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~Exp2LogicalNegation();
+	friend class ParseTree;
 
 };
 
@@ -439,6 +452,7 @@ public:
 	void makeCode();
 	bool isEps();
 	~IndexPosition();
+	friend class ParseTree;
 
 };
 
@@ -492,6 +506,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~OpPlus();
+	friend class ParseTree;
 
 };
 
@@ -505,6 +520,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~OpMinus();
+	friend class ParseTree;
 
 };
 
@@ -518,6 +534,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~OpMult();
+	friend class ParseTree;
 
 };
 
@@ -531,6 +548,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~OpDiv();
+	friend class ParseTree;
 
 };
 
@@ -544,6 +562,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~OpLess();
+	friend class ParseTree;
 
 };
 
@@ -557,6 +576,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~OpGreater();
+	friend class ParseTree;
 
 };
 
@@ -570,6 +590,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~OpEquals();
+	friend class ParseTree;
 
 };
 
@@ -583,6 +604,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~OpNotEquals();
+	friend class ParseTree;
 
 };
 
@@ -596,6 +618,7 @@ public:
 	bool typeCheck();
 	void makeCode();
 	~OpAnd();
+	friend class ParseTree;
 
 };
 
