@@ -45,6 +45,7 @@ void Stack::trim(int back) {
 }
 
 char* Stack::get() {
+	stack[stackHead] = '\0';
 	return stack;
 }
 
