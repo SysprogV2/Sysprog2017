@@ -41,10 +41,10 @@ void Token::setInformation(Information* info) {
 
 int Token::getType(){
 
-	std::cout << "debuging *** Token::getType STRT" << std::endl;
-	std::cout << tType << std::endl;
+	//std::cout << "debuging *** Token::getType STRT" << std::endl;
+	//std::cout << tType << std::endl;
 	int toReturn = tType;
-	std::cout << "debuging *** Token::getType END" << std::endl;
+	//std::cout << "debuging *** Token::getType END" << std::endl;
 	return toReturn;
 }
 

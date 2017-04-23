@@ -35,23 +35,25 @@ Scanner::~Scanner() {
  * @return current token
  */
 Token *Scanner::nextToken() {
-	std::cout << "debuging *** Scanner::nextToken STRT" << std::endl;
+	//std::cout << "debuging *** Scanner::nextToken STRT" << std::endl;
 
 	char currentChar;
 	int finalState = 0;
 
-	std::cout << "debuging *** Scanner::nextToken DO-STRT" << std::endl;
+	//std::cout << "debuging *** Scanner::nextToken DO-STRT" << std::endl;
 	/* run automat and feed it char by char, till any lexem is found */
+	
 	do {
 		currentChar = buffer->getChar();
 		int back_steps = automat->read(currentChar);
 		finalState = automat->getFinalState();
+		std::cout << "QOOO : " << back_steps << "\n";
 		buffer->ungetChar(back_steps);
 		if (automat->isLexemReady() && (finalState == Syntax::WSP_Z || finalState == Syntax::CLSC_Z)) {
 			automat->reset();
-		}
+		}	
 	}while ( currentChar != '\0' &&  !automat->isLexemReady());
-	std::cout << "debuging *** Scanner::nextToken DO-NED" << std::endl;
+	//std::cout << "debuging *** Scanner::nextToken DO-NED" << std::endl;
 
 	/* save all information about the lexem */
 	char* lexem = automat->getLexem();
@@ -83,7 +85,7 @@ Token *Scanner::nextToken() {
 
 	/* now we can reset automat */
 	automat->reset();
-	std::cout << "debuging *** Scanner::nextToken END" << std::endl;
+	//std::cout << "debuging *** Scanner::nextToken END" << std::endl;
 
 	/* if we need to finish already*/
 	if (currentChar == '\0') {
