@@ -25,15 +25,15 @@ Syntax::Syntax() {
 		};
 
 	ttypeString = new const char*[STATES_NUMBER + KEYWORD_NUMBER] {
-								 "Start     ", "Identifier", "Integer   ", "Colon     ", //  0- 3
-								 "Equals    ", "=:=-sign  ", "  --=:--  ", "=:=       ", //  4- 7
-								 "Assignment", " --eof--  ", "Whitespace", "Multipl   ", //  8-11
-								 "  --:*--  ", " --comm-- ", "  --*:--  ", "Prohibited", // 12-15
-								 " --null-- ", "PlusToken ", "MinusToken", "NotToken  ", // 16-19
-								 "SglAndTok ", "DblAndTok ","SemicolTok ", "Paranth ( ", // 20-23  replace '&' with SglAndTok and replace '&&' with DblAndTok
-								 "Paranth ) ", "Braces {  ", "Braces }  ", "Brackets [", // 24-27 all tokens starting from this line have incremented index from now on
-								 "Brackets ]" ,"IfToken   ", "WhileToken", "INT-Token ", // 28-31
-								 "WRITE-Toke", "ELSE-Token", "READ-Token"                // 32-35
+						  	 "Start     ", "Identifier", "Integer   ", "Colon     ", //  0- 3
+							 "Equals    ", " Any      ", "=:        ", "=:=       ", //  4- 7
+							 "Assignment", " SglAndTok", "DblAndTok ", "Eof       ", //  8-11
+							 "Whitespace", "Multiplic ", "  --:*--  ", "COMMENT   ", // 12-15
+							 "  --*:--  ", "PROHIBITED", "MinusToken", "PlusToken ", // 16-19
+							 "MinusToken", "NotToken  ", "SemicolTok", "LessToken ", // 20-23  replace '&' with SglAndTok and replace '&&' with DblAndTok
+							 "GreateToken", "Paranth ( ", "Paranth ) ", "Paran {   ", // 24-27 all tokens starting from this line have incremented index from now on
+							 "Paran    }" ,"Brackets [", "Bracket ] ", "INT-Token ", // 28-31
+							 "WRITE-Toke", "ELSE-Token", "READ-Token"                // 32-35
 	};
 
 	signArray = new const char[SIGN_ARRAY_SZ] {'+', '-', '!', ';', '<', '>', '(', ')','{', '}', '[', ']'}; // remove '&' since its got replaced by '&&' , add '<' and '>'
