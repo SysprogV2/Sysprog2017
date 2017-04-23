@@ -16,14 +16,16 @@ get_timestamp ()
 
 int main(int argc, char **argv) {
 	timestamp_t t0 = get_timestamp();
-	Symboltable* st = new Symboltable();
-	Scanner* s = new Scanner(argv[1], st);
-	Token* t;
-	Syntax* syntax = new Syntax();
+	
 	std::cout << "processing..." << std::endl;
 
 	/* check if all arguments are given */
 	if (argc == 3) {
+		Symboltable* st = new Symboltable();
+		Scanner* s = new Scanner(argv[1], st);
+		Token* t;
+		Syntax* syntax = new Syntax();
+	
 		std::ofstream output_file;
 		output_file.open(argv[2]);
 		if (output_file.is_open()) {
