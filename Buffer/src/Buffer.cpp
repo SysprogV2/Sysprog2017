@@ -14,7 +14,7 @@ Buffer::Buffer(char *file, int size, int segments) {
 		printf("A buffer can't have less than 1 segment. Given segments: %d\n", segments);
 		throw;
 	}
-
+	_fileCurrentPos = 0;
 	_bufferSize = size;
 	_file = file;
 	_segments = segments;
@@ -32,7 +32,7 @@ Buffer::Buffer(char *file, int size, int segments) {
 	//open the file to get file length, then close it again
 	ifstream *fileStream = new ifstream();
 	fileStream->open(_file);
-	_fileLength = getFileLength(fileStream);
+	_fileLength = Buffer::getFileLength(fileStream);
 	fileStream->close();
 
 	_fileSegmentLength = _bufferSize / _segments;
@@ -144,6 +144,10 @@ char Buffer::ungetChar() {
 }
 
 char Buffer::ungetChar(int back) {
+	if(back == 0) {
+		return '\0';
+	}
+
 	return _getChar(_fileCurrentPos -= back);
 }
 
@@ -158,6 +162,10 @@ void Buffer::allocateBufferMemory() {
 bool Buffer::isEnd() {
 	bool end = _fileCurrentPos >= _fileLength;
 	return end;
+}
+
+int Buffer::getFileLength() {
+	return this->_fileLength;
 }
 
 Buffer::~Buffer() {
