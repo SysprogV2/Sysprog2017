@@ -42,7 +42,8 @@ Token *Scanner::nextToken() {
 
 	//std::cout << "debuging *** Scanner::nextToken DO-STRT" << std::endl;
 	/* run automat and feed it char by char, till any lexem is found */
-
+	if(buffer->isEnd())
+		return nullptr;
 	do {
 		currentChar = buffer->getChar();
 		int back_steps = automat->read(currentChar);
@@ -52,7 +53,7 @@ Token *Scanner::nextToken() {
 		if (automat->isLexemReady() && (finalState == Syntax::WSP_Z || finalState == Syntax::CLSC_Z)) {
 			automat->reset();
 		}
-	}while ( currentChar != '\0' &&  !automat->isLexemReady());
+	}while (!buffer->isEnd() && currentChar != '\0' &&  !automat->isLexemReady());
 	//std::cout << "debuging *** Scanner::nextToken DO-NED" << std::endl;
 
 	/* save all information about the lexem */
