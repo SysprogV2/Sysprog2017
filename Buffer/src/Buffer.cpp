@@ -10,6 +10,13 @@ int Buffer::getFileLength(ifstream *fileStream) {
 }
 
 Buffer::Buffer(char *file, int size, int segments) {
+	// assign values here to suppress warnings
+	_bufferSize = 0;       
+    _segments = 0;         
+    _fileLength = 0;       
+    _fileSegmentLength = 0;
+    _fileCurrentPos = 0; 
+    
 	if (segments < 1) {
 		printf("A buffer can't have less than 1 segment. Given segments: %d\n", segments);
 		throw;

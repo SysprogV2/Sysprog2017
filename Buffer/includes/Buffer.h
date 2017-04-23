@@ -9,15 +9,15 @@ class Buffer {
 private:
 
     char *_file;                // File path
-    int _bufferSize = 0;        // Buffer size
-    int _segments = 0;          // Segments count
+    int _bufferSize;        // Buffer size
+    int _segments;          // Segments count
 
     char *_buffer;              // buffer
     int *_loadedSegments;       // loaded segments
 
-    int _fileLength = 0;        // length of file
-    int _fileSegmentLength = 0; // fileLength/_segments;
-    int _fileCurrentPos = 0;    // current position in file
+    int _fileLength;        // length of file
+    int _fileSegmentLength; // fileLength/_segments;
+    int _fileCurrentPos;    // current position in file
 
     /**
      * Get the length of the file from the given file stream.
