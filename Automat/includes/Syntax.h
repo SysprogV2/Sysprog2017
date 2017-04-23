@@ -29,13 +29,13 @@ class Syntax {
 	};
 	char* ttypeString[STATES_NUMBER + KEYWORD_NUMBER] = {
 							 "Start     ", "Identifier", "Integer   ", "Colon     ", //  0- 3
-							 "Equals    ", "=:=-sign  ", "  --=:--  ", "=:=       ", //  4- 7
-							 "Assignment", " --eof--  ", "Whitespace", "Multipl   ", //  8-11
-							 "  --:*--  ", " --comm-- ", "  --*:--  ", "Prohibited", // 12-15
-							 " --null-- ", "PlusToken ", "MinusToken", "NotToken  ", // 16-19
-							 "SglAndTok ", "DblAndTok ","SemicolTok ", "Paranth ( ", // 20-23  replace '&' with SglAndTok and replace '&&' with DblAndTok
-							 "Paranth ) ", "Braces {  ", "Braces }  ", "Brackets [", // 24-27 all tokens starting from this line have incremented index from now on
-							 "Brackets ]" ,"IfToken   ", "WhileToken", "INT-Token ", // 28-31
+							 "Equals    ", " Any      ", "=:        ", "=:=       ", //  4- 7
+							 "Assignment", " SglAndTok", "DblAndTok ", "Eof       ", //  8-11
+							 "Whitespace", "Multiplic ", "  --:*--  ", "COMMENT   ", // 12-15
+							 "  --*:--  ", "PROHIBITED", "MinusToken", "PlusToken ", // 16-19
+							 "MinusToken", "NotToken  ", "SemicolTok", "LessToken ", // 20-23  replace '&' with SglAndTok and replace '&&' with DblAndTok
+							 "GreateToken", "Paranth ( ", "Paranth ) ", "Paran {   ", // 24-27 all tokens starting from this line have incremented index from now on
+							 "Paran    }" ,"Brackets [", "Bracket ] ", "INT-Token ", // 28-31
 							 "WRITE-Toke", "ELSE-Token", "READ-Token"                // 32-35
 							 
 	};
@@ -44,9 +44,12 @@ class Syntax {
 	char* keywordsArray[KEYWORD_NUMBER * 2] = {"if", "IF", "while", "WHILE", "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};
 
 public:
+
+
 	int keywordNumber;
-	enum States {STRT_Z, IDEN_Z, INTG_Z, COLN_Z, EQLS_Z, ASGN_Z,
-				 LCLN_Z, LCLL_Z, ASSG_Z, AND1_Z, AND2_Z, EOF_Z,
+	enum States {STRT_Z, IDEN_Z, INTG_Z, COLN_Z,
+				 EQLS_Z, ASGN_Z, LCLN_Z, LCLL_Z, 
+				 ASSG_Z, AND1_Z, AND2_Z, EOF_Z,
 				 WSP_Z,  MULT_Z, OPNC_Z, COMM_Z,
 				 CLSC_Z, PROH_Z, NULL_STATE, PLUS_Z,
 				 MIN_Z,  NOT_Z,  AND_Z,  SEMI_Z,
