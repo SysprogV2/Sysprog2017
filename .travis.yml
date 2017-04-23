@@ -3,7 +3,7 @@ language: cpp
 compiler:
 - g++
 install:
-- if [ "$CXX" = "g++" ]; then export CXX="g++-6.1" CC="gcc-6.1"; fi
+- if [ "$CXX" = "g++" ]; then export CXX="g++-6" CC="gcc-6"; fi
 addons:
   apt:
     sources:
