@@ -20,7 +20,7 @@
 
 class Symboltable {
 	SymtabEntry *hashTab[TABLE_SIZE];
-	int density[TABLE_SIZE] = {0};
+	int density[TABLE_SIZE];
 	StringTab* strTab;
 
 public:

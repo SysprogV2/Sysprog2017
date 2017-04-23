@@ -7,6 +7,7 @@
 #include "../includes/Symboltable.h"
 
 Symboltable::Symboltable() {
+	density[TABLE_SIZE] = {0};
 	strTab = new StringTab();
 	initSymbols();
 }
@@ -79,22 +80,34 @@ void Symboltable::print() {
 
 
 void Symboltable::initSymbols() {
+	char* tokenIf       = (char *) "if";
+	char* tokenIfCap    = (char *) "IF";
+	char* tokenWhile    = (char *) "while";
+	char* tokenWhileCap = (char *) "WHILE";
+	char* tokenInt      = (char *) "int";
+	char* tokenIntCap   = (char *) "INT";
+	char* tokenWrite	   = (char *) "write";
+	char* tokenWriteCap = (char *) "WRITE";
+	char* tokenElse     = (char *) "else";
+	char* tokenElseCap  = (char *) "ELSE";
+	char* tokenRead     = (char *) "read";
+	char* tokenReadCap  = (char *) "READ";
 
-	insert("write", 5);
-	insert("WRITE", 5);
-	insert("read", 4);
-	insert("READ", 4);
+	insert(tokenWrite, 5);
+	insert(tokenWriteCap, 5);
+	insert(tokenRead, 4);
+	insert(tokenReadCap, 4);
 
-	insert("if", 2);
-	insert("IF", 2);
+	insert(tokenIf, 2);
+	insert(tokenIfCap, 2);
 
-	insert("else", 4);
-	insert("ELSE", 4);
-	insert("int", 3);
-	insert("INT", 3);
+	insert(tokenElse, 4);
+	insert(tokenElseCap, 4);
+	insert(tokenInt, 3);
+	insert(tokenIntCap, 3);
 
-	insert("while", 5);
-	insert("WHILE", 5);
+	insert(tokenWhile, 5);
+	insert(tokenWhileCap, 5);
 }
 
 void Symboltable::attachType(char* lexem, CheckableType type) {
