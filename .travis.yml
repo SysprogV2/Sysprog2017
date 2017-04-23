@@ -1,8 +1,18 @@
+sudo: false
 language: cpp
-#sudo: required
-#dist: trusty
 compiler:
 - g++
+install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-6.1" CC="gcc-6.1"; fi
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-6.1
+    - g++-6.1
 os:
 - linux
-script: make
+script:
+- $CXX --version
+- make
