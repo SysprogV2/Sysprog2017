@@ -13,36 +13,69 @@
 #define KEYWORD_NUMBER 6
 #define STATES_NUMBER STATETABLE_WIDTH + STATETABLE_HEIGHT + 1
 class Syntax {
-						 //  STRT_Z, IDEN_Z, INTG_Z,   COLN_Z, EQLS_Z, ASGN_Z, LCLN_Z, LCLL_Z, ASSG_Z, AND1_Z, AND2_Z,	
-	int stateTable[STATETABLE_HEIGHT][STATETABLE_WIDTH] = {
-				/*            STRT    ID       INT	      :	     =	   <ANY>	  =:	 =:=	 :=      &      &&      Eof     WSP     *       :*   <comment>  *:    PROH_Z */
-				/* a-Z */	{IDEN_Z, IDEN_Z, STRT_Z,   STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/* 0-9 */	{INTG_Z, IDEN_Z, INTG_Z,   STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/*  *  */	{MULT_Z, STRT_Z, STRT_Z,   OPNC_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, COMM_Z, COMM_Z, STRT_Z, STRT_Z},
-				/*  :  */ 	{COLN_Z, STRT_Z, STRT_Z,   STRT_Z, LCLN_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, CLSC_Z, STRT_Z, STRT_Z},
-				/*  =  */ 	{EQLS_Z, STRT_Z, STRT_Z,   ASSG_Z, STRT_Z, STRT_Z, LCLL_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-	/*  added new	&  */   {AND1_Z, STRT_Z, STRT_Z,   STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, AND2_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/* RST */	{ASGN_Z, STRT_Z, STRT_Z,   STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/* EOF */	{EOF_Z,  STRT_Z, STRT_Z,   STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/* WSP */	{WSP_Z,  STRT_Z, STRT_Z,   STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  STRT_Z, STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
-				/* PRH */	{PROH_Z, STRT_Z, STRT_Z,   STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z}
-	};
-	char* ttypeString[STATES_NUMBER + KEYWORD_NUMBER] = {
-							 "Start     ", "Identifier", "Integer   ", "Colon     ", //  0- 3
-							 "Equals    ", "=:=-sign  ", "  --=:--  ", "=:=       ", //  4- 7
-							 "Assignment", " --eof--  ", "Whitespace", "Multipl   ", //  8-11
-							 "  --:*--  ", " --comm-- ", "  --*:--  ", "Prohibited", // 12-15
-							 " --null-- ", "PlusToken ", "MinusToken", "NotToken  ", // 16-19
-							 "SglAndTok ", "DblAndTok ","SemicolTok ", "Paranth ( ", // 20-23  replace '&' with SglAndTok and replace '&&' with DblAndTok
-							 "Paranth ) ", "Braces {  ", "Braces }  ", "Brackets [", // 24-27 all tokens starting from this line have incremented index from now on
-							 "Brackets ]" ,"IfToken   ", "WhileToken", "INT-Token ", // 28-31
-							 "WRITE-Toke", "ELSE-Token", "READ-Token"                // 32-35
-							 
-	};
-	const char signArray[SIGN_ARRAY_SZ] = {'+', '-', '!', ';', '<', '>', '(', ')','{', '}', '[', ']'}; // remove '&' since its got replaced by '&&' , add '<' and '>'
 
-	char* keywordsArray[KEYWORD_NUMBER * 2] = {"if", "IF", "while", "WHILE", "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};
+	char *lexemDispStart;
+	char *lexemDispIdent;
+	char *lexemDispInteg;
+	char *lexemDispColon;
+	char *lexemDispEquals;
+	char *lexemDispNotEqSign;
+	char *lexemDispNotEqLeft;
+	char *lexemDispNotEqFull;
+	char *lexemDispAssign;
+	char *lexemDispEof;
+	char *lexemDispWhitespace;
+	char *lexemDispMultipl;
 
+	char *lexemDispCommentLeft;
+	char *lexemDispCommentContent;
+	char *lexemDispCommentRight;
+	char *lexemDispProhibited;
+	
+	char *lexemDispNull;
+	char *lexemDispPlus;
+	char *lexemDispMinus;
+	char *lexemDispNot;
+	char *lexemDispSingleAnd;
+	char *lexemDispDoubleAnd;	
+	char *lexemDispSemicol;	
+	char *lexemDispParantLeft;	
+	char *lexemDispParantRight;	
+	
+	char *lexemDispBracesLeft;	
+	char *lexemDispBracesRight;	
+	char *lexemDispBracketsLeft;	
+	char *lexemDispBracketsRight;	
+
+	char *lexemDispTknIf;	
+	char *lexemDispTknWhile;	
+	char *lexemDispTknInt;	
+	char *lexemDispTknWrite;	
+	char *lexemDispTknElse;
+	char *lexemDispTknRead;	
+	
+
+	char* ttypeString[STATES_NUMBER + KEYWORD_NUMBER];
+	
+
+
+	
+	
+	char *tokenIf      ;
+	char *tokenIfCap   ;
+	char *tokenWhile   ;
+	char *tokenWhileCap;
+	char *tokenInt     ;
+	char *tokenIntCap  ;
+	char *tokenWrite;
+	char *tokenWriteCap;
+	char *tokenElse    ;
+	char *tokenElseCap ;
+	char *tokenRead    ;
+	char *tokenReadCap ;
+	char signArray[SIGN_ARRAY_SZ]; // remove '&' since its got replaced by '&&' , add '<' and '>'
+	int stateTable[STATETABLE_HEIGHT][STATETABLE_WIDTH];
+	char* keywordsArray[KEYWORD_NUMBER * 2];
 public:
 	int keywordNumber;
 	enum States {STRT_Z, IDEN_Z, INTG_Z, COLN_Z, EQLS_Z, ASGN_Z,
