@@ -9,7 +9,7 @@ SYMBOLTABLEDIR = Symboltable
 SCANNERDIR = Scanner
 PARSERDIR = Parser
 
-all: makedirs automatOBJs bufferOBJs symboltableOBJs scanner parserOBJs
+all: makedirs automatOBJs bufferOBJs symboltableOBJs scanner
 	@echo "target all"
 
 # rm 	remove
