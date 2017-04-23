@@ -7,7 +7,7 @@
 #include "Information.h"
 #include "../../Compatibility/compab.h"
 
-#define SIGN_ARRAY_SZ 11
+#define SIGN_ARRAY_SZ 14
 class Token {
 	int tType;
 	int line;
@@ -15,7 +15,7 @@ class Token {
 	long int value;
 	Information* information;
 	char symbol;
-	const char signArray[SIGN_ARRAY_SZ] = {'+','-','!','&',';','(',')','{','}','[',']'};
+	char signArray[SIGN_ARRAY_SZ];
 public:
 	Token(int type, int line, int column);
 	Token(int state, int l, int c, Information* info);

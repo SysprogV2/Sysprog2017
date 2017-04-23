@@ -19,6 +19,7 @@ Token::Token(int type, int line, int column) {
 }
 
 Token::Token(int state, int l, int c, Information* info) {
+	 char signArray[SIGN_ARRAY_SZ] = {'+','-','!','&',';','(',')','{','}','[',']'};
 	this->tType = state;
 	this->value = 0;
 	this->symbol = 'a';
