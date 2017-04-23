@@ -8,7 +8,7 @@ BUFFERDIR = Buffer
 SYMBOLTABLEDIR = Symboltable
 SCANNERDIR = Scanner
 PARSERDIR = Parser
-GPP_ARGS = -std=c++14
+GPP_ARGS = 
 
 all: makedirs automatOBJs bufferOBJs symboltableOBJs scanner #parserOBJs
 	@echo "target all"
