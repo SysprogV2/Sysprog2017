@@ -7,12 +7,15 @@
 #include "../includes/Symboltable.h"
 
 Symboltable::Symboltable() {
+	density = new int[TABLE_SIZE] {0};
+
 	strTab = new StringTab();
 	initSymbols();
 }
 
 Symboltable::~Symboltable() {
 	delete strTab;
+	delete[] density;
 }
 
 /*

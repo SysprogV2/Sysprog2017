@@ -10,6 +10,8 @@
 #include <iostream>
 #include <errno.h>
 Token::Token(int type, int line, int column) {
+	this->signArray = new const char {'+','-','!','&',';','(',')','{','}','[',']'};
+
 	this->tType = type;
 	this->line = line;
 	this->column = column;
@@ -19,6 +21,8 @@ Token::Token(int type, int line, int column) {
 }
 
 Token::Token(int state, int l, int c, Information* info) {
+	this->signArray = new const char {'+','-','!','&',';','(',')','{','}','[',']'};
+
 	this->tType = state;
 	this->value = 0;
 	this->symbol = 'a';
@@ -29,6 +33,7 @@ Token::Token(int state, int l, int c, Information* info) {
 
 Token::~Token() {
 	delete information;
+	delete[] signArray;
 }
 
 Information* Token::getInformation() {

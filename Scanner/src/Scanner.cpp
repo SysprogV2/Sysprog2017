@@ -50,7 +50,7 @@ Token *Scanner::nextToken() {
 		if (automat->isLexemReady() && (finalState == Syntax::WSP_Z || finalState == Syntax::CLSC_Z)) {
 			automat->reset();
 		}
-	}while ( currentChar != '\0' &&  !automat->isLexemReady());
+	}while ( !buffer->isEnd() && currentChar != '\0' &&  !automat->isLexemReady());
 	std::cout << "debuging *** Scanner::nextToken DO-NED" << std::endl;
 
 	/* save all information about the lexem */
