@@ -5,10 +5,6 @@
  *      Author: arty
  */
 
-#ifndef SIGN_ARRAY_SZ
-#define SIGN_ARRAY_SZ 14
-#endif
-
 #ifndef AUTOMAT_INCLUDES_SYNTAX_H_
 #define AUTOMAT_INCLUDES_SYNTAX_H_
 #ifndef SIGN_ARRAY_SZ
@@ -28,8 +24,9 @@ class Syntax {
 
 public:
 	int keywordNumber;
-	enum States {STRT_Z, IDEN_Z, INTG_Z, COLN_Z, EQLS_Z, ASGN_Z,
-				 LCLN_Z, LCLL_Z, ASSG_Z, AND1_Z, AND2_Z, EOF_Z,
+	enum States {STRT_Z, IDEN_Z, INTG_Z, COLN_Z,
+				 EQLS_Z, ASGN_Z, LCLN_Z, LCLL_Z,
+				 ASSG_Z, AND1_Z, AND2_Z, EOF_Z,
 				 WSP_Z,  MULT_Z, OPNC_Z, COMM_Z,
 				 CLSC_Z, PROH_Z, NULL_STATE, PLUS_Z,
 				 MIN_Z,  NOT_Z,  AND_Z,  SEMI_Z,
