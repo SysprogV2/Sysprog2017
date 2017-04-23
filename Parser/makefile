@@ -7,7 +7,8 @@ AUTOMATDIR = ../Automat
 BUFFERDIR = ../Buffer
 SYMBOLTABLEDIR = ../Symboltable
 SCANNERDIR = ../Scanner
-GPP_ARGS = -std=c++11
+GPP_ARGS = 
+
 # hier alle Object Files eintragen, ausser das File mit der Mainmethode
 # darauf achten, dass letzte Zeile ohne "\" eingetragen wird
 

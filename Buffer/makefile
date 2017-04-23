@@ -3,7 +3,7 @@ HEADERDIR = includes
 SRCDIR = src
 OBJDIR = objs
 BINDIRTEST = debug
-GPP_ARGS = -std=c++11
+GPP_ARGS = 
 
 
 # Linken der Object-files, abhaengig von BufferTarget und TestBufferTarget

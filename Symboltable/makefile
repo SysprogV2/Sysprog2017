@@ -4,7 +4,7 @@ SRCDIR = src
 OBJDIR = objs
 BINDIRTEST = debug
 INFODIR = ../Scanner/objs
-GPP_ARGS = -std=c++11
+GPP_ARGS = 
 
 dirs:
 	mkdir -p $(SRCDIR)
