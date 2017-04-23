@@ -6,7 +6,7 @@ BINDIRTEST = debug
 AUTOMATDIR = ../Automat
 BUFFERDIR = ../Buffer
 SYMBOLTABLEDIR = ../Symboltable
-GPP_ARGS = -std=c++14
+GPP_ARGS = -std=c++11
 
 # hier alle Object Files eintragen, ausser das File mit der Mainmethode
 # darauf achten, dass letzte Zeile ohne "\" eingetragen wird

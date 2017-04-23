@@ -10,7 +10,7 @@ SCANNERDIR = Scanner
 PARSERDIR = Parser
 GPP_ARGS = -std=c++14
 
-all: makedirs automatOBJs bufferOBJs symboltableOBJs scanner parserOBJs
+all: makedirs automatOBJs bufferOBJs symboltableOBJs scanner #parserOBJs
 	@echo "target all"
 
 # rm 	remove

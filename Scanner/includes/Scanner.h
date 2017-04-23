@@ -24,8 +24,8 @@ class Scanner {
 public:
 	Scanner(char *filename);
 	Scanner(char *filename, Symboltable* st);
-	int mapStateToType(int state, char* lexem);
-	long int lexemToValue(char* lexem);
+	int mapStateToType(int state, const char* lexem);
+	long int lexemToValue(const char* lexem);
 	Token* nextToken();
 	virtual ~Scanner();
 };

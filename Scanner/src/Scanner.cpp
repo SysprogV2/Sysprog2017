@@ -56,7 +56,7 @@ Token *Scanner::nextToken() {
 	//std::cout << "debuging *** Scanner::nextToken DO-NED" << std::endl;
 
 	/* save all information about the lexem */
-	char* lexem = automat->getLexem();
+	const char* lexem = automat->getLexem();
 	int lexemLength = automat->getLexemLength();
 	int line = automat->getLine();
 	int col = automat->getColumn();
@@ -99,7 +99,7 @@ Token *Scanner::nextToken() {
  * determine the current token type relying on STATE and LEXEM
  * @return token's type
  */
-int Scanner::mapStateToType(int state, char* lexem) {
+int Scanner::mapStateToType(int state, const char* lexem) {
 	char symbol = lexem[0];
 	int tType = state;
 	if (state == Syntax::ASGN_Z) {
@@ -115,7 +115,7 @@ int Scanner::mapStateToType(int state, char* lexem) {
  * converts a lexem to a its decimal value if it's possible
  * @return the value of a lexem if any
  */
-long int Scanner::lexemToValue(char* lexem) {
+long int Scanner::lexemToValue(const char* lexem) {
 	long int value = 0;
 	char *pEnd;
 	value = strtol(lexem, &pEnd, 10);

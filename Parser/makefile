@@ -7,8 +7,7 @@ AUTOMATDIR = ../Automat
 BUFFERDIR = ../Buffer
 SYMBOLTABLEDIR = ../Symboltable
 SCANNERDIR = ../Scanner
-CPPVERSION = c++11
-GPP_ARGS = -std=c++14
+GPP_ARGS = -std=c++11
 # hier alle Object Files eintragen, ausser das File mit der Mainmethode
 # darauf achten, dass letzte Zeile ohne "\" eingetragen wird
 
@@ -30,8 +29,8 @@ $(OBJDIR)/%.o :  $(SRCDIR)/%.cpp $(HEADERDIR)/%.h
 	g++ $(GPP_ARGS) -g -c -Wall  -o $@  $<
 
 ParserTest:  $(SRCDIR)/TestParser.cpp $(HEADERDIR)/Parser.h
-	g++ $(GPP_ARGS) -std=$(CPPVERSION) -g -c -Wall $(SRCDIR)/TestParser.cpp -o $(BINDIRTEST)/TestParser.o
-	g++ $(GPP_ARGS) -std=$(CPPVERSION) -g $(AUTOMATDIR)/$(OBJDIR)/*.o $(BUFFERDIR)/$(OBJDIR)/*.o $(SYMBOLTABLEDIR)/$(OBJDIR)/*.o $(SCANNERDIR)/$(OBJDIR)/*.o $(OBJDIR)/Parser.o $(OBJDIR)/ParseTree.o $(OBJDIR)/TokenSequence.o $(BINDIRTEST)/TestParser.o -o $(BINDIRTEST)/ParserTest  
+	g++ $(GPP_ARGS) -g -c -Wall $(SRCDIR)/TestParser.cpp -o $(BINDIRTEST)/TestParser.o
+	g++ $(GPP_ARGS) -g $(AUTOMATDIR)/$(OBJDIR)/*.o $(BUFFERDIR)/$(OBJDIR)/*.o $(SYMBOLTABLEDIR)/$(OBJDIR)/*.o $(SCANNERDIR)/$(OBJDIR)/*.o $(OBJDIR)/Parser.o $(OBJDIR)/ParseTree.o $(OBJDIR)/TokenSequence.o $(BINDIRTEST)/TestParser.o -o $(BINDIRTEST)/ParserTest  
 
 # loeschen aller files im verzeichnis $(OBJDIR) und $(BINDIRTEST) und neu erstellen
 cleanParser: 
