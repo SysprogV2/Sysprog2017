@@ -2,6 +2,7 @@
 #include "../includes/Automat.h"
 #include <iostream>
 #include "../../catch.hpp"
+#include <string.h>
 #define WSP_Z 12
 #define CLSC_Z 16
 
@@ -11,7 +12,7 @@
  * @automat
  * @inputString
  */
-char* getNextLexem(Automat* automat, char* inputString) {
+const char* getNextLexem(Automat* automat, char* inputString) {
 	int i = 0;
 	char nextChar = inputString[i];
 	while (nextChar != '\0') {
@@ -24,52 +25,131 @@ char* getNextLexem(Automat* automat, char* inputString) {
 			//std::cout << "Lexem '" << automat->getLexem() << "' is ready. State: " << automat->getFinalState() << "   Length = " << automat->getLexemLength() << "   LINE: " << automat->getLine()  << "   COL: " << automat->getColumn() << std::endl;
 			return automat->getLexem();
 			automat->reset();
-			
 		}
-
-
 	}
 }
 
-// NOTICE: seems like Catch can not match a char* with a string,
-// so we have to make a convertion char*->std::str manually
+//							NOTICE
+// following primitive methods are not tested since they 
+// merely retrieve values from the existing tables/arrays:
+// 
+// Syntax::getTokenTypeAsChar(int num);
+// Syntax::getState(int i, int j)
 
-TEST_CASE( "AUTOMAT TEST CASE: Lexems are processed", "[char]") {
+
+TEST_CASE( "AUTOMAT.CPP TEST: Lexems are processed", "[char]") {
 	// TEST CASE SETUP
 	Automat* automat = new Automat();
+	
+	// #1
 	char* inputString = "&&&other+=:+probably+:=+:=:qeek+k#oo+=:=:+*\0";
-	std::string someString(getNextLexem(automat, inputString));
-	REQUIRE( someString == "&&");
-	//REQUIRE( getNextLexem(automat, inputString) == "&");
+	REQUIRE( !strcmp(getNextLexem(automat, inputString), "&&") );
 }
 
-TEST_CASE( "STACK TEST CASE: Lexems are processed", "[char]") {
+
+TEST_CASE( "SYNTAX.CPP TEST -> matches()", "[char]") {
+	// TEST CASE SETUP
+	Syntax* syntax = new Syntax();
+	
+	// #1
+	REQUIRE( syntax->matches("\0", "\0") );
+	
+	// #2
+	REQUIRE( syntax->matches("a\0", "A\0") == false);
+	
+	// #3
+	REQUIRE( syntax->matches("ag\0", "ag\0") );
+	
+	// #4
+	REQUIRE( syntax->matches("ag", "ag") );
+	
+	// #5
+	REQUIRE( syntax->matches("!@$#%@$^^#&^&*(^((){}\0", "!@$#%@$^^#&^&*(^((){}\0") );
+	
+	// #6
+	REQUIRE( syntax->matches("if", "iF") == false);
+}
+
+TEST_CASE( "SYNTAX.CPP TEST -> ifKeyword()", "[char]") {
+	// TEST CASE SETUP
+	Syntax* syntax = new Syntax();
+	
+	// #1
+	REQUIRE( syntax->ifKeyword("if") );
+
+	// #2
+	REQUIRE( syntax->ifKeyword("iF") == -1);
+	
+	// #3
+	REQUIRE( syntax->ifKeyword("IF"));
+	
+	// #4
+	REQUIRE( syntax->ifKeyword("while"));
+	
+	// #5
+	REQUIRE( syntax->ifKeyword("WHILE"));
+	
+	// #6
+	REQUIRE( syntax->ifKeyword("WHILe") == -1);
+}
+
+TEST_CASE( "SYNTAX.CPP TEST -> isPacked()", "[char]") {
+	// TEST CASE SETUP
+	Syntax* syntax = new Syntax();
+	const char *signArray = new const char[14]
+		{'+', '-', '!', ';', '<', '>', '(', ')','{', '}', '[', ']'};
+	
+	// #1 - #13
+	REQUIRE( syntax->isPacked( signArray[0]) );
+	REQUIRE( syntax->isPacked( signArray[1]) );
+	REQUIRE( syntax->isPacked( signArray[2]) );
+	REQUIRE( syntax->isPacked( signArray[3]) );
+	REQUIRE( syntax->isPacked( signArray[4]) );
+	REQUIRE( syntax->isPacked( signArray[5]) );
+	REQUIRE( syntax->isPacked( signArray[6]) );
+	REQUIRE( syntax->isPacked( signArray[7]) );
+	REQUIRE( syntax->isPacked( signArray[8]) );
+	REQUIRE( syntax->isPacked( signArray[9]) );
+	REQUIRE( syntax->isPacked( signArray[13]) );
+	
+	// #13 - #15
+	REQUIRE( syntax->isPacked( '&') == -1 );
+	REQUIRE( syntax->isPacked( ':') == -1 );
+	REQUIRE( syntax->isPacked( '=') == -1 );
+}
+
+
+TEST_CASE( "STACK.CPP TEST -> push(); trim(); get(); flush()", "[char]") {
 	// TEST CASE SETUP
 	Stack* stack = new Stack();
-	//virtual ~Stack();
-	//void push(char c);
-    //void trim(int back);
-    //void flush();
-    //char* get();
-	
-	// test chars got pushed into right order 1
-	stack->push('a');
-	stack->push('b');
-	std::string expected1("ab");
-	std::string result1(stack->get());
-	REQUIRE( expected1 == result1) ;
-	
-	// test chars got removed from stack after flush()
-	stack->flush();
-	std::string expected2("");
-	std::string result2(stack->get());
-	REQUIRE( expected2 == result2) ;
-	
-	// test we can fill the stack up again
-	stack->push('a');
-	stack->push('b');
-	std::string expected3("ab");
-	std::string result3(stack->get());
-	REQUIRE( expected3 == result3) ;
 
+	// #1
+	stack->push('a');
+	stack->push('b');
+	stack->push('c');
+	REQUIRE( !strcmp(stack->get(), "abc") );
+	
+	// #2
+	stack->trim(0);
+	REQUIRE( !strcmp(stack->get(), "abc") );
+	
+	// #3
+	stack->trim(2);
+	REQUIRE( !strcmp(stack->get(), "a") );
+	
+	// #4
+	stack->trim(1);
+	REQUIRE( !strcmp(stack->get(), "") );
+	
+	// #5
+	stack->flush();
+	REQUIRE( !strcmp(stack->get(), "") );
+	
+	// #6
+	stack->push('§');
+	REQUIRE( !strcmp(stack->get(), "§") );
+	
+	// #7
+	stack->trim(1);
+	REQUIRE( !strcmp(stack->get(), "") );
 }
