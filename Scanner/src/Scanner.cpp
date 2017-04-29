@@ -48,7 +48,6 @@ Token *Scanner::nextToken() {
 		currentChar = buffer->getChar();
 		int back_steps = automat->read(currentChar);
 		finalState = automat->getFinalState();
-		std::cout << "QOOO : " << back_steps << "\n";
 		buffer->ungetChar(back_steps);
 		if (automat->isLexemReady() && (finalState == Syntax::WSP_Z || finalState == Syntax::CLSC_Z)) {
 			automat->reset();

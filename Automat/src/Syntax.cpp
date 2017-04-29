@@ -11,7 +11,7 @@ Syntax::Syntax() {
 	keywordNumber = KEYWORD_NUMBER;
 
 	this->stateTable = new int*[STATETABLE_HEIGHT]{
-					/*            STRT    ID       INT	      :	     =	   <ANY>	  =:	 =:=	 :=      &      &&      Eof     WSP     *       :*   <comment>  *:    PROH_Z */
+					/*          						  STRT 1   ID 2    INT 3     : 4      = 5   <ANY>6	  =: 7	 =:= 8	 := 9     & 10   && 11   Eof 12   WSP 13  * 14    :* 15 <comment>  *:    PROH_Z */
 					/* a-Z */	new int[STATETABLE_WIDTH]{IDEN_Z, IDEN_Z, STRT_Z,   STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
 					/* 0-9 */	new int[STATETABLE_WIDTH]{INTG_Z, IDEN_Z, INTG_Z,   STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z},
 					/*  *  */	new int[STATETABLE_WIDTH]{MULT_Z, STRT_Z, STRT_Z,   OPNC_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, COMM_Z, COMM_Z, STRT_Z, STRT_Z},
@@ -24,16 +24,17 @@ Syntax::Syntax() {
 					/* PRH */	new int[STATETABLE_WIDTH]{PROH_Z, STRT_Z, STRT_Z,   STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z, STRT_Z,  EOF_Z,  STRT_Z, STRT_Z, OPNC_Z, OPNC_Z, STRT_Z, STRT_Z}
 		};
 
-	ttypeString = new const char*[STATES_NUMBER + KEYWORD_NUMBER] {
+	ttypeString = new const char*[STATES_NUMBER + KEYWORD_NUMBER + 2] {
 						  	 "Start     ", "Identifier", "Integer   ", "Colon     ", //  0- 3
-							 "Equals    ", " Any      ", "=:        ", "=:=       ", //  4- 7
-							 "Assignment", " SglAndTok", "DblAndTok ", "Eof       ", //  8-11
-							 "Whitespace", "Multiplic ", "  --:*--  ", "COMMENT   ", // 12-15
-							 "  --*:--  ", "PROHIBITED", "MinusToken", "PlusToken ", // 16-19
+							 "Equals    ", "Any       ", "=:        ", "=:=       ", //  4- 7
+							 "Assignment", "SglAndTok ", "DblAndTok ", "Eof       ", //  8-11
+							 "Whitespace", "Multiplic ", "--:*--    ", "COMMENT   ", // 12-15
+							 "--*:--    ", "PROHIBITED", "MinusToken", "PlusToken ", // 16-19
 							 "MinusToken", "NotToken  ", "SemicolTok", "LessToken ", // 20-23  replace '&' with SglAndTok and replace '&&' with DblAndTok
-							 "GreateToken", "Paranth ( ", "Paranth ) ", "Paran {   ", // 24-27 all tokens starting from this line have incremented index from now on
-							 "Paran    }" ,"Brackets [", "Bracket ] ", "INT-Token ", // 28-31
-							 "WRITE-Toke", "ELSE-Token", "READ-Token"                // 32-35
+							 "GreatToken", "Paranth ( ", "Paranth ) ", "Braces {  ", // 24-27 all tokens starting from this line have incremented index from now on
+							 "Braces }  ", "Brackets [", "Bracket ] ", "IF-Token  ", // 28-31
+							 "WHILE-Toke", "INT-Token ", "WRITE-Tokn", "ELSE-Token",		// 32-35
+							 "READ-Token"
 	};
 
 	signArray = new const char[SIGN_ARRAY_SZ] {'+', '-', '!', ';', '<', '>', '(', ')','{', '}', '[', ']'}; // remove '&' since its got replaced by '&&' , add '<' and '>'
