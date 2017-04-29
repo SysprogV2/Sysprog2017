@@ -53,13 +53,15 @@ Scanner::~Scanner() {
  * @return current token
  */
 Token *Scanner::nextToken() {
-	std::cout << "debuging *** Scanner::nextToken STRT" << std::endl;
+	//std::cout << "debuging *** Scanner::nextToken STRT" << std::endl;
 
 	char currentChar;
 	int finalState = 0;
 
-	std::cout << "debuging *** Scanner::nextToken DO-STRT" << std::endl;
+	//std::cout << "debuging *** Scanner::nextToken DO-STRT" << std::endl;
 	/* run automat and feed it char by char, till any lexem is found */
+	if(buffer->isEnd())
+		return nullptr;
 	do {
 		currentChar = buffer->getChar();
 		int back_steps = automat->read(currentChar);
@@ -68,11 +70,11 @@ Token *Scanner::nextToken() {
 		if (automat->isLexemReady() && (finalState == Syntax::WSP_Z || finalState == Syntax::CLSC_Z)) {
 			automat->reset();
 		}
-	}while ( currentChar != '\0' &&  !automat->isLexemReady());
-	std::cout << "debuging *** Scanner::nextToken DO-NED" << std::endl;
+	}while (!buffer->isEnd() && currentChar != '\0' &&  !automat->isLexemReady());
+	//std::cout << "debuging *** Scanner::nextToken DO-NED" << std::endl;
 
 	/* save all information about the lexem */
-	char* lexem = automat->getLexem();
+	const char* lexem = automat->getLexem();
 	int lexemLength = automat->getLexemLength();
 	int line = automat->getLine();
 	int col = automat->getColumn();
@@ -101,7 +103,7 @@ Token *Scanner::nextToken() {
 
 	/* now we can reset automat */
 	automat->reset();
-	std::cout << "debuging *** Scanner::nextToken END" << std::endl;
+	//std::cout << "debuging *** Scanner::nextToken END" << std::endl;
 
 	/* if we need to finish already*/
 	if (currentChar == '\0') {
@@ -121,7 +123,7 @@ Token* Scanner::currentToken() {
  * determine the current token type relying on STATE and LEXEM
  * @return token's type
  */
-int Scanner::mapStateToType(int state, char* lexem) {
+int Scanner::mapStateToType(int state, const char* lexem) {
 	char symbol = lexem[0];
 	int tType = state;
 	if (state == Syntax::ASGN_Z) {
@@ -137,7 +139,7 @@ int Scanner::mapStateToType(int state, char* lexem) {
  * converts a lexem to a its decimal value if it's possible
  * @return the value of a lexem if any
  */
-long int Scanner::lexemToValue(char* lexem) {
+long int Scanner::lexemToValue(const char* lexem) {
 	long int value = 0;
 	char *pEnd;
 	value = strtol(lexem, &pEnd, 10);

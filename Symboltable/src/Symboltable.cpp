@@ -7,20 +7,23 @@
 #include "../includes/Symboltable.h"
 
 Symboltable::Symboltable() {
+	density = new int[TABLE_SIZE] {0};
+
 	strTab = new StringTab();
 	initSymbols();
 }
 
 Symboltable::~Symboltable() {
 	delete strTab;
+	delete[] density;
 }
 
 /*
  * from Algorithms, 4th edition by Sedgewick & Wayne
  */
-int Symboltable::hash(char *lexem) {
+int Symboltable::hash(const char *lexem) {
 	int hash = 0;
-	char *tmpPtr = lexem;
+	const char *tmpPtr = lexem;
 	while (tmpPtr[0] != '\0') {
 		hash = (R_CONST * hash + tmpPtr[0]) % TABLE_SIZE;
 		tmpPtr++;
@@ -28,7 +31,7 @@ int Symboltable::hash(char *lexem) {
 	return hash;
 }
 
-SymtabEntry* Symboltable::insert(char *lexem, int size) {
+SymtabEntry* Symboltable::insert(const char *lexem, int size) {
 	int key = hash(lexem);
 	if (hashTab[key] == nullptr) {
 		hashTab[key] = new SymtabEntry();
@@ -45,7 +48,7 @@ SymtabEntry* Symboltable::insert(char *lexem, int size) {
 /* checks if the given lexem is already in the table */
 /* returns NULL if not 								 */
 /* returns corresponding Information* object if it is*/
-Information* Symboltable::lookup(char* lexem) {
+Information* Symboltable::lookup(const char* lexem) {
 	int key = hash(lexem);
 	SymtabEntry* entry = hashTab[key];
 	int tmp = 0;

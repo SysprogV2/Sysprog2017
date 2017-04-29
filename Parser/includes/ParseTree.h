@@ -45,6 +45,8 @@
 
 class ParseTree {
 protected:
+	CheckableType checkingType;
+public:
 	static Token* epsToken;
 	static Token* bracketsToken;
 	static Token* minusToken;
@@ -57,8 +59,6 @@ protected:
 	static Symboltable* typeTable;
 	static std::ofstream codeOutput;
 	static LabelFactory* labelFactory;
-	CheckableType checkingType;
-public:
 	static void initStatic();
 	static TokenTypeRegistry* first();
 	static void prepareTreeOperations();
@@ -188,8 +188,8 @@ class DeclOnly : public Decl {
 private:
 	Array* size;
 	Token* identifier;
-	static Token* firstToken;
 public:
+	static Token* firstToken;
 	static void initStatic();
 	DeclOnly(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -202,8 +202,8 @@ public:
 class ArrayIndex : public Array {
 private:
 	Token* integer;
-	static Token* firstToken;
 public:
+	static Token* firstToken;
 	static void initStatic();
 	ArrayIndex(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -259,8 +259,8 @@ private:
 	Token* identifier;
 	Index* index;
 	Exp* aimValue;
-	static Token* defaultIdentifier;
 public:
+	static Token* defaultIdentifier;
 	static void initStatic();
 	StatementSetValue(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -274,8 +274,8 @@ public:
 class StatementWrite : public Statement {
 private:
 	Exp* toPrint;
-	static Token* firstToken;
 public:
+	static Token* firstToken;
 	static void initStatic();
 	StatementWrite(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -290,8 +290,8 @@ class StatementRead : public Statement {
 private:
 	Token* identifier;
 	Index* index;
-	static Token* firstToken;
 public:
+	static Token* firstToken;
 	static void initStatic();
 	StatementRead(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -305,8 +305,8 @@ public:
 class StatementBlock : public Statement {
 private:
 	Statements* blockContent;
-	static Token* firstToken;
 public:
+	static Token* firstToken;
 	static void initStatic();
 	StatementBlock(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -322,8 +322,8 @@ private:
 	Exp* condition;
 	Statement* thenCase;
 	Statement* elseCase;
-	static Token* firstToken;
 public:
+	static Token* firstToken;
 	static void initStatic();
 	StatementIfElse(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -338,8 +338,8 @@ class StatementWhile : public Statement {
 private:
 	Exp* condition;
 	Statement* loop;
-	static Token* firstToken;
 public:
+	static Token* firstToken;
 	static void initStatic();
 	StatementWhile(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -367,8 +367,8 @@ public:
 class Exp2Nested : public Exp2 {
 private:
 	Exp* nestedExpression;
-	static Token* firstToken;
 public:
+	static Token* firstToken;
 	static void initStatic();
 	Exp2Nested(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -383,8 +383,8 @@ class Exp2Variable : public Exp2 {
 private:
 	Token* identifier;
 	Index* index;
-	static Token* defaultIdentifier;
 public:
+	static Token* defaultIdentifier;
 	static void initStatic();
 	Exp2Variable(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -398,8 +398,9 @@ public:
 class Exp2Constant : public Exp2 {
 private:
 	Token* integer;
-	static Token* defaultInteger;
+
 public:
+	static Token* defaultInteger;
 	static void initStatic();
 	Exp2Constant(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -413,8 +414,9 @@ public:
 class Exp2NumericNegation : public Exp2 {
 private:
 	Exp2* toNegate;
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	Exp2NumericNegation(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -428,8 +430,9 @@ public:
 class Exp2LogicalNegation : public Exp2 {
 private:
 	Exp2* toNegate;
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	Exp2LogicalNegation(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -443,8 +446,9 @@ public:
 class IndexPosition : public Index {
 private:
 	Exp* index;
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	IndexPosition(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -498,8 +502,9 @@ public:
 
 class OpPlus : public Op {
 private:
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	OpPlus(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -512,8 +517,9 @@ public:
 
 class OpMinus : public Op {
 private:
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	OpMinus(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -526,8 +532,9 @@ public:
 
 class OpMult : public Op {
 private:
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	OpMult(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -540,8 +547,9 @@ public:
 
 class OpDiv : public Op {
 private:
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	OpDiv(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -554,8 +562,9 @@ public:
 
 class OpLess : public Op {
 private:
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	OpLess(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -568,8 +577,9 @@ public:
 
 class OpGreater : public Op {
 private:
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	OpGreater(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -581,9 +591,9 @@ public:
 };
 
 class OpEquals : public Op {
-private:
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	OpEquals(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -595,9 +605,9 @@ public:
 };
 
 class OpNotEquals : public Op {
-private:
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	OpNotEquals(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -609,9 +619,9 @@ public:
 };
 
 class OpAnd : public Op {
-private:
-	static Token* firstToken;
+
 public:
+	static Token* firstToken;
 	static void initStatic();
 	OpAnd(Scanner* scanner);
 	static TokenTypeRegistry* first();

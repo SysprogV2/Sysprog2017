@@ -45,7 +45,7 @@ int back;
     bool isWspace(char c);
     bool isFinal(int someState);
 
-    char* getLexem();
+    const char* getLexem();
     bool isLexemReady();
     void reset();
 
