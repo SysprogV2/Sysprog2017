@@ -6,11 +6,13 @@ install:
 addons:
   apt:
     sources:
-    - llvm-toolchain-precise
     - ubuntu-toolchain-r-test
+    - george-edison55-precise-backports
     packages:
     - gcc-6
     - g++-6
+    - cmake
+    - cmake-data
 script:
   - mkdir build
   - cd build
