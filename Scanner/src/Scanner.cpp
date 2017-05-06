@@ -82,13 +82,12 @@ Token *Scanner::nextToken() {
 			info = entry->getInfo();
 		}
 		t->setInformation(info);
-	} else {
-		if (tokenType == Syntax::INTG_Z) {
-			long int value = lexemToValue(lexem);
-			t->setValue(value);
-		} else if (tokenType == Syntax::PROH_Z) {
-			t->setSymbol(lexem[0]);
-		}
+	} else if (tokenType == Syntax::AND1_Z || tokenType == Syntax::PROH_Z) {
+		t->setType(Syntax::PROH_Z);
+		t->setErrorMessage("unknown token");
+		t->setSymbol(lexem[0]);
+	} else if (tokenType == Syntax::INTG_Z) {
+		getNumberToken(lexem, t);
 	}
 
 	/* now we can reset automat */
@@ -129,18 +128,19 @@ int Scanner::mapStateToType(int state, const char* lexem) {
 }
 
 /*
- * converts a lexem to a its decimal value if it's possible
- * @return the value of a lexem if any
+ * assigns a decimal value of given char pointer to given token
+ * @return void
  */
-long int Scanner::lexemToValue(const char* lexem) {
-	long int value = 0;
-	char *pEnd;
-	value = strtol(lexem, &pEnd, 10);
-	if (errno == EINVAL) {
-		std::cout << CONV_ERR << std::endl; // TODO actually throw the error
-	} else if (errno == ERANGE) {
-		std::cout << CONV_ERR_OVERFLOW << std::endl; // TODO actually throw the error
+void Scanner::getNumberToken(const char* lexem, Token* t) {
+	errno = 0;
+	long int value = strtol(lexem, 0, 10);
+	if (errno == ERANGE) {
+		t->setType(Syntax::PROH_Z);
+		t->setErrorMessage("error: given integer is too big to be converted to LONG INT");
+		t->setSymbol(nullptr);
 		errno = 0;
+	} else {
+		t->setValue(value);
 	}
-	return value;
+	
 }
