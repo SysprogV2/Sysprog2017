@@ -25,7 +25,7 @@ public:
 	Scanner(char *filename);
 	Scanner(char *filename, Symboltable* st);
 	int mapStateToType(int state, const char* lexem);
-	long int lexemToValue(const char* lexem);
+	void getNumberToken(const char* lexem, Token* t);
 	Token* nextToken();
 	virtual ~Scanner();
 };

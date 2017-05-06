@@ -18,6 +18,7 @@ Token::Token(int type, int line, int column) {
 	this->value = 0;
 	this->symbol = 'a';
 	this->information = nullptr;
+	this->errorMessage = nullptr;
 }
 
 Token::Token(int state, int l, int c, Information* info) {
@@ -45,12 +46,11 @@ void Token::setInformation(Information* info) {
 }
 
 int Token::getType(){
+	return tType;
+}
 
-	//std::cout << "debuging *** Token::getType STRT" << std::endl;
-	//std::cout << tType << std::endl;
-	int toReturn = tType;
-	//std::cout << "debuging *** Token::getType END" << std::endl;
-	return toReturn;
+void Token::setType(int type) {
+	this->tType = type;
 }
 
 char* Token::getLexem() {
@@ -65,7 +65,7 @@ int Token::getColumn() {
 	return column;
 }
 
-int Token::getValue() {
+long int Token::getValue() {
 	return value;
 }
 
@@ -83,4 +83,12 @@ void Token::setSymbol(char symbol) {
 
 bool Token::hasSameTypeAs(Token* other) {
 	return this->tType == other->tType;
+}
+
+char* Token::getErrorMessage() {
+	return this->errorMessage;
+}
+
+void Token::setErrorMessage(char* errorMessage) {
+	this->errorMessage = errorMessage;
 }

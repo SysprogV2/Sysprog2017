@@ -18,22 +18,26 @@ class Token {
 	Information* information;
 	char symbol;
 	const char* signArray;
+	char* errorMessage;
 public:
 	Token(int type, int line, int column);
 	Token(int state, int l, int c, Information* info);
 	virtual ~Token();
 	char* itoc(int number);
 	int getType();
+	void setType(int type);
 	Information* getInformation();
 	char* getLexem();
 	int getLine();
 	int getColumn();
-	int getValue();
+	long int getValue();
 	void setValue(long int value);
 	char getSymbol();
 	void setSymbol(char symbol);
 	void setInformation(Information* info);
 	bool hasSameTypeAs (Token* other);
+	char* getErrorMessage();
+	void setErrorMessage(char* errorMessage);
 };
 
 #endif
