@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "../includes/Automat.h"
 #include <iostream>
-#include "../../catch.hpp"
+#include "../../CatchLib/includes/catch.hpp"
 #include <string.h>
 #define WSP_Z 12
 #define CLSC_Z 16
@@ -146,7 +146,7 @@ TEST_CASE( "STACK.CPP TEST -> push(); trim(); get(); flush()", "[char]") {
 	REQUIRE( !strcmp(stack->get(), "") );
 	
 	// #6
-	stack->push('§');
+	// stack->push('§');
 	//REQUIRE( !strcmp(stack->get(), "§") );
 	
 	// #7

@@ -31,15 +31,27 @@ int main(int argc, char* argv[]) {
 	/* unlike previous version, this is self-made,
 	 * but the test should run correctly
 	 */
-	Parser* parser = new Parser(argv[0]);
-	ParseTree* tree = parser->parse();
-	int compile_error;
-	if (tree->typeCheck()) {
-		compile_error = 0;
-		tree->makeCode();
-	} else {
-		compile_error = 1;
+
+
+	int compile_error = 0;
+	try {
+
+		Parser* parser = new Parser(argv[0]);
+		ParseTree* tree = parser->parse();
+		if (tree->typeCheck()) {
+			compile_error = 0;
+			tree->makeCode();
+		} else {
+			compile_error = 1;
+		}
+	} catch (int error) {
+		cerr << argv[1] << "could not be compiled successfully." << endl;
+		compile_error = error;
 	}
+
+
+
+
 	std::cout << "Time: " << (get_timestamp() - t0) / 1000000.0L << "secs"  << std::endl;
 	return compile_error;
 }

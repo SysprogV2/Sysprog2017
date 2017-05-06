@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="StringtableTest" type="CMakeRunConfiguration" factoryName="Application" singleton="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Sysprog2017" TARGET_NAME="StringtableTest" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Sysprog2017" RUN_TARGET_NAME="StringtableTest">
+    <envs />
+    <method />
+  </configuration>
+</component>
