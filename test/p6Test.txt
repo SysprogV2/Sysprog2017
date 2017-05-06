@@ -1,0 +1,36 @@
+int x;
+int y;
+
+x = ((3+5)-(3 + 4))*(4 : ((2*3)+-5));
+x = (1+1)*(x + 2 - 1*(1+1));
+write(0);
+write(x);
+write(8);
+write(0);
+
+x = 1;
+x = x +1;
+x = x + x + 1;
+write(1);
+write (x);
+write (5);
+write(1);
+y = 1;
+y = y + 1;
+y = y + y + 1;
+write(2);
+write (y);
+write (5);
+write(1);
+y = y + x;
+write(3);
+write (y);
+write (10);
+write(3);
+write(3);
+
+
+
+
+
+
