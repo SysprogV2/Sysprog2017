@@ -15,7 +15,7 @@
 #include "../../Scanner/includes/Token.h"
 #include "../../Automat/includes/Syntax.h"
 #include "../../Compatibility/compab.h"
-#include "../../Parser/includes/TokenSequence.h"
+#include "../../Parser/includes/TokenTypeRegistry.h"
 
 class Scanner {
 	Symboltable *stab;

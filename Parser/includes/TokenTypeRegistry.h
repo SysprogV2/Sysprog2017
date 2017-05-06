@@ -8,7 +8,7 @@
 #ifndef PARSER_INCLUDES_TOKENTYPEREGISTRY_H_
 #define PARSER_INCLUDES_TOKENTYPEREGISTRY_H_
 
-
+#include "TokenSequence.h"
 
 class TokenTypeRegistry {
 private:

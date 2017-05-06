@@ -11,6 +11,7 @@
 #define PARSER_INCLUDES_PARSETREE_H_
 
 #include "TokenSequence.h"
+#include "TokenTypeRegistry.h"
 #include "Errors.h"
 #include "../../Symboltable/includes/Symboltable.h"
 #include "../../Buffer/includes/Buffer.h"
