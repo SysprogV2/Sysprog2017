@@ -29,8 +29,10 @@ public:
 	~TokenTypeRegistry();
 };
 
-int calcLength(char* string);
-
-char* operator+(char* first, char* second);
+class StringUtil {
+public:
+	static char* concat(char* first, char* second);
+	static int calcLength(char* string);
+};
 
 #endif /* SCANNER_INCLUDES_TOKENTYPEREGISTRY_H_ */

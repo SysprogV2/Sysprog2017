@@ -7,7 +7,7 @@
 
 #include "../../Scanner/includes/TokenTypeRegistry.h"
 
-char* operator+(char* first, char* second) {
+char* StringUtil::concat(char* first, char* second) {
 	int firstLength = calcLength(first);
 	int newLength = firstLength + calcLength(second);
 	char* newstring = new char[newLength];
@@ -17,7 +17,7 @@ char* operator+(char* first, char* second) {
 	return newstring;
 }
 
-int calcLength (char* string) {
+int StringUtil::calcLength (char* string) {
 	int length = 0;
 	while (string[length] != '\0') {
 		length++;
@@ -66,9 +66,9 @@ char* TokenTypeRegistry::allSetTokenNames() {
 	for (int i = 0; i < this->size; i++) {
 		if (this->tokenTypes[i]) {
 			if (names != "") {
-				names = names + ", ";
+				names = StringUtil::concat(names, ", ");
 			}
-			names = names + Token::nameOf(i);
+			names = StringUtil::concat(names, Token::nameOf(i));
 		}
 	}
 	return names;
