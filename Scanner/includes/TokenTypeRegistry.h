@@ -29,6 +29,8 @@ public:
 	~TokenTypeRegistry();
 };
 
+int calcLength(char* string);
 
+char* operator+(char* first, char* second);
 
 #endif /* SCANNER_INCLUDES_TOKENTYPEREGISTRY_H_ */

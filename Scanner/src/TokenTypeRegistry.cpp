@@ -7,8 +7,23 @@
 
 #include "../../Scanner/includes/TokenTypeRegistry.h"
 
+char* operator+(char* first, char* second) {
+	int firstLength = calcLength(first);
+	int newLength = firstLength + calcLength(second);
+	char* newstring = new char[newLength];
+	for (int i = 0; i < newLength; i++) {
+		newstring[i] = (i < firstLength ? first[i] : second[i - firstLength]);
+	}
+	return newstring;
+}
 
-
+int calcLength (char* string) {
+	int length = 0;
+	while (string[length] != '\0') {
+		length++;
+	}
+	return length;
+}
 
 TokenTypeRegistry::TokenTypeRegistry() {
 	this->size = 36;
