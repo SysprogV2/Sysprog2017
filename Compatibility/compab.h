@@ -25,8 +25,6 @@ int posix_memalign(void** pointer, size_t alignment, size_t size) { //
 	return error;
 }
 
-// TODO add include for O_DIRECT (location in MinGW) OR migrate project to Cygwin toolchain
-
 #endif // MinGW mapping utility
 
 #endif /* COMPATIBILITY_COMPAB_H_ */
