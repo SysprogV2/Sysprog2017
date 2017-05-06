@@ -17,7 +17,7 @@ public:
 
 private:
 
-    char *_file;                // File path
+    const char *_file;                // File path
     int _bufferSize;        // Buffer size
     int _segments;          // Segments count
 
@@ -71,7 +71,7 @@ public:
      * @param segments Segment count.
      * @return
      */
-    Buffer(char *file, int size = 500, int segments = 2);
+    Buffer(const char *file, int size = 500, int segments = 2);
 
     /**
      * @return The current position in the source file.
