@@ -15,18 +15,22 @@
 #include "../../Scanner/includes/Token.h"
 #include "../../Automat/includes/Syntax.h"
 #include "../../Compatibility/compab.h"
+#include "TokenTypeRegistry.h"
 
 class Scanner {
 	Symboltable *stab;
 	Buffer* buffer;
 	Automat* automat;
 	Syntax* syntax;
+	Token* cToken;
+	TokenTypeRegistry* idenInt;
 public:
 	Scanner(char *filename);
 	Scanner(char *filename, Symboltable* st);
 	int mapStateToType(int state, const char* lexem);
 	long int lexemToValue(const char* lexem);
 	Token* nextToken();
+	Token* currentToken();
 	virtual ~Scanner();
 };
 
