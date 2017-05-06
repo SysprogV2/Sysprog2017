@@ -1,5 +1,7 @@
-*/debug/*
-*/objs/*
+*/debug/
+*/objs/
+*Test
+*.cbp
 
 # Created by https://www.gitignore.io/api/c,c++,eclipse,jetbrains,cmake
 
