@@ -147,9 +147,59 @@ TEST_CASE( "STACK.CPP TEST -> push(); trim(); get(); flush()", "[char]") {
 	
 	// #6
 	stack->push('§');
-	REQUIRE( !strcmp(stack->get(), "§") );
+	//REQUIRE( !strcmp(stack->get(), "§") );
 	
 	// #7
 	stack->trim(1);
 	REQUIRE( !strcmp(stack->get(), "") );
+}
+
+TEST_CASE( "AUTOMAT.CPP TEST -> read(char currentChar); reset()", "[char]") {
+	// TEST CASE SETUP
+	Automat* automat = new Automat();
+	
+	// #1
+	automat->reset();
+	automat->read('=');
+	automat->read(':');
+	int result1 = automat->read('x');
+	REQUIRE( result1 == 2 );
+	
+	// #2
+	automat->reset();
+	automat->read(':');
+	automat->read('=');
+	int result2 = automat->read('x');
+	REQUIRE( result2 == 1 );
+	
+	// #3
+	automat->reset();
+	automat->read('=');
+	automat->read(':');
+	automat->read('=');
+	int result3 = automat->read('x');
+	REQUIRE( result3 == 1 );
+	
+	// #4
+	automat->reset();
+	int result4 = automat->read('x');
+	REQUIRE( result4 == 0 );
+}
+
+TEST_CASE( "AUTOMAT.CPP TEST -> updatePos(char c); :getLine(); getColumn()", "[char]") {
+	// TEST CASE SETUP
+	Automat* automat = new Automat();
+	
+	// #1
+	automat->reset();
+	automat->read('\n');
+	automat->read('\n');
+	automat->read('\n');
+	automat->read('a');
+	automat->read('!');
+	int line1 = automat->getLine();
+	int col1 = automat->getColumn();
+	REQUIRE( line1 == 3 );
+	REQUIRE( col1 == 2 );
+
 }
