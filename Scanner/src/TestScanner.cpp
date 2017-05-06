@@ -30,16 +30,16 @@ int main(int argc, char **argv) {
 			while ((t = s->nextToken())) {
 				/* console output */
 				if (t->getType() == Syntax::PROH_Z) {
-					std::cout << "unknown Token Line: " << t->getLine()
-							<< " Column: " << t->getColumn()
-							<< " Symbol: " << t->getSymbol() << std::endl;
+					std::cout << t->getErrorMessage()
+							<< " Line: " << t->getLine()
+							<< " Column: " << t->getColumn();
+					if (t->getSymbol() != nullptr) {
+						std::cout << " Symbol: " << t->getSymbol();
+					}
+					std::cout << std::endl;
 				/* print everything else to the output file */
-				} else if (t->getType() == Syntax::AND1_Z) {
-					std::cout << "unknown Token Line: " << t->getLine()
-							<< " Column: " << t->getColumn()
-							<< " Symbol: " << "&" << std::endl;
-				} else {
-					output_file << "Token "
+				} else if (t->getType() != Syntax::WSP_Z) {
+					output_file 
 							<< syntax->getTokenTypeAsChar(t->getType())
 							<< " Line: " << t->getLine()
 							<< " Column: " << t->getColumn();
