@@ -15,4 +15,4 @@ os:
 - linux
 script:
 - $CXX --version
-- make
+- cmake
