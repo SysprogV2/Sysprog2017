@@ -5,7 +5,7 @@
 #project(Sysprog2017_Scanner)
 #set(CMAKE_CXX_STANDARD 11)
 
-add_library(ScannerLib src/Scanner.cpp src/Information.cpp src/Token.cpp)
+add_library(ScannerLib src/Scanner.cpp src/Information.cpp src/Token.cpp src/TokenTypeRegistry.cpp)
 target_include_directories(ScannerLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(ScannerTest src/TestScanner.cpp)

@@ -9,4 +9,10 @@ add_library(ParserLib src/Parser.cpp src/ParseTree.cpp src/TokenSequence.cpp src
 target_include_directories(ParserLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(ParserTest src/TestParser.cpp)
-target_link_libraries(ParserTest LINK_PUBLIC SymboltableLib ScannerLib  AutomatLib BufferLib ParserLib CatchLib)
+target_link_libraries(ParserTest LINK_PUBLIC
+        ParserLib
+        ScannerLib
+        SymboltableLib
+        BufferLib
+        AutomatLib
+        CatchLib)

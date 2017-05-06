@@ -20,7 +20,7 @@ Stack::Stack() {
 	int error = posix_memalign(&tmp, 4096, MAX_TOKEN_SIZE);
 	if (error != 0) {
 	    std::cout << MEM_ALLOC_ERR << std::endl;
-	    exit(EXIT_FAILURE);
+	    throw(EXIT_FAILURE);
 	}
 	stack = (char*) tmp;
 }

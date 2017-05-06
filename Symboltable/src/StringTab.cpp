@@ -12,7 +12,7 @@ StringTab::StringTab() {
 	int error = posix_memalign(&spacePtr, INITIAL_ALGN, INITIAL_SIZE * sizeof(char));
 	if (error != 0) {
 	    perror("posix_memalign");
-	    exit(EXIT_FAILURE);
+	    throw(EXIT_FAILURE);
 	}
 	string = (char*) spacePtr;
 	freeP = string;
@@ -65,7 +65,7 @@ void StringTab::resize(char * stringItself, int size) {
 	int error = posix_memalign(&allocPtr, 4096, overallSpace * sizeof(char));
 	if (error != 0) {
 	    perror("posix_memalign");
-	    exit(EXIT_FAILURE);
+	    throw(EXIT_FAILURE);
     }
 	memcpy(allocPtr, string, occupiedSpace * sizeof(char));
 

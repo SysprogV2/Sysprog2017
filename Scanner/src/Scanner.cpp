@@ -9,19 +9,7 @@
 #define CONV_ERR "error: cannot convert given CHAR* to LONG INT"
 #define CONV_ERR_OVERFLOW "error: given integer is too big to be converted to LONG INT"
 
-Scanner::Scanner(char *filename) {
-	buffer = new Buffer(filename);
-	automat = new Automat();
-	syntax = new Syntax();
-	stab = nullptr;
-	cToken = nullptr;
-	idenInt =  new TokenTypeRegistry();
-	Token* idenToken = new Token(1, 0, 0);
-	Token* intToken = new Token (2, 0, 0);
-	idenInt->set(idenToken);
-	idenInt->set(intToken);
-	delete idenToken;
-	delete intToken;
+Scanner::Scanner(char *filename): Scanner(filename, new Symboltable()) {
 }
 
 Scanner::Scanner(char *filename, Symboltable* st) {
@@ -60,8 +48,10 @@ Token *Scanner::nextToken() {
 
 	//std::cout << "debuging *** Scanner::nextToken DO-STRT" << std::endl;
 	/* run automat and feed it char by char, till any lexem is found */
-	if(buffer->isEnd())
+	if (buffer->isEnd()) {
 		return nullptr;
+	}
+
 	do {
 		currentChar = buffer->getChar();
 		int back_steps = automat->read(currentChar);
@@ -70,7 +60,7 @@ Token *Scanner::nextToken() {
 		if (automat->isLexemReady() && (finalState == Syntax::WSP_Z || finalState == Syntax::CLSC_Z)) {
 			automat->reset();
 		}
-	}while (!buffer->isEnd() && currentChar != '\0' &&  !automat->isLexemReady());
+	} while (!buffer->isEnd() && currentChar != '\0' &&  !automat->isLexemReady());
 	//std::cout << "debuging *** Scanner::nextToken DO-NED" << std::endl;
 
 	/* save all information about the lexem */
@@ -109,7 +99,10 @@ Token *Scanner::nextToken() {
 	if (currentChar == '\0') {
 		return nullptr;
 	} else {
-		if (!this->idenInt->isSet(this->cToken)) delete this->cToken;
+		if (this->cToken != nullptr && !this->idenInt->isSet(this->cToken)) {
+            delete this->cToken;
+        }
+
 		this->cToken = t;
 		return t;
 	}

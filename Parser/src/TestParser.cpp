@@ -14,9 +14,9 @@ get_timestamp ()
    return  now.tv_usec + (timestamp_t)now.tv_sec * 1000000;
 }
 
-int main(int argc, char* argv[]) {
+int TEST(int argc, char* argv[]) {
 	std::cout << "Compiler running now (TestParser)\n";
-    timestamp_t t0 = get_timestamp();
+	timestamp_t t0 = get_timestamp();
 
 	if (argc < 2) return EXIT_FAILURE;
 
@@ -31,4 +31,13 @@ int main(int argc, char* argv[]) {
 	tree->makeCode();
 	std::cout << "Time: " << (get_timestamp() - t0) / 1000000.0L << "secs"  << std::endl;
 	return EXIT_SUCCESS;
+}
+
+int main(int argc, char* argv[]) {
+	switch(TEST(argc, argv)) {
+		case EXIT_SUCCESS:
+			cout << "SUCCESS" << endl;
+		default:
+			cout << "FAIL" << endl;
+	}
 }

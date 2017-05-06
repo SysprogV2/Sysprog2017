@@ -106,7 +106,7 @@ int Token::getType(){
 
 	//std::cout << "debuging *** Token::getType STRT" << std::endl;
 	//std::cout << tType << std::endl;
-	int toReturn = tType;
+	int toReturn = this->tType;
 	//std::cout << "debuging *** Token::getType END" << std::endl;
 	return toReturn;
 }
