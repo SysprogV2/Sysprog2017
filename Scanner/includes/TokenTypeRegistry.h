@@ -8,6 +8,8 @@
 #ifndef SCANNER_INCLUDES_TOKENTYPEREGISTRY_H_
 #define SCANNER_INCLUDES_TOKENTYPEREGISTRY_H_
 
+#include "Token.h"
+
 class TokenTypeRegistry {
 private:
 	bool* tokenTypes;
