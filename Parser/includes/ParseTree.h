@@ -53,7 +53,6 @@ protected:
 	static Token* greaterToken;
 	static Token* notEqualsToken;
 	static Token* failureToken;
-	static IntQueue* splitIndexes;
 	static Symboltable* typeTable;
 	static std::ofstream codeOutput;
 	static LabelFactory* labelFactory;
