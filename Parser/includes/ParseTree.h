@@ -11,7 +11,6 @@
 #define PARSER_INCLUDES_PARSETREE_H_
 
 #include "TokenSequence.h"
-#include "TokenTypeRegistry.h"
 #include "Errors.h"
 #include "../../Symboltable/includes/Symboltable.h"
 #include "../../Buffer/includes/Buffer.h"
@@ -19,6 +18,7 @@
 
 #include <iostream>
 #include <fstream>
+#include "../../Scanner/includes/TokenTypeRegistry.h"
 
 #define TYPE_REFERENCE_TOKEN_INT new Token (32, 0, 0)
 #define TYPE_REFERENCE_TOKEN_BRACKETS_START new Token (28, 0, 0)

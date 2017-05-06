@@ -5,7 +5,7 @@
  *      Author: root
  */
 
-#include "../includes/TokenTypeRegistry.h"
+#include "../../Scanner/includes/TokenTypeRegistry.h"
 
 
 
