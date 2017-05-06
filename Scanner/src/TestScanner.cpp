@@ -34,6 +34,10 @@ int main(int argc, char **argv) {
 							<< " Column: " << t->getColumn()
 							<< " Symbol: " << t->getSymbol() << std::endl;
 				/* print everything else to the output file */
+				} else if (t->getType() == Syntax::AND1_Z) {
+					std::cout << "unknown Token Line: " << t->getLine()
+							<< " Column: " << t->getColumn()
+							<< " Symbol: " << "&" << std::endl;
 				} else {
 					output_file << "Token "
 							<< syntax->getTokenTypeAsChar(t->getType())
