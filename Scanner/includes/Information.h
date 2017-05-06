@@ -27,7 +27,7 @@ public:
 	void setLexem(char* lexem);
 	char* getLexem();
 	CheckableType getType();
-	bool matches(char* other);
+	bool matches(const char* other);
 	void setType (CheckableType type);
 };
 

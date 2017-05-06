@@ -25,9 +25,9 @@ class StringTab {
 public:
 	StringTab();
 	virtual ~StringTab();
-	char* insert(char *lexem, int size);
+	char* insert(const char *lexem, int size);
 	void resize(int moreSpace);
-	char* copy(char * freepointer, char *lexem, int size);
+	char* copy(char * freepointer, const char *lexem, int size);
 	void resize(char * stringItself, int size);
 	int getFS();
 	int getOS();

@@ -8,8 +8,9 @@ BUFFERDIR = Buffer
 SYMBOLTABLEDIR = Symboltable
 SCANNERDIR = Scanner
 PARSERDIR = Parser
+GPP_ARGS = 
 
-all:	automatOBJs bufferOBJs symboltableOBJs scanner parserOBJs
+all: makedirs automatOBJs bufferOBJs symboltableOBJs scanner #parserOBJs
 	@echo "target all"
 
 # rm 	remove
@@ -25,7 +26,19 @@ clean:
 	rm -f $(SYMBOLTABLEDIR)/$(DEBUGDIR)/*
 	rm -f $(SCANNERDIR)/$(DEBUGDIR)/*
 	rm -f $(PARSERDIR)/$(DEBUGDIR)/*
-
+	
+makedirs:
+	mkdir -p $(BUFFERDIR)/$(OBJDIR)
+	mkdir -p $(BUFFERDIR)/$(DEBUGDIR)
+	mkdir -p $(AUTOMATDIR)/$(OBJDIR)
+	mkdir -p $(AUTOMATDIR)/$(DEBUGDIR)
+	mkdir -p $(SYMBOLTABLEDIR)/$(OBJDIR)
+	mkdir -p $(SYMBOLTABLEDIR)/$(DEBUGDIR)
+	mkdir -p $(SCANNERDIR)/$(OBJDIR)
+	mkdir -p $(SCANNERDIR)/$(DEBUGDIR)
+	mkdir -p $(PARSERDIR)/$(OBJDIR)
+	mkdir -p $(PARSERDIR)/$(DEBUGDIR)
+	
 automatOBJs:
 	$(MAKE) -C $(AUTOMATDIR) AutomatOBJTarget
 	

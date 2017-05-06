@@ -9,7 +9,8 @@
 #include <iostream>
 
 Information::Information() {
-
+	this->type = noType;
+	this->lexem = '\0';
 }
 
 Information::Information(char* lexem) {
@@ -28,9 +29,9 @@ char* Information::getLexem() {
 	return lexem;
 }
 
-bool Information::matches(char* other) {
-	char* tmp1 = lexem;
-	char* tmp2 = other;
+bool Information::matches(const char* other) {
+	const char* tmp1 = lexem;
+	const char* tmp2 = other;
 	while (tmp1[0] != '\0' || tmp2[0] != '\0') {
 		if (tmp1++[0] != tmp2++[0]) {
 			return false;
