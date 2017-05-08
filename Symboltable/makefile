@@ -6,11 +6,7 @@ BINDIRTEST = debug
 INFODIR = ../Scanner/objs
 GPP_ARGS = 
 
-dirs:
-	mkdir -p $(SRCDIR)
-	mkdir -p $(OBJDIR)
-	mkdir -p $(BINDIRTEST)
-	mkdir -p $(HEADERDIR)
+
 
 # Linken der Object-Files
 makeTestSymboltable:  SymboltableTarget TestSymboltableTarget
