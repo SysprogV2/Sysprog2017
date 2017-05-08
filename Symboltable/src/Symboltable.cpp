@@ -83,18 +83,18 @@ void Symboltable::print() {
 
 void Symboltable::initSymbols() {
 
-	insert("write", 5);
-	insert("WRITE", 5);
-	insert("read", 4);
-	insert("READ", 4);
+	//insert("write", 5);
+	//insert("WRITE", 5);
+	//insert("read", 4);
+	//insert("READ", 4);
 
 	insert("if", 2);
 	insert("IF", 2);
 
-	insert("else", 4);
-	insert("ELSE", 4);
-	insert("int", 3);
-	insert("INT", 3);
+	//insert("else", 4);
+	//insert("ELSE", 4);
+	//insert("int", 3);
+	//insert("INT", 3);
 
 	insert("while", 5);
 	insert("WHILE", 5);
