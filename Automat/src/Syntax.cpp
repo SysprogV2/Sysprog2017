@@ -33,13 +33,13 @@ Syntax::Syntax() {
 							 "MinusToken", "NotToken  ", "SemicolTok", "LessToken ", // 20-23  replace '&' with SglAndTok and replace '&&' with DblAndTok
 							 "GreatToken", "Paranth ( ", "Paranth ) ", "Braces {  ", // 24-27 all tokens starting from this line have incremented index from now on
 							 "Braces }  ", "Brackets [", "Bracket ] ", "IF-Token  ", // 28-31
-							 "WHILE-Toke", "INT-Token ", "WRITE-Tokn", "ELSE-Token",		// 32-35
-							 "READ-Token"
+							 "WHILE-Toke" /*, "INT-Token ", "WRITE-Tokn", "ELSE-Token",		// 32-35
+							 "READ-Token"*/
 	};
 
 	signArray = new const char[SIGN_ARRAY_SZ] {'+', '-', '!', ';', '<', '>', '(', ')','{', '}', '[', ']'}; // remove '&' since its got replaced by '&&' , add '<' and '>'
 
-	keywordsArray = new const char*[KEYWORD_NUMBER * 2] {"if", "IF", "while", "WHILE", "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};
+	keywordsArray = new const char*[KEYWORD_NUMBER * 2] {"if", "IF", "while", "WHILE" /*, "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ" */};
 }
 
 Syntax::~Syntax() {
