@@ -6,46 +6,12 @@
 #define WSP_Z 12
 #define CLSC_Z 16
 
-/**
- * Returns next lexem found in @inputString
- * 
- * @automat
- * @inputString
- */
-const char* getNextLexem(Automat* automat, char* inputString) {
-	int i = 0;
-	char nextChar = inputString[i];
-	while (nextChar != '\0') {
-		int back_steps = automat->read(nextChar);
-		// adjust out pointer position & read the next symbol from input
-		i = i + 1 - back_steps;
-		nextChar = inputString[i];
-		// reset automat iff a new lexem was found during processing
-		if (automat->isLexemReady()) {
-			//std::cout << "Lexem '" << automat->getLexem() << "' is ready. State: " << automat->getFinalState() << "   Length = " << automat->getLexemLength() << "   LINE: " << automat->getLine()  << "   COL: " << automat->getColumn() << std::endl;
-			return automat->getLexem();
-			automat->reset();
-		}
-	}
-}
-
 //							NOTICE
 // following primitive methods are not tested since they 
 // merely retrieve values from the existing tables/arrays:
 // 
 // Syntax::getTokenTypeAsChar(int num);
 // Syntax::getState(int i, int j)
-
-
-TEST_CASE( "AUTOMAT.CPP TEST: Lexems are processed", "[char]") {
-	// TEST CASE SETUP
-	Automat* automat = new Automat();
-	
-	// #1
-	char* inputString = "&&&other+=:+probably+:=+:=:qeek+k#oo+=:=:+*\0";
-	REQUIRE( !strcmp(getNextLexem(automat, inputString), "&&") );
-}
-
 
 TEST_CASE( "SYNTAX.CPP TEST -> matches()", "[char]") {
 	// TEST CASE SETUP
