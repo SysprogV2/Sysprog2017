@@ -2,7 +2,7 @@
 #ifndef Token_H_
 #define Token_H_
 
-//#include <string.h> // TODO: DELETE THIS LATER!!! Prohibited library!
+#include <string.h> // TODO: DELETE THIS LATER!!! Prohibited library!
 #include <stdlib.h>  // for strtol()
 #include "Information.h"
 #include "../../Compatibility/compab.h"
@@ -20,7 +20,6 @@ class Token {
 	const char* signArray;
 	char* errorMessage;
 public:
-	static char* nameOf(int tokenType);
 	Token(int type, int line, int column);
 	Token(int state, int l, int c, Information* info);
 	virtual ~Token();

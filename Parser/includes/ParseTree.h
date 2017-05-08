@@ -14,11 +14,9 @@
 #include "Errors.h"
 #include "../../Symboltable/includes/Symboltable.h"
 #include "../../Buffer/includes/Buffer.h"
-#include "../../Scanner/includes/Scanner.h"
 
 #include <iostream>
 #include <fstream>
-#include "../../Scanner/includes/TokenTypeRegistry.h"
 
 #define TYPE_REFERENCE_TOKEN_INT new Token (32, 0, 0)
 #define TYPE_REFERENCE_TOKEN_BRACKETS_START new Token (28, 0, 0)
@@ -42,7 +40,7 @@
 #define IDENTIFIER_DEFAULT_TOKEN new Token (1, 0, 0)
 #define INTEGER_DEFAULT_TOKEN new Token (2, 0, 0)
 
-#define ERROR_EXIT this->checkingType = errorType; return false; // in typeCheck()
+#define ERROR_EXIT this->checkingType = errorType; return false;
 
 class ParseTree {
 protected:
@@ -56,6 +54,7 @@ public:
 	static Token* greaterToken;
 	static Token* notEqualsToken;
 	static Token* failureToken;
+	static IntQueue* splitIndexes;
 	static Symboltable* typeTable;
 	static std::ofstream codeOutput;
 	static LabelFactory* labelFactory;
@@ -63,7 +62,6 @@ public:
 	static TokenTypeRegistry* first();
 	static void prepareTreeOperations();
 	static void terminateTreeOperations();
-	static void cleanupStatic();
 	virtual ~ParseTree() = 0;
 	virtual bool typeCheck() = 0;
 	virtual void makeCode() = 0;
@@ -149,7 +147,7 @@ private:
 	Statements* statementSegment;
 public:
 	static void initStatic();
-	ProgOnly(Scanner* scanner);
+	ProgOnly();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -163,7 +161,7 @@ private:
 	Decls* restOfDeclarations;
 public:
 	static void initStatic();
-	DeclsSeq(Scanner* scanner);
+	DeclsSeq();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -175,7 +173,7 @@ public:
 class DeclsEps : public Decls {
 public:
 	static void initStatic();
-	DeclsEps(Scanner* scanner);
+	DeclsEps();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -191,12 +189,12 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	DeclOnly(Scanner* scanner);
+	DeclOnly();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~DeclOnly();
-	friend class ParseTree;
+
 };
 
 class ArrayIndex : public Array {
@@ -205,20 +203,19 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	ArrayIndex(Scanner* scanner);
+	ArrayIndex();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	bool isEps();
 	~ArrayIndex();
-	friend class ParseTree;
 
 };
 
 class ArrayEps : public Array {
 public:
 	static void initStatic();
-	ArrayEps(Scanner* scanner);
+	ArrayEps();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -233,7 +230,7 @@ private:
 	Statements* restOfStatements;
 public:
 	static void initStatic();
-	StatementsSeq(Scanner* scanner);
+	StatementsSeq();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -245,7 +242,7 @@ public:
 class StatementsEps : public Statements {
 public:
 	static void initStatic();
-	StatementsEps(Scanner* scanner);
+	StatementsEps();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -262,12 +259,11 @@ private:
 public:
 	static Token* defaultIdentifier;
 	static void initStatic();
-	StatementSetValue(Scanner* scanner);
+	StatementSetValue();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementSetValue();
-	friend class ParseTree;
 
 };
 
@@ -277,12 +273,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	StatementWrite(Scanner* scanner);
+	StatementWrite();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementWrite();
-	friend class ParseTree;
 
 };
 
@@ -293,12 +288,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	StatementRead(Scanner* scanner);
+	StatementRead();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementRead();
-	friend class ParseTree;
 
 };
 
@@ -308,12 +302,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	StatementBlock(Scanner* scanner);
+	StatementBlock();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementBlock();
-	friend class ParseTree;
 
 };
 
@@ -325,12 +318,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	StatementIfElse(Scanner* scanner);
+	StatementIfElse();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementIfElse();
-	friend class ParseTree;
 
 };
 
@@ -341,12 +333,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	StatementWhile(Scanner* scanner);
+	StatementWhile();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~StatementWhile();
-	friend class ParseTree;
 
 };
 
@@ -356,7 +347,7 @@ private:
 	OpExp* calculateWith;
 public:
 	static void initStatic();
-	ExpOnly(Scanner* scanner);
+	ExpOnly();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -370,12 +361,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	Exp2Nested(Scanner* scanner);
+	Exp2Nested();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~Exp2Nested();
-	friend class ParseTree;
 
 };
 
@@ -386,12 +376,11 @@ private:
 public:
 	static Token* defaultIdentifier;
 	static void initStatic();
-	Exp2Variable(Scanner* scanner);
+	Exp2Variable();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~Exp2Variable();
-	friend class ParseTree;
 
 };
 
@@ -402,12 +391,11 @@ private:
 public:
 	static Token* defaultInteger;
 	static void initStatic();
-	Exp2Constant(Scanner* scanner);
+	Exp2Constant();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~Exp2Constant();
-	friend class ParseTree;
 
 };
 
@@ -418,12 +406,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	Exp2NumericNegation(Scanner* scanner);
+	Exp2NumericNegation();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~Exp2NumericNegation();
-	friend class ParseTree;
 
 };
 
@@ -434,12 +421,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	Exp2LogicalNegation(Scanner* scanner);
+	Exp2LogicalNegation();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~Exp2LogicalNegation();
-	friend class ParseTree;
 
 };
 
@@ -450,20 +436,19 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	IndexPosition(Scanner* scanner);
+	IndexPosition();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	bool isEps();
 	~IndexPosition();
-	friend class ParseTree;
 
 };
 
 class IndexEps : public Index {
 public:
 	static void initStatic();
-	IndexEps(Scanner* scanner);
+	IndexEps();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -477,7 +462,7 @@ class OpExpNext : public OpExp {
 	Exp* operand;
 public:
 	static void initStatic();
-	OpExpNext(Scanner* scanner);
+	OpExpNext();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -491,7 +476,7 @@ public:
 class OpExpEps : public OpExp {
 public:
 	static void initStatic();
-	OpExpEps(Scanner* scanner);
+	OpExpEps();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
@@ -506,12 +491,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	OpPlus(Scanner* scanner);
+	OpPlus();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpPlus();
-	friend class ParseTree;
 
 };
 
@@ -521,12 +505,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	OpMinus(Scanner* scanner);
+	OpMinus();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpMinus();
-	friend class ParseTree;
 
 };
 
@@ -536,12 +519,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	OpMult(Scanner* scanner);
+	OpMult();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpMult();
-	friend class ParseTree;
 
 };
 
@@ -551,12 +533,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	OpDiv(Scanner* scanner);
+	OpDiv();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpDiv();
-	friend class ParseTree;
 
 };
 
@@ -566,12 +547,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	OpLess(Scanner* scanner);
+	OpLess();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpLess();
-	friend class ParseTree;
 
 };
 
@@ -581,12 +561,11 @@ private:
 public:
 	static Token* firstToken;
 	static void initStatic();
-	OpGreater(Scanner* scanner);
+	OpGreater();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpGreater();
-	friend class ParseTree;
 
 };
 
@@ -595,12 +574,11 @@ class OpEquals : public Op {
 public:
 	static Token* firstToken;
 	static void initStatic();
-	OpEquals(Scanner* scanner);
+	OpEquals();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpEquals();
-	friend class ParseTree;
 
 };
 
@@ -609,12 +587,11 @@ class OpNotEquals : public Op {
 public:
 	static Token* firstToken;
 	static void initStatic();
-	OpNotEquals(Scanner* scanner);
+	OpNotEquals();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpNotEquals();
-	friend class ParseTree;
 
 };
 
@@ -623,12 +600,11 @@ class OpAnd : public Op {
 public:
 	static Token* firstToken;
 	static void initStatic();
-	OpAnd(Scanner* scanner);
+	OpAnd();
 	static TokenTypeRegistry* first();
 	bool typeCheck();
 	void makeCode();
 	~OpAnd();
-	friend class ParseTree;
 
 };
 

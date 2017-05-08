@@ -13,8 +13,7 @@ GPP_ARGS =
 
 OBJS = $(OBJDIR)/Scanner.o \
 	$(OBJDIR)/Information.o \
-	$(OBJDIR)/Token.o \
-	$(OBJDIR)/TokenTypeRegistry.o
+	$(OBJDIR)/Token.o
 	
 
 	
