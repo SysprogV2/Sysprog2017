@@ -2,3 +2,17 @@
 
 # SysProg2017
 This is a project for university - a compiler for a rather simple custom programming language. Nothing too special.
+
+## Build
+### make
+````
+make -f _makefile all
+````
+### cmake
+````
+  cmake .
+  make all
+````
+
+## Run tests
+...
