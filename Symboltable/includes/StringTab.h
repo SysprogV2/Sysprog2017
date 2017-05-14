@@ -12,7 +12,7 @@
 #define INITIAL_ALGN 4096
 
 #include <stdio.h>  // perror()
-#include <stdlib.h> // exit()
+#include <stdlib.h> // throw()
 #include <errno.h>  // errors' list
 #include <string.h> // memcpy()
 #include "../../Compatibility/compab.h"

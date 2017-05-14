@@ -5,7 +5,7 @@
  *      Author: root
  */
 
-#include "../../Scanner/includes/TokenTypeRegistry.h"
+#include "../includes/TokenTypeRegistry.h"
 
 char* StringUtil::concat(char* first, char* second) {
 	int firstLength = calcLength(first);

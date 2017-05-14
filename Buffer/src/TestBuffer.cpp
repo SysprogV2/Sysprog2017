@@ -1,12 +1,11 @@
 #include "../includes/Buffer.h"
-#include "../../Automat/includes/Automat.h"
 #include <iostream>
 #include <string>
 
 
 
 
-bool TEST_getChar(char* filename) {
+bool TEST_getChar(const char *filename) {
 	// Initialize Buffer 1
 	Buffer bufferIntern = Buffer(filename);
 
@@ -52,7 +51,7 @@ bool TEST_getChar(char* filename) {
     return true;
 }
 
-bool TEST_ungetChar(char* filename) {
+bool TEST_ungetChar(const char *filename) {
 	// Initialize Buffer
 	Buffer buffer = Buffer(filename);
 
@@ -105,19 +104,18 @@ bool TEST_ungetChar(char* filename) {
     return true;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, const char *argv[]) {
 
-	char* filename;
-		if (argc > 0) {
+	const char *filename;
+		if (argc > 1) {
 			filename = argv[1];
 		} else {
-			std::cout << "Failed to read file. No filename is given!" << std::endl;
-			return 1;
+            filename = "test/scanner6.txt";
 		}
 
 
-    //printf("Test %d %s\n", 0, TEST_getChar(filename) ? "success" : "FAIL");
-		printf("Test %d %s\n", 0, TEST_ungetChar(filename) ? "success" : "FAIL");
+    printf("Test %d %s\n", 0, TEST_getChar(filename) ? "success" : "FAIL");
+	printf("Test %d %s\n", 0, TEST_ungetChar(filename) ? "success" : "FAIL");
     //   printf("Test %d %s\n", 1, TEST_ungetChar() ? "success" : "FAIL");
     //   printf("Test %d %s\n", 2, TEST_getungetChar() ? "success" : "FAIL");
 

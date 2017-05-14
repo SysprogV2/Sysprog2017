@@ -9,7 +9,7 @@ int Buffer::getFileLength(ifstream *fileStream) {
 	return length;
 }
 
-Buffer::Buffer(char *file, int size, int segments) {
+Buffer::Buffer(const char *file, int size, int segments) {
 	if (segments < 1) {
 		printf("A buffer can't have less than 1 segment. Given segments: %d\n", segments);
 		throw;
