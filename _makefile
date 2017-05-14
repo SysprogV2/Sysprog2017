@@ -40,20 +40,20 @@ makedirs:
 	mkdir -p $(PARSERDIR)/$(DEBUGDIR)
 	
 automatOBJs:
-	$(MAKE) -C $(AUTOMATDIR) AutomatOBJTarget
+	$(MAKE) -C $(AUTOMATDIR) -f _makefile AutomatOBJTarget
 	
 	
 bufferOBJs:
-	$(MAKE) -C $(BUFFERDIR) BufferOBJTarget
+	$(MAKE) -C $(BUFFERDIR) -f _makefile BufferOBJTarget
 
 	
 symboltableOBJs:
-	$(MAKE) -C $(SYMBOLTABLEDIR) SymboltableOBJTarget
+	$(MAKE) -C $(SYMBOLTABLEDIR) -f _makefile SymboltableOBJTarget
 	
 
 scanner: 
-	$(MAKE) -C $(SCANNERDIR) makeTestScanner
+	$(MAKE) -C $(SCANNERDIR) -f _makefile makeTestScanner
 
 parserOBJs:
-	$(MAKE) -C $(PARSERDIR) makeTestParser
+	$(MAKE) -C $(PARSERDIR) -f _makefile makeTestParser
 	
