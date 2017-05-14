@@ -4,6 +4,7 @@
 *.cbp
 *out.txt
 
+
 # Created by https://www.gitignore.io/api/c,c++,eclipse,jetbrains,cmake
 
 ### C ###
@@ -157,6 +158,7 @@ local.properties
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
+.idea/inspectionProfiles/
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
@@ -166,6 +168,7 @@ local.properties
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
+.idea/.name
 
 # Gradle:
 .idea/**/gradle.xml
