@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="All targets" type="CMakeRunConfiguration" factoryName="Application" singleton="true" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Sysprog2017" RUN_TARGET_NAME="MainTest" EXPLICIT_BUILD_TARGET_NAME="all">
+  <configuration default="false" name="All targets" type="CMakeRunConfiguration" factoryName="Application" singleton="true" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Default" RUN_TARGET_PROJECT_NAME="Sysprog2017" RUN_TARGET_NAME="MainTest" EXPLICIT_BUILD_TARGET_NAME="all">
     <envs />
     <method />
   </configuration>
