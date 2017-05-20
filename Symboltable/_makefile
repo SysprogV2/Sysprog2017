@@ -31,11 +31,11 @@ TestSymboltableTarget:  $(SRCDIR)/TestSymboltable.cpp $(HEADERDIR)/Symboltable.h
 cleanSymboltable: 
 	rm -rf $(OBJDIR)/*.o
 	rm -rf $(BINDIRTEST)/*
-	$(MAKE) makeTestSymboltable
+	$(MAKE) -f _makefile makeTestSymboltable
 	
 # dieses Target wird vom makefile des Gesamtprojekts verwendet
 # objs fuer Gesamtprojekt loeschen und dann neu erzeugen
 SymboltableOBJTarget: 
-	$(MAKE) SymboltableTarget
+	$(MAKE) -f _makefile SymboltableTarget
 
 	

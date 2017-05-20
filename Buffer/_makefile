@@ -31,11 +31,11 @@ TestBufferTarget : $(SRCDIR)/TestBuffer.cpp $(HEADERDIR)/Buffer.h
 cleanBuffer: 
 	rm -f $(OBJDIR)/*.o
 	rm -f $(BINDIRTEST)/*
-	$(MAKE) makeTestBuffer
+	$(MAKE) -f _makefile makeTestBuffer
 	
 # dieses Target wird vom makefile des Gesamtprojekts verwendet
 # objs fuer GesamtProjekt loeschen und dann neu erzeugen
 BufferOBJTarget: 
-	$(MAKE) BufferTarget
+	$(MAKE) -f _makefile BufferTarget
 
 	
