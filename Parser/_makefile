@@ -37,4 +37,4 @@ ParserTest:  $(SRCDIR)/TestParser.cpp $(HEADERDIR)/Parser.h
 cleanParser: 
 	rm -rf $(OBJDIR)/*.o
 	rm -rf $(BINDIRTEST)/*
-	$(MAKE) makeTestParser
+	$(MAKE) -f _makefile  makeTestParser

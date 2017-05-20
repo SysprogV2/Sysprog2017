@@ -33,13 +33,13 @@ Syntax::Syntax() {
 							 "MinusToken", "NotToken  ", "SemicolTok", "LessToken ", // 20-23  replace '&' with SglAndTok and replace '&&' with DblAndTok
 							 "GreatToken", "Paranth ( ", "Paranth ) ", "Braces {  ", // 24-27 all tokens starting from this line have incremented index from now on
 							 "Braces }  ", "Brackets [", "Bracket ] ", "IF-Token  ", // 28-31
-							 "WHILE-Toke", "INT-Token ", "WRITE-Tokn", "ELSE-Token",		// 32-35
+							 "WHILE-Toke", "ELSE-Token", "INT-Token ", "WRITE-Tokn", // 32-35
 							 "READ-Token"
 	};
 
 	signArray = new const char[SIGN_ARRAY_SZ] {'+', '-', '!', ';', '<', '>', '(', ')','{', '}', '[', ']'}; // remove '&' since its got replaced by '&&' , add '<' and '>'
 
-	keywordsArray = new const char*[KEYWORD_NUMBER * 2] {"if", "IF", "while", "WHILE", "int", "INT", "write", "WRITE", "else", "ELSE", "read", "READ"};
+	keywordsArray = new const char*[KEYWORD_NUMBER * 2 - 3] {"if", "IF", "while", "WHILE", "else", "ELSE", "int", "write", "read"};
 }
 
 Syntax::~Syntax() {
@@ -77,9 +77,13 @@ int Syntax::isPacked(char sign) {
  */
 int Syntax::ifKeyword(const char* lexem) {
 	//int tType = 0;
-	for (int i = 0; i < KEYWORD_NUMBER * 2; i++) {
+	for (int i = 0; i < KEYWORD_NUMBER * 2 - 3; i++) {
 		if (matches(lexem, keywordsArray[i]))
-			return (STATES_NUMBER + i / 2);
+			if (i < 6) {
+				return (STATES_NUMBER + i / 2);
+			} else {
+				return (STATES_NUMBER + i - 3);
+			}
 	}
 	return -1;
 }
