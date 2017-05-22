@@ -17,6 +17,10 @@ private:
 	Scanner* scanner;
 public:
 	Parser(char* filename);
+	/**
+	 * Parses the file it was constructed with.
+	 * @return the code{ParseTree} that resulted from parsing the file
+	 */
 	ParseTree* parse();
 	~Parser();
 };

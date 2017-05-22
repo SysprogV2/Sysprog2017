@@ -36,17 +36,14 @@ Scanner::~Scanner() {
 }
 
 /*
- * feeds characters to the automat, untill the new lexem is found.
+ * feeds characters to the automat, until the new lexem is found.
  * Then tries to attribute it to some token.
- * @return current token
  */
 Token *Scanner::nextToken() {
-	//std::cout << "debuging *** Scanner::nextToken STRT" << std::endl;
 
 	char currentChar;
 	int finalState = 0;
 
-	//std::cout << "debuging *** Scanner::nextToken DO-STRT" << std::endl;
 	/* run automat and feed it char by char, till any lexem is found */
 	if (buffer->isEnd()) {
 		return nullptr;
@@ -61,7 +58,6 @@ Token *Scanner::nextToken() {
 			automat->reset();
 		}
 	} while (!buffer->isEnd() && currentChar != '\0' &&  !automat->isLexemReady());
-	//std::cout << "debuging *** Scanner::nextToken DO-NED" << std::endl;
 
 	/* save all information about the lexem */
 	const char* lexem = automat->getLexem();
@@ -92,16 +88,16 @@ Token *Scanner::nextToken() {
 
 	/* now we can reset automat */
 	automat->reset();
-	//std::cout << "debuging *** Scanner::nextToken END" << std::endl;
 
 	/* if we need to finish already*/
 	if (currentChar == '\0') {
 		return nullptr;
 	} else {
+        // free cached Token (if existant) unless it's stored in the tree
 		if (this->cToken != nullptr && !this->idenInt->isSet(this->cToken)) {
             delete this->cToken;
         }
-
+        // cache generated Token
 		this->cToken = t;
 		return t;
 	}
@@ -111,10 +107,6 @@ Token* Scanner::currentToken() {
 	return this->cToken;
 }
 
-/*
- * determine the current token type relying on STATE and LEXEM
- * @return token's type
- */
 int Scanner::mapStateToType(int state, const char* lexem) {
 	char symbol = lexem[0];
 	int tType = state;
@@ -127,10 +119,6 @@ int Scanner::mapStateToType(int state, const char* lexem) {
 	return tType;
 }
 
-/*
- * assigns a decimal value of given char pointer to given token
- * @return void
- */
 void Scanner::getNumberToken(const char* lexem, Token* t) {
 	errno = 0;
 	long int value = strtol(lexem, 0, 10);

@@ -254,12 +254,11 @@ TokenTypeRegistry* ProgOnly::first() {
 	return registry;
 }
 
-ProgOnly::ProgOnly(Scanner* scanner) {
+ProgOnly::ProgOnly(Scanner* scanner) { // reminder: PROG ::= DECLS STATEMENTS
 	if (DeclsSeq::first()->isSet(scanner->nextToken())) {
 		this->declarationSegment = new DeclsSeq(scanner);
 	} else if (DeclsEps::first()->isSet(scanner->currentToken())) {
 		this->declarationSegment = new DeclsEps(scanner);
-	} else {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, any of " << Decls::first()->allSetTokenNames() << " expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
 	}
@@ -307,7 +306,7 @@ TokenTypeRegistry* DeclsSeq::first() {
 	return Decl::first(); // no Epsilon in Decl::first() so no merging with Decls::first()
 }
 
-DeclsSeq::DeclsSeq(Scanner* scanner) {
+DeclsSeq::DeclsSeq(Scanner* scanner) { // reminder: DECLS ::= DECL;DECLS
 	this->firstDeclaration = new DeclOnly(scanner);
 	if (scanner->nextToken()->getType() != 23) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, semicolon expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found\n";
@@ -352,12 +351,10 @@ DeclsSeq::~DeclsSeq() {
 void DeclsEps::initStatic() {}
 
 TokenTypeRegistry* DeclsEps::first() {
-	TokenTypeRegistry* registry = new TokenTypeRegistry();
-	registry->set(DeclsEps::epsToken);
-	return registry;
+	return Statements::first(); // € so first() is first() of next block
 }
 
-DeclsEps::DeclsEps(Scanner* scanner) {
+DeclsEps::DeclsEps(Scanner* scanner) { // reminder: DECLS ::= €
 	 // empty string representative, doesn't make much sense to check anything here
 }
 
@@ -385,7 +382,7 @@ TokenTypeRegistry* DeclOnly::first() {
     return sequence;
 }
 
-DeclOnly::DeclOnly(Scanner* scanner) {
+DeclOnly::DeclOnly(Scanner* scanner) { // reminder: DECL ::= identifier ARRAY
 	if (scanner->currentToken()->getType() != 32) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, keyword \"int\" expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found\n";
 		// if (scanner->currentToken()->getLexem() == "class") std::cerr << "Sorry, but this programming language does not support classes. We suggest trying Java instead.\n";
@@ -450,7 +447,7 @@ TokenTypeRegistry* ArrayIndex::first() {
 	return sequence;
 }
 
-ArrayIndex::ArrayIndex(Scanner* scanner) {
+ArrayIndex::ArrayIndex(Scanner* scanner) { // reminder: ARRAY ::= [integer]
 	if (scanner->currentToken()->getType() != 28) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, opening bracket (\"[\") expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -487,11 +484,11 @@ void ArrayEps::initStatic() {}
 
 TokenTypeRegistry* ArrayEps::first() {
 	TokenTypeRegistry *sequence = new TokenTypeRegistry ();
-	sequence->set (ParseTree::epsToken);
+	sequence->set (ParseTree::epsToken); // TODO replace with semicolon token here
 	return sequence;
 }
 
-ArrayEps::ArrayEps(Scanner* scanner) {
+ArrayEps::ArrayEps(Scanner* scanner) { // reminder: ARRAY ::= €
 	// empty string representative, doesn't make much sense to check anything here
 }
 
@@ -518,7 +515,7 @@ TokenTypeRegistry* StatementsSeq::first() {
 	return Statement::first();
 }
 
-StatementsSeq::StatementsSeq(Scanner* scanner) {
+StatementsSeq::StatementsSeq(Scanner* scanner) { // reminder: STATEMENTS ::= STATEMENT;STATEMENTS
 	switch (scanner->currentToken()->getType()) {
 	case 1:
 		this->firstStatement = new StatementSetValue(scanner);
@@ -585,11 +582,11 @@ void StatementsEps::initStatic() {}
 
 TokenTypeRegistry* StatementsEps::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
-	sequence->set (ParseTree::epsToken);
+	sequence->set (ParseTree::epsToken); // works because no Tokens if empty
 	return sequence;
 }
 
-StatementsEps::StatementsEps(Scanner* scanner) {
+StatementsEps::StatementsEps(Scanner* scanner) { // reminder: STATEMENTS ::= €
 	// empty string representative, doesn't make much sense to check anything here
 }
 
@@ -620,7 +617,7 @@ TokenTypeRegistry* StatementSetValue::first() {
 	return sequence;
 }
 
-StatementSetValue::StatementSetValue(Scanner* scanner) {
+StatementSetValue::StatementSetValue(Scanner* scanner) { // reminder: STATEMENT ::= identifier INDEX := EXP
 	this->identifier = scanner->currentToken();
 	if (this->identifier->getType() != 1) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, identifier expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
@@ -690,7 +687,7 @@ TokenTypeRegistry* StatementWrite::first() {
 	return sequence;
 }
 
-StatementWrite::StatementWrite(Scanner* scanner) {
+StatementWrite::StatementWrite(Scanner* scanner) { // reminder: STATEMENT ::= write(EXP)
 	if (scanner->currentToken()->getType() != 33) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, keyword \"write\" expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -733,7 +730,7 @@ TokenTypeRegistry* StatementRead::first() {
 	return sequence;
 }
 
-StatementRead::StatementRead(Scanner* scanner) {
+StatementRead::StatementRead(Scanner* scanner) { // reminder: STATEMENT ::= read(identifier INDEX)
 	if (scanner->currentToken()->getType() != 35) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, keyword \"read\" expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -801,7 +798,7 @@ TokenTypeRegistry* StatementBlock::first() {
 	return sequence;
 }
 
-StatementBlock::StatementBlock(Scanner* scanner) {
+StatementBlock::StatementBlock(Scanner* scanner) { // reminder: STATEMENT ::= {STATEMENTS}
 	if (scanner->currentToken()->getType() != 26) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, opening brace (\"{\") expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -846,7 +843,7 @@ TokenTypeRegistry* StatementIfElse::first() {
 	return sequence;
 }
 
-StatementIfElse::StatementIfElse(Scanner* scanner) {
+StatementIfElse::StatementIfElse(Scanner* scanner) { // reminder: STATEMENT ::= if(EXP)STATEMENT else STATEMENT
 	if (scanner->currentToken()->getType() != 30) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, keyword \"if\" expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -956,7 +953,7 @@ TokenTypeRegistry* StatementWhile::first() {
 	return sequence;
 }
 
-StatementWhile::StatementWhile(Scanner* scanner) {
+StatementWhile::StatementWhile(Scanner* scanner) { // reminder: STATEMENT ::= while(EXP)STATEMENT
 	if (scanner->currentToken()->getType() != 31) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, keyword \"while\" expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1033,7 +1030,7 @@ TokenTypeRegistry* ExpOnly::first() {
 	return Exp2::first();
 }
 
-ExpOnly::ExpOnly(Scanner* scanner) {
+ExpOnly::ExpOnly(Scanner* scanner) { // reminder: EXP ::= EXP2 OP_EXP
 	switch(scanner->nextToken()->getType()) {
 	case 24:
 		this->rawExpression = new Exp2Nested(scanner);
@@ -1111,7 +1108,7 @@ TokenTypeRegistry* Exp2Nested::first() {
 	return sequence;
 }
 
-Exp2Nested::Exp2Nested(Scanner* scanner) {
+Exp2Nested::Exp2Nested(Scanner* scanner) { // reminder: EXP2 ::= (EXP)
 	if (scanner->currentToken()->getType() != 24) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, opening paranthesis (\"(\") expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1141,7 +1138,7 @@ void Exp2Variable::initStatic() {
 }
 
 void Exp2Constant::initStatic() {
-    // TODO: implement
+    Exp2Constant::defaultInteger = ParseTree::integerToken;
 }
 
 TokenTypeRegistry* Exp2Variable::first() {
@@ -1150,7 +1147,7 @@ TokenTypeRegistry* Exp2Variable::first() {
 	return sequence;
 }
 
-Exp2Variable::Exp2Variable(Scanner* scanner) {
+Exp2Variable::Exp2Variable(Scanner* scanner) { // reminder: EXP2 ::= identifier INDEX
 	this->identifier = scanner->currentToken();
 	if (this->identifier->getType() != 1) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, identifier expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
@@ -1205,7 +1202,7 @@ TokenTypeRegistry* Exp2Constant::first() {
 	return sequence;
 }
 
-Exp2Constant::Exp2Constant(Scanner* scanner) {
+Exp2Constant::Exp2Constant(Scanner* scanner) { // reminder: EXP2 ::= integer
 	this->integer = scanner->currentToken();
 	if (this->integer->getType() != 2) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, integer expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
@@ -1236,7 +1233,7 @@ TokenTypeRegistry* Exp2NumericNegation::first() {
 	return sequence;
 }
 
-Exp2NumericNegation::Exp2NumericNegation(Scanner* scanner) {
+Exp2NumericNegation::Exp2NumericNegation(Scanner* scanner) { // reminder: EXP2 ::= -EXP2
 	if (scanner->currentToken()->getType() != 20) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, negative signum or substraction expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1289,7 +1286,7 @@ TokenTypeRegistry* Exp2LogicalNegation::first() {
 	return sequence;
 }
 
-Exp2LogicalNegation::Exp2LogicalNegation(Scanner* scanner) {
+Exp2LogicalNegation::Exp2LogicalNegation(Scanner* scanner) { // reminder: EXP2 ::= !EXP2
 	if (scanner->currentToken()->getType() != 21) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, boolean negator expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1348,7 +1345,7 @@ TokenTypeRegistry* IndexPosition::first() {
 	return sequence;
 }
 
-IndexPosition::IndexPosition(Scanner* scanner) {
+IndexPosition::IndexPosition(Scanner* scanner) { // reminder: INDEX ::= [EXP]
 	if (scanner->currentToken()->getType() != 28) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, opening bracket (\"[\") expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1381,7 +1378,8 @@ void IndexEps::initStatic() {}
 
 TokenTypeRegistry* IndexEps::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
-	sequence->set (ParseTree::epsToken);
+	sequence->set (ParseTree::epsToken); // TODO fill with := and ) instead
+	sequence->uniteWith(OpExp::first());
 	return sequence;
 }
 
@@ -1389,7 +1387,7 @@ bool IndexEps::isEps() {
 	return true;
 }
 
-IndexEps::IndexEps(Scanner* scanner) {
+IndexEps::IndexEps(Scanner* scanner) { // reminder: INDEX ::= €
 	// empty string representative, doesn't make much sense to check anything here
 }
 
@@ -1410,7 +1408,7 @@ TokenTypeRegistry* OpExpNext::first() {
 	return Op::first();
 }
 
-OpExpNext::OpExpNext(Scanner* scanner) {
+OpExpNext::OpExpNext(Scanner* scanner) { // reminder: OP_EXP ::= OP EXP
 	switch(scanner->currentToken()->getType()) {
 	case 19:
 		this->Operator = new OpPlus(scanner);
@@ -1483,11 +1481,11 @@ void OpExpEps::initStatic() {}
 
 TokenTypeRegistry* OpExpEps::first() {
 	TokenTypeRegistry* sequence = new TokenTypeRegistry ();
-	sequence->set (ParseTree::epsToken);
+	sequence->set (ParseTree::epsToken); // TODO fill with ;, ) and ] instead
 	return sequence;
 }
 
-OpExpEps::OpExpEps(Scanner* scanner) {
+OpExpEps::OpExpEps(Scanner* scanner) { // reminder: OP_EXP ::= €
 	// empty string representative, doesn't make much sense to check anything here
 }
 
@@ -1514,7 +1512,7 @@ TokenTypeRegistry* OpPlus::first() {
 	return sequence;
 }
 
-OpPlus::OpPlus(Scanner* scanner) {
+OpPlus::OpPlus(Scanner* scanner) { // reminder: OP ::= +
 	if (scanner->currentToken()->getType() != 19) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, addition expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1542,7 +1540,7 @@ TokenTypeRegistry* OpMinus::first() {
 	return sequence;
 }
 
-OpMinus::OpMinus(Scanner* scanner) {
+OpMinus::OpMinus(Scanner* scanner) { // reminder: OP ::= -
 	if (scanner->currentToken()->getType() != 20) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, negative signum or substraction expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1570,7 +1568,7 @@ TokenTypeRegistry* OpMult::first() {
 	return sequence;
 }
 
-OpMult::OpMult(Scanner* scanner) {
+OpMult::OpMult(Scanner* scanner) { // reminder: OP ::= *
 	if (scanner->currentToken()->getType() != 13) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, multiplication expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1598,7 +1596,7 @@ TokenTypeRegistry* OpDiv::first() {
 	return sequence;
 }
 
-OpDiv::OpDiv(Scanner* scanner) {
+OpDiv::OpDiv(Scanner* scanner) { // reminder: OP ::= /
 	if (scanner->currentToken()->getType() != 5) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, division expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1626,7 +1624,7 @@ TokenTypeRegistry* OpLess::first() {
 	return sequence;
 }
 
-OpLess::OpLess(Scanner* scanner) {
+OpLess::OpLess(Scanner* scanner) { // reminder: OP ::= <
 	if (scanner->currentToken()->getType() != 3) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, comparision expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1654,7 +1652,7 @@ TokenTypeRegistry* OpGreater::first() {
 	return sequence;
 }
 
-OpGreater::OpGreater(Scanner* scanner) {
+OpGreater::OpGreater(Scanner* scanner) { // reminder: OP ::= >
 	if (scanner->currentToken()->getType() != 4) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, comparision expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1680,7 +1678,7 @@ TokenTypeRegistry* OpEquals::first() {
 	return sequence;
 }
 
-OpEquals::OpEquals(Scanner* scanner) {
+OpEquals::OpEquals(Scanner* scanner) { // reminder: OP ::= =
 	if (scanner->currentToken()->getType() != 6) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, comparision expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1702,7 +1700,7 @@ void OpNotEquals::initStatic() {
 	OpNotEquals::firstToken = ParseTree::notEqualsToken;
 }
 
-OpNotEquals::OpNotEquals(Scanner* scanner) {
+OpNotEquals::OpNotEquals(Scanner* scanner) { // reminder: OP ::= =:=
 	if (scanner->currentToken()->getType() != 7) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, comparision expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -1730,7 +1728,7 @@ void OpAnd::initStatic() {
 	OpAnd::firstToken = TYPE_REFERENCE_TOKEN_AND;
 }
 
-OpAnd::OpAnd(Scanner* scanner) {
+OpAnd::OpAnd(Scanner* scanner) { // reminder: OP ::= &&
 	if (scanner->currentToken()->getType() != 22) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, \"and\" mask expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);

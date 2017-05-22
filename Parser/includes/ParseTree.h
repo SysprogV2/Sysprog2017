@@ -1,7 +1,7 @@
-/*
+/**
  * ParseTree.h
  *
- * Created retyping the ParseTree_h.txt template. Methods will be added as necessary.
+ * Note that the documentation uses the Euro sign (€) as Epsilon sign, in lack of an actual Epsilon sign on the keyboard.
  *
  *  Created on: 29.12.2015
  *      Author: ehx
@@ -44,6 +44,9 @@
 
 #define ERROR_EXIT this->checkingType = errorType; return false; // in typeCheck()
 
+/**
+ * Represents the generic parse tree.
+ */
 class ParseTree {
 protected:
 	CheckableType checkingType;
@@ -59,6 +62,9 @@ public:
 	static Symboltable* typeTable;
 	static std::ofstream codeOutput;
 	static LabelFactory* labelFactory;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	static TokenTypeRegistry* first();
 	static void prepareTreeOperations();
@@ -72,82 +78,154 @@ public:
 
 };
 
+/**
+ * Represents the generic program, as defined by the PROG spec.
+ */
 class Prog : public ParseTree {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	static TokenTypeRegistry* first();
 };
 
+/**
+ * Represents the generic declaration segment, as defined by the DECLS spec.
+ */
 class Decls : public ParseTree {
 public:
+    /**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
     static TokenTypeRegistry* first();
     virtual bool isEps() = 0;
 };
 
+/**
+ * Represents the generic declaration, as defined by the DECL spec.
+ */
 class Decl : public ParseTree {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
     static TokenTypeRegistry* first();
 };
 
+/**
+ * Represents the generic array modifier, as defined by the ARRAY spec.
+ */
 class Array : public ParseTree {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	static TokenTypeRegistry* first();
 	virtual bool isEps() = 0;
 };
 
+/**
+ * Represents the generic statement segment, as defined by the STATEMENTS spec.
+ */
 class Statements : public ParseTree {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	static TokenTypeRegistry* first();
 	virtual bool isEps() = 0;
 };
 
+/**
+ * Represents the generic statement, as defined by the STATEMENT spec.
+ */
 class Statement : public ParseTree {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	static TokenTypeRegistry* first();
 };
 
+/**
+ * Represents the generic expression, as defined by the EXP spec.
+ */
 class Exp : public ParseTree {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	static TokenTypeRegistry* first();
 };
 
+/**
+ * Represents the generic single subexpression, as defined by the EXP2 spec.
+ */
 class Exp2 : public ParseTree {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	static TokenTypeRegistry* first();
 };
 
+/**
+ * Represents the generic array index, as defined by the INDEX spec.
+ */
 class Index : public ParseTree {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	static TokenTypeRegistry* first();
 	virtual bool isEps() = 0;
 };
 
+/**
+ * Represents the generic combined expression, as defined by the OP_EXP spec.
+ */
 class OpExp : public ParseTree {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	static TokenTypeRegistry* first();
 	virtual bool isEps() = 0;
 };
 
+/**
+ * Represents the generic operator, as defined by the OP spec.
+ */
 class Op : public ParseTree {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	static TokenTypeRegistry* first();
 };
 
+/**
+ * Represents the rule code{PROG ::= DECLS STATEMENTS}, i.e. the default program.
+ */
 class ProgOnly : public Prog {
 private:
 	Decls* declarationSegment;
 	Statements* statementSegment;
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	ProgOnly(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -157,11 +235,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{DECLS ::= DECL;DECLS}, i.e. the declaration sequence.
+ */
 class DeclsSeq : public Decls {
 private:
 	Decl* firstDeclaration;
 	Decls* restOfDeclarations;
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	DeclsSeq(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -172,8 +256,14 @@ public:
 
 };
 
+/**
+ * Represents the rule code{DECLS ::= €}, i.e. the empty declaration sequence.
+ */
 class DeclsEps : public Decls {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	DeclsEps(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -184,12 +274,18 @@ public:
 
 };
 
+/**
+ * Represents the rule code{DECL ::= int ARRAY identifier}, i.e. the default declaration.
+ */
 class DeclOnly : public Decl {
 private:
 	Array* size;
 	Token* identifier;
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	DeclOnly(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -199,11 +295,17 @@ public:
 	friend class ParseTree;
 };
 
+/**
+ * Represents the rule code{ARRAY ::= [integer]}, i.e. the existant array modifier.
+ */
 class ArrayIndex : public Array {
 private:
 	Token* integer;
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	ArrayIndex(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -215,8 +317,14 @@ public:
 
 };
 
+/**
+ * Represents the rule code{ARRAY ::= €}, i.e. the nonexistant array modifier.
+ */
 class ArrayEps : public Array {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	ArrayEps(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -227,11 +335,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{STATEMENTS ::= STATEMENT;STATEMENTS}, i.e. the statement sequence.
+ */
 class StatementsSeq : public Statements {
 private:
 	Statement* firstStatement;
 	Statements* restOfStatements;
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	StatementsSeq(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -242,8 +356,14 @@ public:
 
 };
 
+/**
+ * Represents the rule code{STATEMENTS ::= €}, i.e. the empty statement sequence.
+ */
 class StatementsEps : public Statements {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	StatementsEps(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -254,6 +374,9 @@ public:
 
 };
 
+/**
+ * Represents the rule code{STATEMENT ::= identifier INDEX := EXP}, i.e. the assignment.
+ */
 class StatementSetValue : public Statement {
 private:
 	Token* identifier;
@@ -261,6 +384,9 @@ private:
 	Exp* aimValue;
 public:
 	static Token* defaultIdentifier;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	StatementSetValue(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -271,11 +397,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{STATEMENT ::= write(EXP)}, i.e. the console output.
+ */
 class StatementWrite : public Statement {
 private:
 	Exp* toPrint;
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	StatementWrite(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -286,12 +418,18 @@ public:
 
 };
 
+/**
+ * Represents the rule code{STATEMENT ::= read(identifier INDEX)}, i.e. the console input.
+ */
 class StatementRead : public Statement {
 private:
 	Token* identifier;
 	Index* index;
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	StatementRead(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -302,11 +440,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{STATEMENT ::= ${STATEMENTS$}}, i.e. the block of statements.
+ */
 class StatementBlock : public Statement {
 private:
 	Statements* blockContent;
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	StatementBlock(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -317,6 +461,9 @@ public:
 
 };
 
+/**
+ * Represents the rule code{STATEMENT ::= if(EXP)STATEMENT else STATEMENT}, i.e. the conditional flow fork.
+ */
 class StatementIfElse : public Statement {
 private:
 	Exp* condition;
@@ -324,6 +471,9 @@ private:
 	Statement* elseCase;
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	StatementIfElse(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -334,12 +484,18 @@ public:
 
 };
 
+/**
+ * Represents the rule code{while(EXP) STATEMENT}, i.e. the flow loop.
+ */
 class StatementWhile : public Statement {
 private:
 	Exp* condition;
 	Statement* loop;
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	StatementWhile(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -350,11 +506,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{EXP ::= EXP2 OP_EXP}, i.e. the default expression.
+ */
 class ExpOnly : public Exp {
 private:
 	Exp2* rawExpression;
 	OpExp* calculateWith;
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	ExpOnly(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -364,11 +526,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{EXP2 ::= ${EXP$}}, i.e. the nested expression.
+ */
 class Exp2Nested : public Exp2 {
 private:
 	Exp* nestedExpression;
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	Exp2Nested(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -379,12 +547,18 @@ public:
 
 };
 
+/**
+ * Represents the rule code{EXP2 ::= identifier INDEX}, i.e. the variable value readout.
+ */
 class Exp2Variable : public Exp2 {
 private:
 	Token* identifier;
 	Index* index;
 public:
 	static Token* defaultIdentifier;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	Exp2Variable(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -395,12 +569,18 @@ public:
 
 };
 
+/**
+ * Represents the rule code{EXP2 ::= integer}, i.e. the constant expression.
+ */
 class Exp2Constant : public Exp2 {
 private:
 	Token* integer;
 
 public:
 	static Token* defaultInteger;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	Exp2Constant(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -411,12 +591,18 @@ public:
 
 };
 
+/**
+ * Represents the rule code{EXP2 ::= -EXP2}, i.e. the numeric expression value negation.
+ */
 class Exp2NumericNegation : public Exp2 {
 private:
 	Exp2* toNegate;
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	Exp2NumericNegation(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -427,12 +613,18 @@ public:
 
 };
 
+/**
+ * Represents the rule code{EXP2 ::= !EXP2}, i.e. the logical (a.k.a. boolean value scope) expression value negation.
+ */
 class Exp2LogicalNegation : public Exp2 {
 private:
 	Exp2* toNegate;
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	Exp2LogicalNegation(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -443,12 +635,18 @@ public:
 
 };
 
+/**
+ * Represents the rule code{INDEX ::= [EXP]}, i.e. the existant array index.
+ */
 class IndexPosition : public Index {
 private:
 	Exp* index;
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	IndexPosition(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -460,8 +658,14 @@ public:
 
 };
 
+/**
+ * Represents the rule code{INDEX ::= €}, i.e. the nonexistant array index.
+ */
 class IndexEps : public Index {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	IndexEps(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -472,10 +676,16 @@ public:
 
 };
 
+/**
+ * Represents the rule code{OP_EXP ::= OP EXP}, i.e. the existant combined expression.
+ */
 class OpExpNext : public OpExp {
 	Op* Operator;
 	Exp* operand;
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	OpExpNext(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -488,8 +698,14 @@ public:
 
 };
 
+/**
+ * Represents the rule code{OP_EXP ::= €}, i.e. the nonexistant combined expression.
+ */
 class OpExpEps : public OpExp {
 public:
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	OpExpEps(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -500,11 +716,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{OP ::= +}, i.e. the addition operator.
+ */
 class OpPlus : public Op {
 private:
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	OpPlus(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -515,11 +737,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{OP ::= -}, i.e. the substraction operator.
+ */
 class OpMinus : public Op {
 private:
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	OpMinus(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -530,11 +758,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{OP ::= *}, i.e. the multiplication operator.
+ */
 class OpMult : public Op {
 private:
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	OpMult(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -545,11 +779,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{OP ::= /}, i.e. the division operator.
+ */
 class OpDiv : public Op {
 private:
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	OpDiv(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -560,11 +800,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{OP ::= <}, i.e. the less comparision operator.
+ */
 class OpLess : public Op {
 private:
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	OpLess(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -575,11 +821,17 @@ public:
 
 };
 
+/**
+ * Represents the rule code{OP :== >}, i.e. the greater comparision operator.
+ */
 class OpGreater : public Op {
 private:
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	OpGreater(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -590,10 +842,16 @@ public:
 
 };
 
+/**
+ * Represents the rule code{OP ::= =}, i.e. the equality comparision opeator.
+ */
 class OpEquals : public Op {
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	OpEquals(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -604,10 +862,16 @@ public:
 
 };
 
+/**
+ * Represents the rule code{OP ::= =:=}, i.e. the inequality comparision operator.
+ */
 class OpNotEquals : public Op {
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	OpNotEquals(Scanner* scanner);
 	static TokenTypeRegistry* first();
@@ -618,10 +882,16 @@ public:
 
 };
 
+/**
+ * Represents the rule code{OP ::= &&}, i.e. the conjunction operator.
+ */
 class OpAnd : public Op {
 
 public:
 	static Token* firstToken;
+	/**
+	 * Initializes static members of itself and related classes.
+	 */
 	static void initStatic();
 	OpAnd(Scanner* scanner);
 	static TokenTypeRegistry* first();
