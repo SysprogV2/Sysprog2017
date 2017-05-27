@@ -927,7 +927,7 @@ TokenTypeRegistry* StatementIfElse::first() {
 }
 
 StatementIfElse::StatementIfElse(Scanner* scanner) { // reminder: STATEMENT ::= if(EXP)STATEMENT else STATEMENT
-	if (scanner->currentToken()->getType() != 28) {
+	if (scanner->currentToken()->getType() != 31) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, keyword \"if\" expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
 	}
@@ -944,19 +944,19 @@ StatementIfElse::StatementIfElse(Scanner* scanner) { // reminder: STATEMENT ::= 
 	case 1:
 		this->thenCase = new StatementSetValue(scanner);
 		break;
-	case 33:
+	case 35:
 		this->thenCase = new StatementWrite(scanner);
 		break;
-	case 35:
+	case 36:
 		this->thenCase = new StatementRead(scanner);
 		break;
-	case 26:
+	case 27:
 		this->thenCase = new StatementBlock(scanner);
 		break;
-	case 30:
+	case 31:
 		this->thenCase = new StatementIfElse(scanner);
 		break;
-	case 31:
+	case 32:
 		this->thenCase = new StatementWhile(scanner);
 		break;
 	default:
@@ -971,19 +971,19 @@ StatementIfElse::StatementIfElse(Scanner* scanner) { // reminder: STATEMENT ::= 
 	case 1:
 		this->elseCase = new StatementSetValue(scanner);
 		break;
-	case 33:
+	case 35:
 		this->elseCase = new StatementWrite(scanner);
 		break;
-	case 35:
+	case 36:
 		this->elseCase = new StatementRead(scanner);
 		break;
-	case 26:
+	case 27:
 		this->elseCase = new StatementBlock(scanner);
 		break;
-	case 30:
+	case 31:
 		this->elseCase = new StatementIfElse(scanner);
 		break;
-	case 31:
+	case 32:
 		this->elseCase = new StatementWhile(scanner);
 		break;
 	default:
@@ -1509,7 +1509,7 @@ OpExpNext::OpExpNext(Scanner* scanner) { // reminder: OP_EXP ::= OP EXP
 	case 19:
 		this->Operator = new OpPlus(scanner);
 		break;
-	case 18:
+	case 20:
 		this->Operator = new OpMinus(scanner);
 		break;
 	case 13:
@@ -1647,7 +1647,7 @@ TokenTypeRegistry* OpMinus::first() {
 }
 
 OpMinus::OpMinus(Scanner* scanner) { // reminder: OP ::= -
-	if (scanner->currentToken()->getType() != 18) {
+	if (scanner->currentToken()->getType() != 20) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, negative signum or substraction expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
 	}

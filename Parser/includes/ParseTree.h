@@ -26,7 +26,7 @@
 #define TYPE_REFERENCE_TOKEN_IF new Token (31, 0, 0)
 #define TYPE_REFERENCE_TOKEN_WHILE new Token (32, 0, 0)
 #define TYPE_REFERENCE_TOKEN_PARANTH_START new Token (25, 0, 0)
-#define TYPE_REFERENCE_TOKEN_MINUS new Token (18, 0, 0)
+#define TYPE_REFERENCE_TOKEN_MINUS new Token (20, 0, 0)
 #define TYPE_REFERENCE_TOKEN_NOT new Token (21, 0, 0)
 #define TYPE_REFERENCE_TOKEN_PLUS new Token (19, 0, 0)
 #define TYPE_REFERENCE_TOKEN_MULT new Token (13, 0, 0)
