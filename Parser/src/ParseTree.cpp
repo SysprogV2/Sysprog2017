@@ -55,8 +55,9 @@ void ParseTree::initStatic() { // to be called on Parser launch
 	ParseTree::notEqualsToken = TYPE_REFERENCE_TOKEN_NOT_EQUALS;
 	ParseTree::semicolonToken = TYPE_REFERENCE_TOKEN_SCOL;
 	ParseTree::paranthesisToken = TYPE_REFERENCE_TOKEN_PARANTH_END;
+    ParseTree::log.open("../debug/debug.log");
 	Prog::initStatic();
-	std::cout << "Static ParseTree initialization works\n"; // debug output, remove?
+	ParseTree::log << "Static ParseTree initialization works\n";
 }
 
 TokenTypeRegistry* ParseTree::first() {
@@ -93,7 +94,7 @@ void ParseTree::prepareTreeOperations() { // to be called before running typeChe
 	ParseTree::typeTable = new Symboltable();
 	ParseTree::codeOutput.open("../../debug/test.code");
 	ParseTree::labelFactory = new LabelFactory(1);
-	std::cout << "Operative initialization works\n"; // debug output, remove?
+	ParseTree::log << "Operative initialization works\n";
 }
 
 void ParseTree::terminateTreeOperations() { // to be called at the end of main()
@@ -338,15 +339,15 @@ ProgOnly::ProgOnly(Scanner* scanner) { // reminder: PROG ::= DECLS STATEMENTS
 
 bool ProgOnly::typeCheck() {
 	if (!this->declarationSegment->typeCheck()) {
-		std::cout << "Type checking works\n"; // debug output, remove?
+		ParseTree::log << "Type checking works\n";
 		ERROR_EXIT;
 	}
 	if (!this->statementSegment->typeCheck()) {
-		std::cout << "Type checking works\n"; // debug output, remove?
+		ParseTree::log << "Type checking works\n";
 		ERROR_EXIT;
 	}
 	this->checkingType = noType;
-	std::cout << "Type checking works\n"; // debug output, remove?
+	ParseTree::log << "Type checking works\n";
 	return true;
 }
 
@@ -354,7 +355,7 @@ void ProgOnly::makeCode() {
 	this->declarationSegment->makeCode();
 	this->statementSegment->makeCode();
 	ParseTree::codeOutput << "STP\n";
-	std::cout << "Code creation works\n"; // debug output, remove?
+	ParseTree::log << "Code creation works\n";
 }
 
 ProgOnly::~ProgOnly() {

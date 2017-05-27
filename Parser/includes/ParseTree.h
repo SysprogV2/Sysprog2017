@@ -66,6 +66,7 @@ public:
 	static Symboltable* typeTable;
 	static std::ofstream codeOutput;
 	static LabelFactory* labelFactory;
+    static std::ofstream log;
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
