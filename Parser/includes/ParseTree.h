@@ -1,8 +1,6 @@
 /**
  * ParseTree.h
  *
- * Note that the documentation uses the Euro sign (€) as Epsilon sign, in lack of an actual Epsilon sign on the keyboard.
- *
  *  Created on: 29.12.2015
  *      Author: ehx
  */
@@ -38,11 +36,16 @@
 #define TYPE_REFERENCE_TOKEN_EQUALS new Token (4, 0, 0)
 #define TYPE_REFERENCE_TOKEN_NOT_EQUALS new Token (7, 0, 0)
 #define TYPE_REFERENCE_TOKEN_AND new Token (10, 0, 0)
+#define TYPE_REFERENCE_TOKEN_SCOL new Token (22, 0, 0)
+#define TYPE_REFERENCE_TOKEN_PARANTH_END new Token (26, 0, 0)
+#define TYPE_REFERENCE_TOKEN_BRACKETS_END new Token (30, 0, 0)
+#define TYPE_REFERENCE_TOKEN_ASGN new Token (8, 0, 0)
 #define EPSILON_TOKEN new Token (5, 0, 0)
 #define IDENTIFIER_DEFAULT_TOKEN new Token (1, 0, 0)
 #define INTEGER_DEFAULT_TOKEN new Token (2, 0, 0)
 
-#define ERROR_EXIT this->checkingType = errorType; return false; // in typeCheck()
+// in typeCheck()
+#define ERROR_EXIT this->checkingType = errorType; return false
 
 /**
  * Represents the generic parse tree.
@@ -52,13 +55,14 @@ protected:
 	CheckableType checkingType;
 public:
 	static Token* epsToken;
-	static Token* bracketsToken;
+	static Token* bracketsToken; // opening
 	static Token* minusToken;
 	static Token* integerToken;
 	static Token* identifierToken;
 	static Token* greaterToken;
 	static Token* notEqualsToken;
-	static Token* failureToken;
+    static Token* semicolonToken;
+    static Token* paranthesisToken; // closing
 	static Symboltable* typeTable;
 	static std::ofstream codeOutput;
 	static LabelFactory* labelFactory;
@@ -216,7 +220,7 @@ public:
 };
 
 /**
- * Represents the rule code{PROG ::= DECLS STATEMENTS}, i.e. the default program.
+ * Represents the rule `PROG ::= DECLS STATEMENTS`, i.e. the default program.
  */
 class ProgOnly : public Prog {
 private:
@@ -236,7 +240,7 @@ public:
 };
 
 /**
- * Represents the rule code{DECLS ::= DECL;DECLS}, i.e. the declaration sequence.
+ * Represents the rule `DECLS ::= DECL;DECLS`, i.e. the declaration sequence.
  */
 class DeclsSeq : public Decls {
 private:
@@ -257,7 +261,7 @@ public:
 };
 
 /**
- * Represents the rule code{DECLS ::= €}, i.e. the empty declaration sequence.
+ * Represents the rule `DECLS ::= ε`, i.e. the empty declaration sequence.
  */
 class DeclsEps : public Decls {
 public:
@@ -275,7 +279,7 @@ public:
 };
 
 /**
- * Represents the rule code{DECL ::= int ARRAY identifier}, i.e. the default declaration.
+ * Represents the rule `DECL ::= int ARRAY identifier`, i.e. the default declaration.
  */
 class DeclOnly : public Decl {
 private:
@@ -296,7 +300,7 @@ public:
 };
 
 /**
- * Represents the rule code{ARRAY ::= [integer]}, i.e. the existant array modifier.
+ * Represents the rule `ARRAY ::= [integer]`, i.e. the existant array modifier.
  */
 class ArrayIndex : public Array {
 private:
@@ -318,7 +322,7 @@ public:
 };
 
 /**
- * Represents the rule code{ARRAY ::= €}, i.e. the nonexistant array modifier.
+ * Represents the rule `ARRAY ::= €`, i.e. the nonexistant array modifier.
  */
 class ArrayEps : public Array {
 public:
@@ -336,7 +340,7 @@ public:
 };
 
 /**
- * Represents the rule code{STATEMENTS ::= STATEMENT;STATEMENTS}, i.e. the statement sequence.
+ * Represents the rule `STATEMENTS ::= STATEMENT;STATEMENTS`, i.e. the statement sequence.
  */
 class StatementsSeq : public Statements {
 private:
@@ -357,7 +361,7 @@ public:
 };
 
 /**
- * Represents the rule code{STATEMENTS ::= €}, i.e. the empty statement sequence.
+ * Represents the rule `STATEMENTS ::= ε`, i.e. the empty statement sequence.
  */
 class StatementsEps : public Statements {
 public:
@@ -375,7 +379,7 @@ public:
 };
 
 /**
- * Represents the rule code{STATEMENT ::= identifier INDEX := EXP}, i.e. the assignment.
+ * Represents the rule `STATEMENT ::= identifier INDEX := EXP`, i.e. the assignment.
  */
 class StatementSetValue : public Statement {
 private:
@@ -398,7 +402,7 @@ public:
 };
 
 /**
- * Represents the rule code{STATEMENT ::= write(EXP)}, i.e. the console output.
+ * Represents the rule `STATEMENT ::= write(EXP)`, i.e. the console output.
  */
 class StatementWrite : public Statement {
 private:
@@ -419,7 +423,7 @@ public:
 };
 
 /**
- * Represents the rule code{STATEMENT ::= read(identifier INDEX)}, i.e. the console input.
+ * Represents the rule `STATEMENT ::= read(identifier INDEX)`, i.e. the console input.
  */
 class StatementRead : public Statement {
 private:
@@ -441,7 +445,7 @@ public:
 };
 
 /**
- * Represents the rule code{STATEMENT ::= ${STATEMENTS$}}, i.e. the block of statements.
+ * Represents the rule `STATEMENT ::= {STATEMENTS}`, i.e. the block of statements.
  */
 class StatementBlock : public Statement {
 private:
@@ -462,7 +466,7 @@ public:
 };
 
 /**
- * Represents the rule code{STATEMENT ::= if(EXP)STATEMENT else STATEMENT}, i.e. the conditional flow fork.
+ * Represents the rule `STATEMENT ::= if(EXP)STATEMENT else STATEMENT`, i.e. the conditional flow fork.
  */
 class StatementIfElse : public Statement {
 private:
@@ -485,7 +489,7 @@ public:
 };
 
 /**
- * Represents the rule code{while(EXP) STATEMENT}, i.e. the flow loop.
+ * Represents the rule `while(EXP) STATEMENT`, i.e. the flow loop.
  */
 class StatementWhile : public Statement {
 private:
@@ -507,7 +511,7 @@ public:
 };
 
 /**
- * Represents the rule code{EXP ::= EXP2 OP_EXP}, i.e. the default expression.
+ * Represents the rule `EXP ::= EXP2 OP_EXP`, i.e. the default expression.
  */
 class ExpOnly : public Exp {
 private:
@@ -527,7 +531,7 @@ public:
 };
 
 /**
- * Represents the rule code{EXP2 ::= ${EXP$}}, i.e. the nested expression.
+ * Represents the rule `EXP2 ::= (EXP)`, i.e. the nested expression.
  */
 class Exp2Nested : public Exp2 {
 private:
@@ -548,7 +552,7 @@ public:
 };
 
 /**
- * Represents the rule code{EXP2 ::= identifier INDEX}, i.e. the variable value readout.
+ * Represents the rule `EXP2 ::= identifier INDEX`, i.e. the variable value readout.
  */
 class Exp2Variable : public Exp2 {
 private:
@@ -570,7 +574,7 @@ public:
 };
 
 /**
- * Represents the rule code{EXP2 ::= integer}, i.e. the constant expression.
+ * Represents the rule `EXP2 ::= integer`, i.e. the constant expression.
  */
 class Exp2Constant : public Exp2 {
 private:
@@ -592,7 +596,7 @@ public:
 };
 
 /**
- * Represents the rule code{EXP2 ::= -EXP2}, i.e. the numeric expression value negation.
+ * Represents the rule `EXP2 ::= -EXP2`, i.e. the numeric expression value negation.
  */
 class Exp2NumericNegation : public Exp2 {
 private:
@@ -614,7 +618,7 @@ public:
 };
 
 /**
- * Represents the rule code{EXP2 ::= !EXP2}, i.e. the logical (a.k.a. boolean value scope) expression value negation.
+ * Represents the rule `EXP2 ::= !EXP2`, i.e. the logical (a.k.a. boolean value scope) expression value negation.
  */
 class Exp2LogicalNegation : public Exp2 {
 private:
@@ -636,7 +640,7 @@ public:
 };
 
 /**
- * Represents the rule code{INDEX ::= [EXP]}, i.e. the existant array index.
+ * Represents the rule `INDEX ::= [EXP]`, i.e. the existant array index.
  */
 class IndexPosition : public Index {
 private:
@@ -659,9 +663,11 @@ public:
 };
 
 /**
- * Represents the rule code{INDEX ::= €}, i.e. the nonexistant array index.
+ * Represents the rule `INDEX ::= ε`, i.e. the nonexistant array index.
  */
 class IndexEps : public Index {
+private:
+    static Token* followingToken;
 public:
 	/**
 	 * Initializes static members of itself and related classes.
@@ -673,11 +679,12 @@ public:
 	void makeCode();
 	bool isEps();
 	~IndexEps();
+    friend class ParseTree;
 
 };
 
 /**
- * Represents the rule code{OP_EXP ::= OP EXP}, i.e. the existant combined expression.
+ * Represents the rule `OP_EXP ::= OP EXP`, i.e. the existant combined expression.
  */
 class OpExpNext : public OpExp {
 	Op* Operator;
@@ -699,9 +706,11 @@ public:
 };
 
 /**
- * Represents the rule code{OP_EXP ::= €}, i.e. the nonexistant combined expression.
+ * Represents the rule `OP_EXP ::= ε`, i.e. the nonexistant combined expression.
  */
 class OpExpEps : public OpExp {
+private:
+    static Token* followingToken;
 public:
 	/**
 	 * Initializes static members of itself and related classes.
@@ -713,11 +722,12 @@ public:
 	void makeCode();
 	bool isEps();
 	~OpExpEps();
+    friend class ParseTree;
 
 };
 
 /**
- * Represents the rule code{OP ::= +}, i.e. the addition operator.
+ * Represents the rule `OP ::= +`, i.e. the addition operator.
  */
 class OpPlus : public Op {
 private:
@@ -738,7 +748,7 @@ public:
 };
 
 /**
- * Represents the rule code{OP ::= -}, i.e. the substraction operator.
+ * Represents the rule `OP ::= -`, i.e. the substraction operator.
  */
 class OpMinus : public Op {
 private:
@@ -759,7 +769,7 @@ public:
 };
 
 /**
- * Represents the rule code{OP ::= *}, i.e. the multiplication operator.
+ * Represents the rule `OP ::= *`, i.e. the multiplication operator.
  */
 class OpMult : public Op {
 private:
@@ -780,7 +790,7 @@ public:
 };
 
 /**
- * Represents the rule code{OP ::= /}, i.e. the division operator.
+ * Represents the rule `OP ::= /`, i.e. the division operator.
  */
 class OpDiv : public Op {
 private:
@@ -801,7 +811,7 @@ public:
 };
 
 /**
- * Represents the rule code{OP ::= <}, i.e. the less comparision operator.
+ * Represents the rule `OP ::= <`, i.e. the less comparision operator.
  */
 class OpLess : public Op {
 private:
@@ -822,7 +832,7 @@ public:
 };
 
 /**
- * Represents the rule code{OP :== >}, i.e. the greater comparision operator.
+ * Represents the rule `OP :== >`, i.e. the greater comparision operator.
  */
 class OpGreater : public Op {
 private:
@@ -843,7 +853,7 @@ public:
 };
 
 /**
- * Represents the rule code{OP ::= =}, i.e. the equality comparision opeator.
+ * Represents the rule `OP ::= =`, i.e. the equality comparision opeator.
  */
 class OpEquals : public Op {
 
@@ -863,7 +873,7 @@ public:
 };
 
 /**
- * Represents the rule code{OP ::= =:=}, i.e. the inequality comparision operator.
+ * Represents the rule `OP ::= =:=`, i.e. the inequality comparision operator.
  */
 class OpNotEquals : public Op {
 
@@ -883,7 +893,7 @@ public:
 };
 
 /**
- * Represents the rule code{OP ::= &&}, i.e. the conjunction operator.
+ * Represents the rule `OP ::= &&`, i.e. the conjunction operator.
  */
 class OpAnd : public Op {
 
