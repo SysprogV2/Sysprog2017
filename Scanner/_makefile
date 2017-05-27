@@ -39,5 +39,5 @@ ScannerTest:  $(SRCDIR)/TestScanner.cpp $(HEADERDIR)/Scanner.h
 cleanScanner: 
 	rm -rf $(OBJDIR)/*.o
 	rm -rf $(BINDIRTEST)/*
-	$(MAKE) makeTestScanner
+	$(MAKE) -f _makefile makeTestScanner
 
