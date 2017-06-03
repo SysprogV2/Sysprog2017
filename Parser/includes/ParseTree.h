@@ -40,7 +40,7 @@
 #define TYPE_REFERENCE_TOKEN_PARANTH_END new Token (26, 0, 0)
 #define TYPE_REFERENCE_TOKEN_BRACKETS_END new Token (30, 0, 0)
 #define TYPE_REFERENCE_TOKEN_ASGN new Token (8, 0, 0)
-#define EPSILON_TOKEN new Token (5, 0, 0)
+#define EPSILON_TOKEN new Token (11, 0, 0)
 #define IDENTIFIER_DEFAULT_TOKEN new Token (1, 0, 0)
 #define INTEGER_DEFAULT_TOKEN new Token (2, 0, 0)
 
