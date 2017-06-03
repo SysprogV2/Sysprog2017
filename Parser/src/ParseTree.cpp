@@ -18,6 +18,7 @@ Token* ParseTree::semicolonToken = nullptr;
 Token* ParseTree::paranthesisToken = nullptr;
 Symboltable* ParseTree::typeTable = nullptr;
 std::ofstream ParseTree::codeOutput;
+std::ofstream ParseTree::log;
 LabelFactory* ParseTree::labelFactory = nullptr;
 Token* DeclOnly::firstToken = nullptr;
 Token* ArrayIndex::firstToken = nullptr;
