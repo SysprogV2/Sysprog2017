@@ -10,3 +10,4 @@ target_include_directories(AutomatLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(AutomatTest src/TestAutomat.cpp)
 target_link_libraries(AutomatTest LINK_PUBLIC AutomatLib CatchLib)
+target_compile_definitions(AutomatTest PRIVATE CMAKE_SOURCE_DIR=${PROJECT_SOURCE_DIR})

@@ -10,3 +10,7 @@ target_include_directories(ScannerLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(ScannerTest src/TestScanner.cpp)
 target_link_libraries(ScannerTest LINK_PUBLIC ScannerLib AutomatLib BufferLib SymboltableLib CatchLib)
+target_compile_definitions(ScannerTest PRIVATE CMAKE_SOURCE_DIR=${PROJECT_SOURCE_DIR})
+
+add_executable(ScannerExe src/ScannerExe.cpp)
+target_link_libraries(ScannerTest LINK_PUBLIC ScannerLib AutomatLib BufferLib SymboltableLib)

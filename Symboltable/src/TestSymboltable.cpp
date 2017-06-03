@@ -1,69 +1,81 @@
+#include "../../CatchLib/includes/catch.hpp"
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedMacroInspection"
 #include "../includes/Symboltable.h"
-#include "../includes/SymtabEntry.h"
-#include <iostream>
+#define CATCH_CONFIG_MAIN
 
-int main(int argc, char **argv) {
 
+//							NOTICE
+// following primitive methods are not tested since they
+// merely retrieve values from the existing tables/arrays:
+//
+
+TEST_CASE( "Symboltable.CPP TEST -> insert()", "[symboltable]") {
+	// setup
 	Symboltable* symboltable = new Symboltable();
 
-	char * c1 = "reallyreal";
-	int c1len = 10;
-	char * c2 = "a";
-	int c2len = 1;
-	char * c3 = "c";
-	int c3len = 1;
-	char * c4 = "c";
-	int c4len = 1;
-	char * c5 = "d";
-	int c5len = 1;
-	char * c6 = "mio moi mio";
-	int c6len = 11;
-	char * c7 = "RACINGTEAM";
-	int c7len = 10;
-	char * c8 = "trytohandleths";
-	int c8len = 14;
-	char * c9 = "not impressed at all";
-	int c9len = 20;
-	char * c10 = "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallyString";
-	int c10len = 67;
+	// #1
+	SymtabEntry *s1 = symboltable->insert("string1", 7);
+	REQUIRE(s1 != NULL);
 
 
-	SymtabEntry *s1 = symboltable->insert(c1, c1len);
-	SymtabEntry *s2 = symboltable->insert(c2, c2len);
-	SymtabEntry *s3 = symboltable->insert(c3, c3len);
-	SymtabEntry *s4 = symboltable->insert(c4, c4len);
-	SymtabEntry *s5 = symboltable->insert(c5, c5len);
-	SymtabEntry *s6 = symboltable->insert(c6, c6len);
-	SymtabEntry *s7 = symboltable->insert(c7, c7len);
-	SymtabEntry *s8 = symboltable->insert(c8, c8len);
-	SymtabEntry *s9 = symboltable->insert(c9, c9len);
-	SymtabEntry *s10 = symboltable->insert(c10, c10len);
+	// #2
+	SymtabEntry *s2 = symboltable->insert("string2", 7);
+	REQUIRE(s2 != NULL);
 
-	c1 = ";";
-	c2 = ";";
-	c3 = "d";
-	c9 = ";";
-	c10 = ";";
-	c8 = "d";
-
-	std::cout << s1->getInfo()->getLexem() << std::endl;
-	std::cout << s2->getInfo()->getLexem()  << std::endl;
-	std::cout << s3->getInfo()->getLexem()  << std::endl;
-	std::cout << s4->getInfo()->getLexem()  << std::endl;
-	std::cout << s5->getInfo()->getLexem()  << std::endl;
-	std::cout << s6->getInfo()->getLexem()  << std::endl;
-	std::cout << s7->getInfo()->getLexem()  << std::endl;
-	std::cout << s8->getInfo()->getLexem()  << std::endl;
-	std::cout << s9->getInfo()->getLexem()  << std::endl;
-	std::cout << s10->getInfo()->getLexem()  << std::endl << std::endl;
-
-	if (argc > 0) {
-		Information* info = symboltable->lookup(argv[1]);
-		if (info == NULL) {
-			std::cout <<"Not found"  << std::endl;
-		} else {
-			std::cout << "Found: " << info->getLexem() << std::endl;
-		}
-	}
+	// #3
+	SymtabEntry *s3 = nullptr;
+	REQUIRE(s3 == NULL);
 }
 
+TEST_CASE( "Symboltable.CPP TEST -> lookup()", "[symboltable]") {
+	// setup
+	Symboltable* symboltable = new Symboltable();
+	REQUIRE(symboltable != nullptr);
+	REQUIRE(symboltable->insert("abc", 3) != nullptr);
+	REQUIRE(symboltable->insert("veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstring", 114) != nullptr);
+
+	// #1
+	Information* info1 = symboltable->lookup("string1");
+	REQUIRE(info1 == NULL);
+
+	// #2
+	Information* info2 = symboltable->lookup("abc");
+	REQUIRE(info2 != NULL);
+	REQUIRE(info2->getLexem() != NULL);
+	REQUIRE( !strcmp(info2->getLexem(), "abc") );
+
+	// #3
+	Information* info3 = symboltable->lookup("veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstring");
+	REQUIRE(info3 != NULL);
+	REQUIRE(info3->getLexem() != NULL);
+	REQUIRE( !strcmp(info3->getLexem(), "veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstring") );
+}
+
+TEST_CASE( "StringTab.CPP TEST -> insert()", "[symboltable]") {
+	// setup
+	StringTab * st = new StringTab();
+
+	const char *charPtr1 = "a";
+	int charPtrLen1 = 10;
+	const char *charPtr2 = "veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstring";
+	int charPtrLen2 = 114;
+	const char *charPtr3 = "veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstring";
+	int charPtrLen3 = 570;
+
+	// #1
+	char *entry1 = st->insert(charPtr1, charPtrLen1);
+	REQUIRE(charPtr1 != entry1);
+	REQUIRE( !strcmp(charPtr1, entry1) );
+
+	// #2
+	char *entry2 = st->insert(charPtr2, charPtrLen2);
+	REQUIRE(charPtr2 != entry2);
+	REQUIRE( !strcmp(charPtr2, entry2) );
+
+	// #3
+	char *entry3 = st->insert(charPtr3, charPtrLen3);
+	REQUIRE(charPtr3 != entry3);
+	REQUIRE( !strcmp(charPtr3, entry3) );
+}
+#pragma clang diagnostic pop

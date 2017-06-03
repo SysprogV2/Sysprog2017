@@ -1,7 +1,10 @@
-#define CATCH_CONFIG_MAIN
-
+#include <cstring>
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedMacroInspection"
 #include "../includes/Automat.h"
+#define CATCH_CONFIG_MAIN
 #include "../../CatchLib/includes/catch.hpp"
+#include "../../Parser/includes/ParseTree.h"
 
 
 // NOTICE
@@ -11,7 +14,7 @@
 // Syntax::getTokenTypeAsChar(int num);
 // Syntax::getState(int i, int j)
 
-TEST_CASE("SYNTAX.CPP TEST -> matches()", "[char]") {
+TEST_CASE("SYNTAX.CPP TEST -> matches()", "[automat]") {
     Syntax *syntax = new Syntax();
 
     SECTION("When two strings are equal, they should match") {
@@ -26,7 +29,7 @@ TEST_CASE("SYNTAX.CPP TEST -> matches()", "[char]") {
     }
 }
 
-TEST_CASE("SYNTAX.CPP TEST -> ifKeyword()", "[char]") {
+TEST_CASE("SYNTAX.CPP TEST -> ifKeyword()", "[automat]") {
     Syntax *syntax = new Syntax();
 
     SECTION("lower case keywords should be recognized") {
@@ -43,7 +46,7 @@ TEST_CASE("SYNTAX.CPP TEST -> ifKeyword()", "[char]") {
     }
 }
 
-TEST_CASE("SYNTAX.CPP TEST -> isPacked()", "[char]") {
+TEST_CASE("SYNTAX.CPP TEST -> isPacked()", "[automat]") {
     Syntax *syntax = new Syntax();
 
     SECTION("Known symbols should be recognized") {
@@ -68,7 +71,7 @@ TEST_CASE("SYNTAX.CPP TEST -> isPacked()", "[char]") {
 }
 
 
-TEST_CASE("STACK.CPP TEST -> push(); trim(); get(); flush()", "[char]") {
+TEST_CASE("STACK.CPP TEST -> push(); trim(); get(); flush()", "[automat]") {
     Stack *stack = new Stack();
 
     SECTION("empty") {
@@ -99,10 +102,11 @@ TEST_CASE("STACK.CPP TEST -> push(); trim(); get(); flush()", "[char]") {
     }
 }
 
-TEST_CASE("AUTOMAT.CPP TEST -> read(char currentChar); reset()", "[char]") {
+
+
+TEST_CASE("AUTOMAT.CPP TEST -> read(char currentChar); reset()", "[automat]") {
     Automat *automat = new Automat();
 
-    SECTION("")
     automat->reset();
     automat->read('=');
     automat->read(':');
@@ -130,7 +134,7 @@ TEST_CASE("AUTOMAT.CPP TEST -> read(char currentChar); reset()", "[char]") {
     REQUIRE(result4 == 0);
 }
 
-TEST_CASE("AUTOMAT.CPP TEST -> updatePos(char c); :getLine(); getColumn()", "[char]") {
+TEST_CASE("AUTOMAT.CPP TEST -> updatePos(char c); :getLine(); getColumn()", "[automat]") {
     Automat *automat = new Automat();
 
     // #1
@@ -145,3 +149,5 @@ TEST_CASE("AUTOMAT.CPP TEST -> updatePos(char c); :getLine(); getColumn()", "[ch
     REQUIRE(line1 == 3);
     REQUIRE(col1 == 2);
 }
+
+#pragma clang diagnostic pop

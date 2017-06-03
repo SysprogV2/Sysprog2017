@@ -10,3 +10,4 @@ target_include_directories(BufferLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(BufferTest src/TestBuffer.cpp)
 target_link_libraries(BufferTest LINK_PUBLIC BufferLib CatchLib)
+target_compile_definitions(BufferTest PRIVATE CMAKE_SOURCE_DIR=${PROJECT_SOURCE_DIR})
