@@ -451,7 +451,7 @@ TokenTypeRegistry* DeclOnly::first() {
     return sequence;
 }
 
-DeclOnly::DeclOnly(Scanner* scanner) { // reminder: DECL ::= identifier ARRAY
+DeclOnly::DeclOnly(Scanner* scanner) { // reminder: DECL ::= int ARRAY identifier
 	if (scanner->currentToken()->getType() != 34) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, keyword \"int\" expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found\n";
 		// if (scanner->currentToken()->getLexem() == "class") std::cerr << "Sorry, but this programming language does not support classes. We suggest trying Java instead.\n"; // uncomment this easter egg?
@@ -555,7 +555,7 @@ void ArrayEps::initStatic() {}
 
 TokenTypeRegistry* ArrayEps::first() {
 	TokenTypeRegistry *sequence = new TokenTypeRegistry ();
-	sequence->set (ParseTree::semicolonToken);
+	sequence->set (ParseTree::identifierToken);
 	return sequence;
 }
 
