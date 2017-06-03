@@ -9,6 +9,35 @@
 
 #include <iostream>
 #include <errno.h>
+#include <cstdarg>
+#include <cstdio>
+
+char* StringUtil::concat(char* first, char* second) {
+	int firstLength = calcLength(first);
+	int newLength = firstLength + calcLength(second);
+	char* newstring = new char[newLength];
+	for (int i = 0; i < newLength; i++) {
+		newstring[i] = (i < firstLength ? first[i] : second[i - firstLength]);
+	}
+	return newstring;
+}
+
+int StringUtil::calcLength (char* string) {
+	int length = 0;
+	while (string[length] != '\0') {
+		length++;
+	}
+	return length;
+}
+
+char* StringUtil::format(char *fmt, ...) {
+	va_list args;
+	char buf[1000];
+	va_start(args, fmt);
+	vsnprintf(buf, sizeof(buf), fmt, args );
+	va_end(args);
+	return buf;
+}
 
 char* Token::nameOf(int tokenType) {
 	switch (tokenType) {
@@ -63,7 +92,7 @@ char* Token::nameOf(int tokenType) {
 	case 35:
 		return "keyword \"read\"";
 	default:
-		return "unidentifiable token";
+		return StringUtil::format("unidentifiable token (%d)", tokenType);
 	}
 }
 

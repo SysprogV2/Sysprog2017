@@ -41,5 +41,12 @@ public:
 	void setErrorMessage(char* errorMessage);
 };
 
+class StringUtil {
+public:
+	static char* concat(char* first, char* second);
+	static int calcLength(char* string);
+	static char* format(char* format, ...);
+};
+
 #endif
 

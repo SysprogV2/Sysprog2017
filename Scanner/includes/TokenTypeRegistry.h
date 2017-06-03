@@ -29,10 +29,4 @@ public:
 	~TokenTypeRegistry();
 };
 
-class StringUtil {
-public:
-	static char* concat(char* first, char* second);
-	static int calcLength(char* string);
-};
-
 #endif /* SCANNER_INCLUDES_TOKENTYPEREGISTRY_H_ */
