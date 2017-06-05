@@ -17,8 +17,7 @@ target_link_libraries(ParserExe LINK_PUBLIC
         ScannerLib
         SymboltableLib
         BufferLib
-        AutomatLib
-        CatchLib)
+        AutomatLib)
 
 
 add_executable(ParserTest src/TestParser.cpp)
