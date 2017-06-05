@@ -91,7 +91,7 @@ bool TEST_getChar(const char* filename) {
 
     // Compare both buffers
     for (int i = 0; i < length; i++) {
-        printf("%d: %c vs %c\n", i, bufferOutputIntern[i], bufferOutputExtern[i]);
+        // printf("%d: %c vs %c\n", i, bufferOutputIntern[i], bufferOutputExtern[i]);
         if (bufferOutputIntern[i] != bufferOutputExtern[i]) {
             printf("ERROR!\n");
             return false;
@@ -121,7 +121,7 @@ bool TEST_ungetChar(const char *filename) {
     for (int i = length - 1; i >= 0; i--) {
         char newUngetChar = buffer.ungetChar(1);
         buffer.ungetChar(0);
-        printf("%d: %c vs %c\n", i, bufferOutput[i], newUngetChar);
+        // printf("%d: %c vs %c\n", i, bufferOutput[i], newUngetChar);
         if (bufferOutput[i] != newUngetChar) {
             printf("ERROR!\n");
             return false;
@@ -133,7 +133,7 @@ bool TEST_ungetChar(const char *filename) {
         buffer.ungetChar(0);
         char newGetChar = buffer.getChar();
 
-        printf("%d: %c vs %c\n", i, bufferOutput[i], newGetChar);
+        // printf("%d: %c vs %c\n", i, bufferOutput[i], newGetChar);
         if (bufferOutput[i] != newGetChar) {
             printf("ERROR!\n");
             return false;
@@ -144,7 +144,7 @@ bool TEST_ungetChar(const char *filename) {
     for (int i = (length / 2) - 1; i >= 0; i--) {
         char newGetChar = buffer.ungetChar(1);
         buffer.ungetChar(0);
-        printf("%d: %c vs %c\n", i, bufferOutput[i], newGetChar);
+        // printf("%d: %c vs %c\n", i, bufferOutput[i], newGetChar);
         if (bufferOutput[i] != newGetChar) {
             printf("ERROR!\n");
             return false;
