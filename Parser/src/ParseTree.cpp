@@ -326,7 +326,7 @@ ProgOnly::ProgOnly(Scanner* scanner) { // reminder: PROG ::= DECLS STATEMENTS
 	delete compare2;
 	compare1 = StatementsSeq::first();
 	compare2 = StatementsEps::first();
-	if (compare1->isSet(scanner->nextToken())) {
+	if (compare1->isSet(this->declarationSegment->isEps() ? scanner->currentToken() : scanner->nextToken())) {
 		this->statementSegment = new StatementsSeq(scanner);
 	} else if (compare2->isSet(scanner->currentToken())) {
 		this->statementSegment = new StatementsEps(scanner);
@@ -451,7 +451,7 @@ TokenTypeRegistry* DeclOnly::first() {
     return sequence;
 }
 
-DeclOnly::DeclOnly(Scanner* scanner) { // reminder: DECL ::= identifier ARRAY
+DeclOnly::DeclOnly(Scanner* scanner) { // reminder: DECL ::= int ARRAY identifier
 	if (scanner->currentToken()->getType() != 34) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, keyword \"int\" expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found\n";
 		// if (scanner->currentToken()->getLexem() == "class") std::cerr << "Sorry, but this programming language does not support classes. We suggest trying Java instead.\n"; // uncomment this easter egg?
@@ -467,7 +467,7 @@ DeclOnly::DeclOnly(Scanner* scanner) { // reminder: DECL ::= identifier ARRAY
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, any of " << Array::first()->allSetTokenNames() << " expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
 	}
-	this->identifier = scanner->nextToken();
+	this->identifier = this->size->isEps() ? scanner->currentToken() : scanner->nextToken();
 	if (this->identifier->getType() != 1) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, identifier expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
@@ -555,7 +555,7 @@ void ArrayEps::initStatic() {}
 
 TokenTypeRegistry* ArrayEps::first() {
 	TokenTypeRegistry *sequence = new TokenTypeRegistry ();
-	sequence->set (ParseTree::semicolonToken);
+	sequence->set (ParseTree::identifierToken);
 	return sequence;
 }
 
@@ -710,7 +710,7 @@ StatementSetValue::StatementSetValue(Scanner* scanner) { // reminder: STATEMENT 
 	}
 	delete index1;
 	delete index2;
-	if (scanner->nextToken()->getType() != 8) {
+	if ((this->index->isEps() ? scanner->currentToken() : scanner->nextToken())->getType() != 8) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, assignment expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
 	}
@@ -833,7 +833,7 @@ StatementRead::StatementRead(Scanner* scanner) { // reminder: STATEMENT ::= read
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, any of " << Index::first()->allSetTokenNames() << " expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
 	}
-	if (scanner->nextToken()->getType() != 26) {
+	if ((this->index->isEps() ? scanner->currentToken() : scanner->nextToken())->getType() != 26) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, closing paranthesis(\")\") expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
 	}
@@ -896,7 +896,7 @@ StatementBlock::StatementBlock(Scanner* scanner) { // reminder: STATEMENT ::= {S
 	}
 	delete statements1;
 	delete statements2;
-	if (scanner->nextToken()->getType() != 28) {
+	if ((this->blockContent->isEps() ? scanner->currentToken() : scanner->nextToken())->getType() != 28) {
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, closing brace (\"}\") expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
 		throw(1);
 	}

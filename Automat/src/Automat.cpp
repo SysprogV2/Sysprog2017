@@ -20,11 +20,12 @@ Automat::~Automat() {
     delete stack;
     delete syntax;
 }
-/*
+/**
  * Automat consumes a character and then changes current state
  * according to the StateTable. When some valid lexem is found, it
  * saves important information about it such as position in input file,
  * lexem as char* and the last final state.
+ * @param currentChar the character to consume (typically coming from the Buffer)
  * @return number of chars it looked ahead during execution
  */
 int Automat::read(char currentChar) {
