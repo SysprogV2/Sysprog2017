@@ -8,11 +8,12 @@
 
 #define CONV_ERR "error: cannot convert given CHAR* to LONG INT"
 #define CONV_ERR_OVERFLOW "error: given integer is too big to be converted to LONG INT"
+// TODO: use somewhere
 
-Scanner::Scanner(char *filename): Scanner(filename, new Symboltable()) {
+Scanner::Scanner(const char *filename): Scanner(filename, new Symboltable()) {
 }
 
-Scanner::Scanner(char *filename, Symboltable* st) {
+Scanner::Scanner(const char *filename, Symboltable *st) {
 	stab = st;
 	buffer = new Buffer(filename);
 	automat = new Automat();
@@ -31,15 +32,19 @@ Scanner::~Scanner() {
 	delete buffer;
 	delete automat;
 	delete syntax;
-	if (!this->idenInt->isSet(this->cToken)) delete this->cToken;
+	if (!this->idenInt->isSet(this->cToken)) {
+        delete this->cToken;
+    }
 	delete this->idenInt;
 }
 
 /*
  * feeds characters to the automat, until the new lexem is found.
  * Then tries to attribute it to some token.
+ * @return current token
  */
 Token *Scanner::nextToken() {
+	//std::cout << "debuging *** Scanner::nextToken STRT" << std::endl;
 
 	char currentChar;
 	int finalState = 0;
@@ -107,18 +112,26 @@ Token* Scanner::currentToken() {
 	return this->cToken;
 }
 
-int Scanner::mapStateToType(int state, const char* lexem) {
-	char symbol = lexem[0];
-	int tType = state;
-	if (state == Syntax::ASGN_Z) {
-		tType = syntax->isPacked(symbol);
-	} else if (state == Syntax::IDEN_Z) {
-		int tmp = syntax->ifKeyword(lexem);
-		if (tmp > 0) tType = tmp; // 30..35
-	}
-	return tType;
+/*
+ * determine the current token type relying on STATE and LEXEM
+ * @return token's type
+ */
+int Scanner::mapStateToType(int state, const char *lexem) {
+    char symbol = lexem[0];
+    int tType = state;
+    if (state == Syntax::ASGN_Z) {
+        tType = syntax->isPacked(symbol);
+    } else if (state == Syntax::IDEN_Z) {
+        int tmp = syntax->ifKeyword(lexem);
+        if (tmp > 0) tType = tmp;  // 30..35
+    }
+    return tType;
 }
 
+/*
+ * assigns a decimal value of given char pointer to given token
+ * @return void
+ */
 void Scanner::getNumberToken(const char* lexem, Token* t) {
 	errno = 0;
 	long int value = strtol(lexem, 0, 10);

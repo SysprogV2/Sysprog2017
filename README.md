@@ -4,15 +4,33 @@
 This is a project for university - a compiler for a rather simple custom programming language. Nothing too special.
 
 ## Build
-### make
+### Oldstyle Make without tests
 ````
-make -f _makefile all
+  make -f _makefile all
 ````
-### cmake
+### CMake
 ````
-  cmake .
-  make all
+  mkdir build
+  cd build
+  cmake ..
+  make
 ````
 
 ## Run tests
-...
+````
+  ./AllTests
+  ./MainTest
+  ./Automat/AutomatTest
+  ./Buffer/BufferTest
+  ./Parser/ParserTest
+  ./Scanner/ScannerTest
+  ./Symboltable/SymboltableTest
+  ./Symboltable/StringtableTest
+````
+
+## Run executables
+````
+  ./MainExe <inputfile>
+  ./Scanner/ScannerExe <inputfile> <outputfile>
+  ./Parser/ParserExe <inputfile>
+````

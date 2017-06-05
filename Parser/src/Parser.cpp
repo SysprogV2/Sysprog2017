@@ -7,7 +7,7 @@
 
 #include "../includes/Parser.h"
 
-Parser::Parser(char* filename) {
+Parser::Parser(const char *filename) {
 	this->scanner = new Scanner (filename); // the Scanner that will be used all along the process
 	ParseTree::initStatic();
 }
