@@ -85,7 +85,7 @@ Token *Scanner::nextToken() {
 		t->setInformation(info);
 	} else if (tokenType == Syntax::AND1_Z || tokenType == Syntax::PROH_Z) {
 		t->setType(Syntax::PROH_Z);
-		t->setErrorMessage("unknown token");
+		t->setErrorMessage((char *) "unknown token");
 		t->setSymbol(lexem[0]);
 	} else if (tokenType == Syntax::INTG_Z) {
 		getNumberToken(lexem, t);
@@ -137,7 +137,7 @@ void Scanner::getNumberToken(const char* lexem, Token* t) {
 	long int value = strtol(lexem, 0, 10);
 	if (errno == ERANGE) {
 		t->setType(Syntax::PROH_Z);
-		t->setErrorMessage("error: given integer is too big to be converted to LONG INT");
+		t->setErrorMessage((char *) "error: given integer is too big to be converted to LONG INT");
 		t->setSymbol(nullptr);
 		errno = 0;
 	} else {

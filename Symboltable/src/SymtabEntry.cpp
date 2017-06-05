@@ -5,8 +5,7 @@
  *      Author: arty
  */
 #include "../includes/SymtabEntry.h"
-#include "../../Scanner/includes/Information.h"
-#include <iostream>
+
 SymtabEntry::SymtabEntry(Information* info) {
 	this->information = info;
 	this->next = this;

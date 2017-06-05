@@ -44,7 +44,7 @@ char* StringTab::insert(const char *lexem, int size) {
  * copy lexem to the end of the string
  */
 char * StringTab::copy(char * freepointer, const char *lexem, int size) {
-	memcpy(freepointer, lexem, size + 1);
+	memcpy(freepointer, lexem, (size_t) (size + 1));
 	freeSpace -= size + 1;
 	return freepointer;
 }

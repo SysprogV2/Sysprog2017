@@ -15,6 +15,6 @@ typedef enum {
 }ErrorType;
 
 void throwError(ErrorType type);
-char* errorTypeToString(ErrorType type);
+const char* errorTypeToString(ErrorType type);
 
 #endif /* PARSER_INCLUDES_ERRORS_H_ */

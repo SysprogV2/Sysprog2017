@@ -151,9 +151,12 @@ char Buffer::ungetChar(int back) {
 	return _getChar(_fileCurrentPos -= back);
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
 void Buffer::load(void *somebuffer) {
 	return;
 }
+#pragma clang diagnostic pop
 
 void Buffer::allocateBufferMemory() {
 	return;

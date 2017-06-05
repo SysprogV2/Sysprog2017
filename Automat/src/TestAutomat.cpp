@@ -8,7 +8,7 @@
  * @automat
  * @inputString
  */
-const char *getNextLexem(Automat *automat, char *inputString) {
+const char *getNextLexem(Automat *automat, const char *inputString) {
     int i = 0;
     char nextChar = inputString[i];
     while (nextChar != '\0') {
@@ -36,7 +36,7 @@ TEST(automat, read_isLexemReady_getLexem) {
     Automat *automat = new Automat();
 
     // #1
-    char *inputString = "&&&other+=:+probably+:=+:=:qeek+k#oo+=:=:+*\0";
+    const char *inputString = "&&&other+=:+probably+:=+:=:qeek+k#oo+=:=:+*\0";
     EXPECT_TRUE(!strcmp(getNextLexem(automat, inputString), "&&"));
 }
 
