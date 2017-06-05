@@ -14,7 +14,10 @@ TEST(parser, test1) {
 	Parser* parser = new Parser(FILE0.c_str());
     EXPECT_TRUE(parser != nullptr);
 
-	ParseTree* tree = parser->parse();
+
+	ParseTree* tree;
+    EXPECT_NO_THROW(tree = parser->parse());
+
     EXPECT_TRUE(tree != nullptr);
 
 	EXPECT_TRUE(tree->typeCheck());

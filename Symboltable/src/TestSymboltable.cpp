@@ -48,30 +48,3 @@ TEST(symboltable, lookup) {
 	EXPECT_FALSE(strcmp(info3->getLexem(), "veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstring") );
 }
 
-// TODO: StringTab Test here? Better move to TestStringTab
-TEST(stringtable, insert) {
-	// setup
-	StringTab * st = new StringTab();
-
-	const char *charPtr1 = "a";
-	int charPtrLen1 = 10;
-	const char *charPtr2 = "veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstring";
-	int charPtrLen2 = 114;
-	const char *charPtr3 = "veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstring";
-	int charPtrLen3 = 570;
-
-	// #1
-	char *entry1 = st->insert(charPtr1, charPtrLen1);
-	EXPECT_TRUE(charPtr1 != entry1);
-	EXPECT_FALSE(strcmp(charPtr1, entry1) );
-
-	// #2
-	char *entry2 = st->insert(charPtr2, charPtrLen2);
-	EXPECT_TRUE(charPtr2 != entry2);
-	EXPECT_FALSE(strcmp(charPtr2, entry2) );
-
-	// #3
-	char *entry3 = st->insert(charPtr3, charPtrLen3);
-	EXPECT_TRUE(charPtr3 != entry3);
-	EXPECT_FALSE(strcmp(charPtr3, entry3) );
-}

@@ -27,6 +27,13 @@ target_link_libraries(MainExe LINK_PUBLIC ParserLib ScannerLib SymboltableLib Bu
 
 add_executable(MainTest mainTest.cpp)
 target_link_libraries(MainTest LINK_PUBLIC ParserLib ScannerLib SymboltableLib BufferLib AutomatLib gtest gtest_main)
-#add_test(	NAME MainTest_test1
-#		COMMAND MainTest
-#		WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+
+add_executable(AllTests AllTests.cpp
+        Automat/src/TestAutomat.cpp
+        Buffer/src/TestBuffer.cpp
+        Parser/src/TestParser.cpp
+        Scanner/src/TestScanner.cpp
+        Symboltable/src/TestSymboltable.cpp
+        Symboltable/src/TestStringTab.cpp)
+target_link_libraries(AllTests LINK_PUBLIC ParserLib ScannerLib SymboltableLib BufferLib AutomatLib gtest gtest_main)
+target_compile_definitions(AllTests PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
