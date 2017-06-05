@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ParserExe" type="CMakeRunConfiguration" factoryName="Application" singleton="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Sysprog2017" TARGET_NAME="ParserExe" CONFIG_NAME="Default" RUN_TARGET_PROJECT_NAME="Sysprog2017" RUN_TARGET_NAME="ParserExe">
+  <configuration default="false" name="ParserExe" type="CMakeRunConfiguration" factoryName="Application" singleton="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Sysprog2017" TARGET_NAME="ParserExe" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Sysprog2017" RUN_TARGET_NAME="ParserExe">
     <envs />
     <method />
   </configuration>
