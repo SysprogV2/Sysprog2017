@@ -8,6 +8,8 @@
 add_library(BufferLib src/Buffer.cpp)
 target_include_directories(BufferLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+include_directories(../gtest/include gtest)
+
 add_executable(BufferTest src/TestBuffer.cpp)
-target_link_libraries(BufferTest LINK_PUBLIC BufferLib CatchLib)
-target_compile_definitions(BufferTest PRIVATE CMAKE_SOURCE_DIR=${PROJECT_SOURCE_DIR})
+target_link_libraries(BufferTest LINK_PUBLIC BufferLib gtest gtest_main)
+target_compile_definitions(BufferTest PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")

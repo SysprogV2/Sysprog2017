@@ -1,29 +1,25 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCUnusedMacroInspection"
-
 #include "../includes/Scanner.h"
+#include "gtest/gtest.h"
 
-#define CATCH_CONFIG_MAIN
+#define FILE0 string(PROJECT_SOURCE_DIR "/test/scanner1.txt")
+#define OUT_FILE (string(PROJECT_SOURCE_DIR "/out.txt"))
 
-#include "../../CatchLib/includes/catch.hpp"
-
-
-TEST_CASE("scanner main", "[scanner]") {
-    const char *INPUT_FILE = "../../test/scanner0.txt";
-    const char *OUTPUT_FILE = "out.txt";
-
+TEST(scanner, main) {
     Symboltable *st = new Symboltable();
-    Scanner *s = new Scanner((char *) INPUT_FILE, st);
+    Scanner *s = new Scanner((char *) FILE0.c_str(), st);
     Token *t;
     Syntax *syntax = new Syntax();
+
+    std::cout << endl;
+    std::cout << "Input file: " << FILE0.c_str() << endl;
+    std::cout << "Output file: " << OUT_FILE.c_str() << endl;
     std::cout << "processing..." << std::endl;
 
 
     std::ofstream output_file;
-    output_file.open(OUTPUT_FILE);
+    output_file.open(OUT_FILE.c_str());
 
-    REQUIRE(output_file.is_open());
-
+    ASSERT_TRUE(output_file.is_open());
     // TODO: Test more!
 
     while ((t = s->nextToken())) {
@@ -53,6 +49,3 @@ TEST_CASE("scanner main", "[scanner]") {
     output_file.close();
 
 }
-
-
-#pragma clang diagnostic pop

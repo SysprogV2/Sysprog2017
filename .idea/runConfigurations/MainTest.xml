@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MainTest" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" singleton="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Sysprog2017" TARGET_NAME="MainTest" CONFIG_NAME="Default" RUN_TARGET_PROJECT_NAME="Sysprog2017" RUN_TARGET_NAME="MainTest" TEST_MODE="SUITE_TEST">
+    <envs />
+    <method />
+  </configuration>
+</component>

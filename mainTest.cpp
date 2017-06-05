@@ -1,21 +1,14 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCUnusedMacroInspection"
-#define CATCH_CONFIG_MAIN
-
+#include "gtest/gtest.h"
 #include "Parser/includes/Parser.h"
-#include "./CatchLib/includes/catch.hpp"
 
-
-TEST_CASE("Main test", "[main]") {
-    char *TEST_FILE = (char *) "./test/scanner0.txt";
+TEST(main, test1) {
+    char *TEST_FILE = (char *) "test/scanner0.txt";
     Parser *parser = new Parser(TEST_FILE);
-    REQUIRE(parser != nullptr);
+    EXPECT_TRUE(parser != nullptr);
 
     ParseTree *tree = parser->parse();
-    REQUIRE(tree != nullptr);
+    EXPECT_TRUE(tree != nullptr);
 
-    REQUIRE(tree->typeCheck());
-    REQUIRE_NOTHROW(tree->makeCode());
+    EXPECT_TRUE(tree->typeCheck());
+    EXPECT_NO_THROW(tree->makeCode());
 }
-
-#pragma clang diagnostic pop

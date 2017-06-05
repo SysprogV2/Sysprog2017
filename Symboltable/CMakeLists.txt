@@ -8,11 +8,13 @@
 add_library(SymboltableLib src/Symboltable.cpp src/StringTab.cpp src/SymtabEntry.cpp)
 target_include_directories(SymboltableLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+include_directories(../gtest/include gtest)
 
 add_executable(SymboltableTest src/TestSymboltable.cpp)
 add_executable(StringtableTest src/TestStringTab.cpp)
 
-target_link_libraries(SymboltableTest LINK_PUBLIC SymboltableLib ScannerLib CatchLib)
-target_link_libraries(StringtableTest LINK_PUBLIC SymboltableLib CatchLib)
-target_compile_definitions(SymboltableTest PRIVATE CMAKE_SOURCE_DIR=${PROJECT_SOURCE_DIR})
-target_compile_definitions(StringtableTest PRIVATE CMAKE_SOURCE_DIR=${PROJECT_SOURCE_DIR})
+target_link_libraries(SymboltableTest LINK_PUBLIC SymboltableLib ScannerLib gtest gtest_main)
+target_link_libraries(StringtableTest LINK_PUBLIC SymboltableLib gtest gtest_main)
+
+target_compile_definitions(SymboltableTest PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+target_compile_definitions(StringtableTest PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")

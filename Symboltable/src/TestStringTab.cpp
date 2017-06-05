@@ -1,28 +1,22 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCUnusedMacroInspection"
-
 #include "../includes/StringTab.h"
-
-#define CATCH_CONFIG_MAIN
-
-#include "../../CatchLib/includes/catch.hpp"
+#include "gtest/gtest.h"
 
 char *testInsert(StringTab *stringTab, char *input);
 
-TEST_CASE("default", "[stringtable]") {
+TEST(stringtable, insert) {
     StringTab *stringTab = new StringTab();
-    REQUIRE(stringTab != nullptr);
+    EXPECT_TRUE(stringTab != nullptr);
 
-    REQUIRE(testInsert(stringTab, "reallyreal") != nullptr);
-    REQUIRE(testInsert(stringTab, "a") != nullptr);
-    REQUIRE(testInsert(stringTab, "b") != nullptr);
-    REQUIRE(testInsert(stringTab, "c") != nullptr);
-    REQUIRE(testInsert(stringTab, "d") != nullptr);
-    REQUIRE(testInsert(stringTab, "mio moi mio") != nullptr);
-    REQUIRE(testInsert(stringTab, "RACINGTEAM") != nullptr);
-    REQUIRE(testInsert(stringTab, "trytohandleths") != nullptr);
-    REQUIRE(testInsert(stringTab, "not impressed at all") != nullptr);
-    REQUIRE(testInsert(stringTab, "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallyString") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "reallyreal") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "a") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "b") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "c") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "d") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "mio moi mio") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "RACINGTEAM") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "trytohandleths") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "not impressed at all") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallyString") != nullptr);
 }
 
 
@@ -30,5 +24,3 @@ char *testInsert(StringTab *stringTab, char *input) {
     std::string copy = input;
     return stringTab->insert(copy.c_str(), (int) copy.length());
 }
-
-#pragma clang diagnostic pop

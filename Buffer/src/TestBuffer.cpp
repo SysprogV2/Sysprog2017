@@ -1,78 +1,71 @@
 #include "../includes/Buffer.h"
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCUnusedMacroInspection"
-#include <regex.h>
-#define CATCH_CONFIG_MAIN
-#include "../../CatchLib/includes/catch.hpp"
-
+#include "gtest/gtest.h"
 
 bool TEST_getChar(const char* filename);
 bool TEST_ungetChar(const char* filename);
 
-#define TEST_TAG "[buffer]"
+#define FILE0 (string(PROJECT_SOURCE_DIR) + string("/test/scanner0.txt"))
+#define FILE1 (string(PROJECT_SOURCE_DIR) + string("/test/scanner1.txt"))
+#define FILE2 (string(PROJECT_SOURCE_DIR) + string("/test/scanner2.txt"))
+#define FILE3 (string(PROJECT_SOURCE_DIR) + string("/test/scanner3.txt"))
+#define FILE4 (string(PROJECT_SOURCE_DIR) + string("/test/scanner4.txt"))
+#define FILE5 (string(PROJECT_SOURCE_DIR) + string("/test/scanner5.txt"))
+#define FILE6 (string(PROJECT_SOURCE_DIR) + string("/test/scanner6.txt"))
+#define FILE7 (string(PROJECT_SOURCE_DIR) + string("/test/scanner7.txt"))
+#define FILE8 (string(PROJECT_SOURCE_DIR) + string("/test/scanner8.txt"))
+#define FILE9 (string(PROJECT_SOURCE_DIR) + string("/test/scanner9.txt"))
 
-#define FILE0 "../test/scanner0.txt"
-#define FILE1 "../test/scanner1.txt"
-#define FILE2 "../test/scanner2.txt"
-#define FILE3 "../test/scanner3.txt"
-#define FILE4 "../test/scanner4.txt"
-#define FILE5 "../test/scanner5.txt"
-#define FILE6 "../test/scanner6.txt"
-#define FILE7 "../test/scanner7.txt"
-#define FILE8 "../test/scanner8.txt"
-#define FILE9 "../test/scanner9.txt"
-
-TEST_CASE("getChar", TEST_TAG) {
-    REQUIRE(TEST_getChar(FILE0));
-    REQUIRE(TEST_getChar(FILE1));
-    REQUIRE(TEST_getChar(FILE2));
-    REQUIRE(TEST_getChar(FILE3));
-    REQUIRE(TEST_getChar(FILE4));
-    REQUIRE(TEST_getChar(FILE5));
-    REQUIRE(TEST_getChar(FILE6));
-    REQUIRE(TEST_getChar(FILE7));
-    REQUIRE(TEST_getChar(FILE8));
-    REQUIRE(TEST_getChar(FILE9));
+TEST(buffer, getChar) {
+    EXPECT_TRUE(TEST_getChar(FILE0.c_str()));
+    EXPECT_TRUE(TEST_getChar(FILE1.c_str()));
+    EXPECT_TRUE(TEST_getChar(FILE2.c_str()));
+    EXPECT_TRUE(TEST_getChar(FILE3.c_str()));
+    EXPECT_TRUE(TEST_getChar(FILE4.c_str()));
+    EXPECT_TRUE(TEST_getChar(FILE5.c_str()));
+    EXPECT_TRUE(TEST_getChar(FILE6.c_str()));
+    EXPECT_TRUE(TEST_getChar(FILE7.c_str()));
+    EXPECT_TRUE(TEST_getChar(FILE8.c_str()));
+    EXPECT_TRUE(TEST_getChar(FILE9.c_str()));
 }
 
-TEST_CASE("ungetChar", TEST_TAG) {
-    REQUIRE(TEST_ungetChar(FILE0));
-    REQUIRE(TEST_ungetChar(FILE1));
-    REQUIRE(TEST_ungetChar(FILE2));
-    REQUIRE(TEST_ungetChar(FILE3));
-    REQUIRE(TEST_ungetChar(FILE4));
-    REQUIRE(TEST_ungetChar(FILE5));
-    REQUIRE(TEST_ungetChar(FILE6));
-    REQUIRE(TEST_ungetChar(FILE7));
-    REQUIRE(TEST_ungetChar(FILE8));
-    REQUIRE(TEST_ungetChar(FILE9));
+TEST(buffer, ungetChar) {
+    EXPECT_TRUE(TEST_ungetChar(FILE0.c_str()));
+    EXPECT_TRUE(TEST_ungetChar(FILE1.c_str()));
+    EXPECT_TRUE(TEST_ungetChar(FILE2.c_str()));
+    EXPECT_TRUE(TEST_ungetChar(FILE3.c_str()));
+    EXPECT_TRUE(TEST_ungetChar(FILE4.c_str()));
+    EXPECT_TRUE(TEST_ungetChar(FILE5.c_str()));
+    EXPECT_TRUE(TEST_ungetChar(FILE6.c_str()));
+    EXPECT_TRUE(TEST_ungetChar(FILE7.c_str()));
+    EXPECT_TRUE(TEST_ungetChar(FILE8.c_str()));
+    EXPECT_TRUE(TEST_ungetChar(FILE9.c_str()));
 }
 
-TEST_CASE("constructor", TEST_TAG) {
-    SECTION("on stack") {
-        Buffer buffer = Buffer(FILE0);
-        REQUIRE(buffer.getFileLength() > 0);
-        REQUIRE_FALSE(buffer.isEnd());
-    }
-    SECTION("on heap") {
-        Buffer* buffer = new Buffer(FILE0);
-        REQUIRE(buffer->getFileLength() > 0);
-        REQUIRE_FALSE(buffer->isEnd());
-    }
+TEST(buffer, constructor) {
+    // on stack") {
+    Buffer buffer = Buffer(FILE0.c_str());
+    EXPECT_TRUE(buffer.getFileLength() > 0);
+    EXPECT_FALSE(buffer.isEnd());
+
+    // on heap") {
+    Buffer *buffer2 = new Buffer(FILE0.c_str());
+    EXPECT_TRUE(buffer2->getFileLength() > 0);
+    EXPECT_FALSE(buffer2->isEnd());
+
 }
 
-bool TEST_getChar(const char *filename) {
+bool TEST_getChar(const char* filename) {
     // Initialize Buffer 1
     Buffer bufferIntern = Buffer(filename);
 
     // Initialize Buffer 2
-    ifstream* bufferExtern = new ifstream();
+    ifstream *bufferExtern = new ifstream();
     bufferExtern->open(filename);
 
     int length = bufferIntern.getFileLength();
     int lengthExtern = Buffer::getFileLength(bufferExtern);
 
-    if(length != lengthExtern) {
+    if (length != lengthExtern) {
         printf("Unexpected Error: Buffers have unequal lengths");
         return false;
     }
@@ -125,7 +118,7 @@ bool TEST_ungetChar(const char *filename) {
     }
 
     // Compare both buffers
-    for (int i = length-1; i >= 0; i--) {
+    for (int i = length - 1; i >= 0; i--) {
         char newUngetChar = buffer.ungetChar(1);
         buffer.ungetChar(0);
         printf("%d: %c vs %c\n", i, bufferOutput[i], newUngetChar);
@@ -136,7 +129,7 @@ bool TEST_ungetChar(const char *filename) {
     }
 
     // Compare until half
-    for (int i = 0; i < length/2; i++) {
+    for (int i = 0; i < length / 2; i++) {
         buffer.ungetChar(0);
         char newGetChar = buffer.getChar();
 
@@ -148,7 +141,7 @@ bool TEST_ungetChar(const char *filename) {
     }
 
     // Compare back
-    for (int i = (length/2)-1; i >= 0; i--) {
+    for (int i = (length / 2) - 1; i >= 0; i--) {
         char newGetChar = buffer.ungetChar(1);
         buffer.ungetChar(0);
         printf("%d: %c vs %c\n", i, bufferOutput[i], newGetChar);
@@ -159,4 +152,3 @@ bool TEST_ungetChar(const char *filename) {
     }
     return true;
 }
-#pragma clang diagnostic pop

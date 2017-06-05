@@ -8,6 +8,9 @@
 add_library(ParserLib src/Parser.cpp src/ParseTree.cpp src/TokenSequence.cpp src/Errors.cpp)
 target_include_directories(ParserLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+
+include_directories(../gtest/include gtest)
+
 add_executable(ParserExe src/ParserExe.cpp)
 target_link_libraries(ParserExe LINK_PUBLIC
         ParserLib
@@ -25,5 +28,5 @@ target_link_libraries(ParserTest LINK_PUBLIC
         SymboltableLib
         BufferLib
         AutomatLib
-        CatchLib)
+        gtest gtest_main)
 target_compile_definitions(ParserTest PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")

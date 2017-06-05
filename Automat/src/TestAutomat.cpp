@@ -1,11 +1,6 @@
-#include <cstring>
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCUnusedMacroInspection"
 #include "../includes/Automat.h"
-#define CATCH_CONFIG_MAIN
-#include "../../CatchLib/includes/catch.hpp"
 #include "../../Parser/includes/ParseTree.h"
-
+#include "gtest/gtest.h"
 
 // NOTICE
 // following primitive methods are not tested since they
@@ -14,131 +9,132 @@
 // Syntax::getTokenTypeAsChar(int num);
 // Syntax::getState(int i, int j)
 
-TEST_CASE("SYNTAX.CPP TEST -> matches()", "[automat]") {
+TEST(automat, matches) {
     Syntax *syntax = new Syntax();
 
-    SECTION("When two strings are equal, they should match") {
-        REQUIRE(syntax->matches("\0", "\0"));
-        REQUIRE(syntax->matches("ag\0", "ag\0"));
-        REQUIRE(syntax->matches("ag", "ag"));
-        REQUIRE(syntax->matches("!@$#%@$^^#&^&*(^((){}\0", "!@$#%@$^^#&^&*(^((){}\0"));
-    }
-    SECTION("When two strings are not equal, they should not match") {
-        REQUIRE(!syntax->matches("a\0", "A\0"));
-        REQUIRE(!syntax->matches("if", "iF"));
-    }
+    // When two strings are equal, they should match
+    EXPECT_TRUE(syntax->matches("\0", "\0"));
+    EXPECT_TRUE(syntax->matches("ag\0", "ag\0"));
+    EXPECT_TRUE(syntax->matches("ag", "ag"));
+    EXPECT_TRUE(syntax->matches("!@$#%@$^^#&^&*(^((){}\0", "!@$#%@$^^#&^&*(^((){}\0"));
+
+    // When two strings are not equal, they should not match
+    EXPECT_FALSE(syntax->matches("a\0", "A\0"));
+    EXPECT_FALSE(syntax->matches("if", "iF"));
 }
 
-TEST_CASE("SYNTAX.CPP TEST -> ifKeyword()", "[automat]") {
+TEST(automat, ifKeyword) {
     Syntax *syntax = new Syntax();
 
-    SECTION("lower case keywords should be recognized") {
-        REQUIRE(syntax->ifKeyword("if"));
-        REQUIRE(syntax->ifKeyword("while"));
-    }
-    SECTION("upper case keywords should be recognized") {
-        REQUIRE(syntax->ifKeyword("IF"));
-        REQUIRE(syntax->ifKeyword("WHILE"));
-    }
-    SECTION("mixed case keywords should NOT be recognized") {
-        REQUIRE(syntax->ifKeyword("iF") == -1);
-        REQUIRE(syntax->ifKeyword("WHILe") == -1);
-    }
+    // lower case keywords should be recognized
+    EXPECT_TRUE(syntax->ifKeyword("if"));
+    EXPECT_TRUE(syntax->ifKeyword("while"));
+
+    // upper case keywords should be recognized
+    EXPECT_TRUE(syntax->ifKeyword("IF"));
+    EXPECT_TRUE(syntax->ifKeyword("WHILE"));
+
+    // mixed case keywords should NOT be recognized
+    EXPECT_TRUE(syntax->ifKeyword("iF") == -1);
+    EXPECT_TRUE(syntax->ifKeyword("WHILe") == -1);
+
 }
 
-TEST_CASE("SYNTAX.CPP TEST -> isPacked()", "[automat]") {
+TEST(automat, isPacked) {
     Syntax *syntax = new Syntax();
 
-    SECTION("Known symbols should be recognized") {
-        REQUIRE(syntax->isPacked('+'));
-        REQUIRE(syntax->isPacked('-'));
-        REQUIRE(syntax->isPacked('!'));
-        REQUIRE(syntax->isPacked(';'));
-        REQUIRE(syntax->isPacked('<'));
-        REQUIRE(syntax->isPacked('>'));
-        REQUIRE(syntax->isPacked('('));
-        REQUIRE(syntax->isPacked(')'));
-        REQUIRE(syntax->isPacked('{'));
-        REQUIRE(syntax->isPacked('}'));
-        REQUIRE(syntax->isPacked('['));
-        REQUIRE(syntax->isPacked(']'));
-    }
-    SECTION("Unknown symbols should not be recognized") {
-        REQUIRE(syntax->isPacked('&') == -1);
-        REQUIRE(syntax->isPacked(':') == -1);
-        REQUIRE(syntax->isPacked('=') == -1);
-    }
+    // Known symbols should be recognized
+    EXPECT_TRUE(syntax->isPacked('+'));
+    EXPECT_TRUE(syntax->isPacked('-'));
+    EXPECT_TRUE(syntax->isPacked('!'));
+    EXPECT_TRUE(syntax->isPacked(';'));
+    EXPECT_TRUE(syntax->isPacked('<'));
+    EXPECT_TRUE(syntax->isPacked('>'));
+    EXPECT_TRUE(syntax->isPacked('('));
+    EXPECT_TRUE(syntax->isPacked(')'));
+    EXPECT_TRUE(syntax->isPacked('{'));
+    EXPECT_TRUE(syntax->isPacked('}'));
+    EXPECT_TRUE(syntax->isPacked('['));
+    EXPECT_TRUE(syntax->isPacked(']'));
+
+    // Unknown symbols should not be recognized
+    EXPECT_TRUE(syntax->isPacked('&') == -1);
+    EXPECT_TRUE(syntax->isPacked(':') == -1);
+    EXPECT_TRUE(syntax->isPacked('=') == -1);
+
 }
 
 
-TEST_CASE("STACK.CPP TEST -> push(); trim(); get(); flush()", "[automat]") {
+TEST(automat, push_trim_get_flush) {
     Stack *stack = new Stack();
 
-    SECTION("empty") {
-        REQUIRE(!strcmp(stack->get(), ""));
+    // empty
+    EXPECT_FALSE(strcmp(stack->get(), ""));
 
-        stack->push('a');
-        stack->push('b');
-        stack->push('c');
+    stack->push('a');
+    stack->push('b');
+    stack->push('c');
 
-        SECTION("abc") {
-            REQUIRE(!strcmp(stack->get(), "abc"));
+    // abc
+    EXPECT_FALSE(strcmp(stack->get(), "abc"));
 
-            stack->trim(0);
-            REQUIRE(!strcmp(stack->get(), "abc"));
-            stack->trim(2);
-            REQUIRE(!strcmp(stack->get(), "a"));
-            stack->trim(1);
-            REQUIRE(!strcmp(stack->get(), ""));
-        }
+    stack->trim(0);
+    EXPECT_FALSE(strcmp(stack->get(), "abc"));
+    stack->trim(2);
+    EXPECT_FALSE(strcmp(stack->get(), "a"));
+    stack->trim(1);
+    EXPECT_FALSE(strcmp(stack->get(), ""));
 
-        SECTION("abc") {
-            REQUIRE(!strcmp(stack->get(), "abc"));
 
-            stack->flush();
-            REQUIRE(!strcmp(stack->get(), ""));
+    // abc
+    EXPECT_FALSE(strcmp(stack->get(), "abc"));
 
-        }
-    }
+    stack->flush();
+    EXPECT_FALSE(strcmp(stack->get(), ""));
+
 }
 
 
-
-TEST_CASE("AUTOMAT.CPP TEST -> read(char currentChar); reset()", "[automat]") {
+TEST(automat, read_reset) {
     Automat *automat = new Automat();
 
     automat->reset();
+
     automat->read('=');
     automat->read(':');
     int result1 = automat->read('x');
-    REQUIRE(result1 == 2);
+    EXPECT_EQ(result1, 2);
 
     // #2
     automat->reset();
+
     automat->read(':');
     automat->read('=');
     int result2 = automat->read('x');
-    REQUIRE(result2 == 1);
+    EXPECT_EQ(result2, 1);
 
     // #3
     automat->reset();
+
     automat->read('=');
     automat->read(':');
     automat->read('=');
     int result3 = automat->read('x');
-    REQUIRE(result3 == 1);
+    EXPECT_EQ(result3, 1);
 
     // #4
     automat->reset();
+
     int result4 = automat->read('x');
-    REQUIRE(result4 == 0);
+    EXPECT_EQ(result4, 0);
 }
 
-TEST_CASE("AUTOMAT.CPP TEST -> updatePos(char c); :getLine(); getColumn()", "[automat]") {
+TEST(automat, updatePos_getLine_getColumn) {
     Automat *automat = new Automat();
 
     // #1
     automat->reset();
+
     automat->read('\n');
     automat->read('\n');
     automat->read('\n');
@@ -146,8 +142,6 @@ TEST_CASE("AUTOMAT.CPP TEST -> updatePos(char c); :getLine(); getColumn()", "[au
     automat->read('!');
     int line1 = automat->getLine();
     int col1 = automat->getColumn();
-    REQUIRE(line1 == 3);
-    REQUIRE(col1 == 2);
+    EXPECT_EQ(line1, 3);
+    EXPECT_EQ(col1, 2);
 }
-
-#pragma clang diagnostic pop
