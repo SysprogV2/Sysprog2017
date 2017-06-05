@@ -6,13 +6,6 @@
  */
 #include <iostream>
 #include "../includes/Stack.h"
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include "../../Compatibility/compab.h"
 
 Stack::Stack() {
 	stackHead = 0;

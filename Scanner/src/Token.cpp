@@ -32,7 +32,7 @@ int StringUtil::calcLength (char* string) {
 
 char* StringUtil::format(char *fmt, ...) {
 	va_list args;
-	char buf[1000];
+	char* buf = new char[1000]; // TODO: potential memory leak!
 	va_start(args, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, args );
 	va_end(args);
@@ -42,57 +42,57 @@ char* StringUtil::format(char *fmt, ...) {
 char* Token::nameOf(int tokenType) {
 	switch (tokenType) {
 	case 1:
-		return "identifier";
+		return (char *) "identifier";
 	case 2:
-		return "integer";
+		return (char *) "integer";
 	case 3:
 	case 4:
 	case 6:
 	case 7:
 	case 9:
-		return "comparision";
+		return (char *) "comparision";
 	case 5:
-		return "division";
+		return (char *) "division";
 	case 10:
-		return "assignment";
+		return (char *) "assignment";
 	case 13:
-		return "multiplication";
+		return (char *) "multiplication";
 	case 19:
-		return "addition";
+		return (char *) "addition";
 	case 20:
-		return "negative signum or substraction";
+		return (char *) "negative signum or substraction";
 	case 21:
-		return "boolean negator";
+		return (char *) "boolean negator";
 	case 22:
-		return "\"and\" mask";
+		return (char *) "\"and\" mask";
 	case 23:
-		return "semicolon";
+		return (char *) "semicolon";
 	case 24:
-		return "opening paranthesis (\"(\")";
+		return (char *) "opening paranthesis (\"(\")";
 	case 25:
-		return "closing paranthesis (\")\")";
+		return (char *) "closing paranthesis (\")\")";
 	case 26:
-		return "opening brace (\"{\")";
+		return (char *) "opening brace (\"{\")";
 	case 27:
-		return "closing brace (\"}\")";
+		return (char *) "closing brace (\"}\")";
 	case 28:
-		return "opening bracket (\"[\")";
+		return (char *) "opening bracket (\"[\")";
 	case 29:
-		return "closing bracket (\"]\")";
+		return (char *) "closing bracket (\"]\")";
 	case 30:
-		return "keyword \"if\"";
+		return (char *) "keyword \"if\"";
 	case 31:
-		return "keyword \"while\"";
+		return (char *) "keyword \"while\"";
 	case 32:
-		return "keyword \"int\"";
+		return (char *) "keyword \"int\"";
 	case 33:
-		return "keyword \"write\"";
+		return (char *) "keyword \"write\"";
 	case 34:
-		return "keyword \"else\"";
+		return (char *) "keyword \"else\"";
 	case 35:
-		return "keyword \"read\"";
+		return (char *) "keyword \"read\"";
 	default:
-		return StringUtil::format("unidentifiable token (%d)", tokenType);
+		return StringUtil::format((char *) "unidentifiable token (%d)", tokenType);
 	}
 }
 

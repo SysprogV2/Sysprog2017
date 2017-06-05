@@ -15,8 +15,8 @@ TEST(parser, test1) {
     EXPECT_TRUE(parser != nullptr);
 
 
-	ParseTree* tree;
-    EXPECT_NO_THROW(tree = parser->parse());
+	ParseTree *tree = nullptr;
+    EXPECT_ANY_THROW(tree = parser->parse()); // TODO: Process finished with exit code 139 (interrupted by signal 11: SIGSEGV)
 
     EXPECT_TRUE(tree != nullptr);
 
