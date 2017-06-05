@@ -10,10 +10,10 @@
 #define CONV_ERR_OVERFLOW "error: given integer is too big to be converted to LONG INT"
 // TODO: use somewhere
 
-Scanner::Scanner(char *filename): Scanner(filename, new Symboltable()) {
+Scanner::Scanner(const char *filename): Scanner(filename, new Symboltable()) {
 }
 
-Scanner::Scanner(char *filename, Symboltable* st) {
+Scanner::Scanner(const char *filename, Symboltable *st) {
 	stab = st;
 	buffer = new Buffer(filename);
 	automat = new Automat();
