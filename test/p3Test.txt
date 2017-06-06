@@ -14,12 +14,12 @@ int tmp;
 
 :* 676 *:
 read(n);
-a = n;
-w = a;
-a = (w + (n:w)):2;
+a := n;
+w := a;
+a := (w + (n:w)):2;
 while(a < w){
-w = a;
-a = (w + (n:w)):2;
+w := a;
+a := (w + (n:w)):2;
 };
 write(w);
 write(26);
@@ -30,11 +30,11 @@ write(26);
 :*679*:
 read(m);
 
-y = m : int 2;
-i = 20;
+y := m : int 2;
+i := 20;
 while (0 < i){
-  y = (y + (m:y)): int 2;
-  i = i - 1;
+  y := (y + (m:y)): int 2;
+  i := i - 1;
 };
 write(y);
 write(y*y);
@@ -49,38 +49,38 @@ read(n);
 read(a);
 
 
-x = 1;
-tmp = 0;
+x := 1;
+tmp := 0;
 
 while ( tmp  < x ) {
 
- :* tmp = a : x^(n-1) *:
- tmp = a;
- i = 1;
+ :* tmp := a : x^(n-1) *:
+ tmp := a;
+ i := 1;
  while (i < n) {
-  tmp = tmp : x;
-  i = i +1;
+  tmp := tmp : x;
+  i := i +1;
  };
  
-x = (((n - 1)*x) + tmp):n;
+x := (((n - 1)*x) + tmp):n;
  
  
- i = 2;
- tmp = a : x;
- while((i < n) & (x < tmp)){
-  i = i +1;
-  tmp = tmp : x;
+ i := 2;
+ tmp := a : x;
+ while((i < n) && (x < tmp)){
+  i := i +1;
+  tmp := tmp : x;
  }; 
   
 };
 
 write (x);
 write (13);
-tmp = x;
-i = 1;
+tmp := x;
+i := 1;
 while (i < n){
- tmp = tmp * x;
- i = i +1;
+ tmp := tmp * x;
+ i := i +1;
  };
 write (tmp);
 :* *:
@@ -90,73 +90,73 @@ write (tmp);
 :*62748517*:
 read(a);
 
-n = 2;
+n := 2;
  
-x = 1;
-tmp = 0;
+x := 1;
+tmp := 0;
 
 while ( tmp  < x ) {
 
- :* tmp = a : x^(n-1) *:
- tmp = a;
- i = 1;
+ :* tmp := a : x^(n-1) *:
+ tmp := a;
+ i := 1;
  while (i < n) {
-  tmp = tmp : x;
-  i = i +1;
+  tmp := tmp : x;
+  i := i +1;
  };
  
-x = (((n - 1)*x) + tmp):n;
+x := (((n - 1)*x) + tmp):n;
  
  
- i = 2;
- tmp = a : x;
- while((i < n) & (x < tmp)){
-  i = i +1;
-  tmp = tmp : x;
+ i := 2;
+ tmp := a : x;
+ while((i < n) && (x < tmp)){
+  i := i +1;
+  tmp := tmp : x;
  }; 
   
 };
 
-tmp = x;
-i = 1;
+tmp := x;
+i := 1;
 while (i < n){
- tmp = tmp * x;
- i = i +1;
+ tmp := tmp * x;
+ i := i +1;
  };
 
 while ((!(tmp = a)) & n < x){
 
-  n = n+1;   
-  x = 1;
-  tmp = 0;
+  n := n+1;
+  x := 1;
+  tmp := 0;
 
   while ( tmp  < x ) {
 
    :* tmp = a : x^(n-1) *:
-   tmp = a;
-   i = 1;
+   tmp := a;
+   i := 1;
    while (i < n) {
-    tmp = tmp : x;
-    i = i +1;
+    tmp := tmp : x;
+    i := i +1;
    };
  
-   x = (((n - 1)*x) + tmp):n;
+   x := (((n - 1)*x) + tmp):n;
  
  
-   i = 2;
-   tmp = a : x;
-   while((i < n) & (x < tmp)){
-    i = i +1;
-    tmp = tmp : x;
+   i := 2;
+   tmp := a : x;
+   while((i < n) && (x < tmp)){
+    i := i +1;
+    tmp := tmp : x;
    }; 
   
   };
 
- tmp = x;
- i = 1;
+ tmp := x;
+ i := 1;
  while (i < n){
-  tmp = tmp * x;
-  i = i +1;
+  tmp := tmp * x;
+  i := i +1;
  };
 
 } ;

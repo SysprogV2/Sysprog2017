@@ -24,14 +24,14 @@ int u;
 read(a);
 :* 335 *:
 read(b);
-if (a < 0) a = -a else{};
-if (b < 0) b = -b else{};
+if (a < 0) a := -a else{};
+if (b < 0) b := -b else{};
 
 while ( 0 < b ){
- d = a : b;
- c = a - (d * b); :* c = a mod b *:
- a = b;
- b = c;
+ d := a : b;
+ c := a - (d * b); :* c = a mod b *:
+ a := b;
+ b := c;
  };
  write (a);
  write (5);
@@ -44,46 +44,46 @@ while ( 0 < b ){
 :* 1045 *:
 read(a);
 if (a < 0) {
-   a = -a;
+   a := -a;
    write(a);
 }else{};
 
 :* 335 *:
 read(b);
 if (b < 0) {
-   b = -b;
+   b := -b;
    write(b);
 }else{};
 
-r0 = a;
-r1 = b;
-p0 = 0;
-p1 = 1;
-q0 = 1;
-q1 = 0;
+r0 := a;
+r1 := b;
+p0 := 0;
+p1 := 1;
+q0 := 1;
+q1 := 0;
 
-while ( (0 < r0) & (0 < r1) ){
-  u = r0 : r1;
-  r0 = r0 - (u * r1); :* r0 = r0 mod r1 *:
-  p0 = (u * p1) + p0;
-  q0 = (u * q1) + q0;
+while ( (0 < r0) && (0 < r1) ){
+  u := r0 : r1;
+  r0 := r0 - (u * r1); :* r0 = r0 mod r1 *:
+  p0 := (u * p1) + p0;
+  q0 := (u * q1) + q0;
 
   if ( 0 < r0 ) {
-     u = r1 : r0;
-     r1 = r1 - (u * r0); :* r0 = r0 mod r1 *:
-     p1 = (u * p0) + p1;
-     q1 = (u * q0) + q1;
+     u := r1 : r0;
+     r1 := r1 - (u * r0); :* r0 = r0 mod r1 *:
+     p1 := (u * p0) + p1;
+     q1 := (u * q0) + q1;
      } else {};
 };
 
 if (r0 = 0){
-  ggt = r1;
-  x = -q1;
-  y = p1;
+  ggt := r1;
+  x := -q1;
+  y := p1;
 } else {
-  ggt = r0;
-  x = q0;
-  y = -p0;
+  ggt := r0;
+  x := q0;
+  y := -p0;
 };
 
 

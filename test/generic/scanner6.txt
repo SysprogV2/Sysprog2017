@@ -1,4 +1,4 @@
-123.A xxx
+123.A xxx :* Parser-Fehler *:
 richtig 123 . A xxx
 xxxxxxxxfertigxxxxxxxxxxx
 

@@ -1,4 +1,4 @@
-aaa234
+aaa234 :* Parser-Fehler *:
 
 korrekt
 ein Identifier aaa234
@@ -12,7 +12,7 @@ ein Integer 1234 und ein Identifier bbb
 
 xxxxxx
 
-ccc1234.123
+ccc1234.123 :* Scanner-Fehler *:
 
 korrekt
 ein Identifier ccc1234
