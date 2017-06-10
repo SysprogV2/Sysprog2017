@@ -1,43 +1,25 @@
-/*
- * TestParser.cpp
- *
- *  Created on: Jan 22, 2016
- *      Author: arty
- */
 #include "../includes/Parser.h"
-typedef unsigned long long timestamp_t;
-static timestamp_t
-get_timestamp ()
-{
-   struct timeval now;
-   gettimeofday (&now, NULL);
-   return  now.tv_usec + (timestamp_t)now.tv_sec * 1000000;
+#include "gtest/gtest.h"
+
+#define FILE0 string(PROJECT_SOURCE_DIR "/test/parser0.txt")
+
+inline bool file_exists (const std::string& name) {
+    ifstream f(name.c_str());
+    return f.good();
 }
 
-int TEST(int argc, char* argv[]) {
-	std::cout << "Compiler running now (TestParser)\n";
-	timestamp_t t0 = get_timestamp();
+TEST(parser, test1) {
+    EXPECT_TRUE(file_exists(FILE0));
 
-	if (argc < 2) return EXIT_FAILURE;
+	Parser* parser = new Parser(FILE0.c_str());
+    EXPECT_TRUE(parser != nullptr);
 
-	/* unlike previous version, this is self-made,
-	 * but the test should run correctly
-	 */
-	Parser* parser = new Parser(argv[1]);
-	ParseTree* tree = parser->parse();
-	if (!tree->typeCheck()) {
-		return EXIT_FAILURE;
-	}
-	tree->makeCode();
-	std::cout << "Time: " << (get_timestamp() - t0) / 1000000.0L << "secs"  << std::endl;
-	return EXIT_SUCCESS;
-}
 
-int main(int argc, char* argv[]) {
-	switch(TEST(argc, argv)) {
-		case EXIT_SUCCESS:
-			cout << "SUCCESS" << endl;
-		default:
-			cout << "FAIL" << endl;
-	}
+	ParseTree *tree = nullptr;
+    EXPECT_ANY_THROW(tree = parser->parse()); // TODO: Process finished with exit code 139 (interrupted by signal 11: SIGSEGV)
+
+    EXPECT_TRUE(tree != nullptr);
+
+	EXPECT_TRUE(tree->typeCheck());
+	EXPECT_NO_THROW(tree->makeCode());
 }

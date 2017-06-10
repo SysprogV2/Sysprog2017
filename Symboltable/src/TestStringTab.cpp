@@ -1,48 +1,53 @@
 #include "../includes/StringTab.h"
-#include <iostream>
-int main(int argc, char **argv) {
-	StringTab * st = new StringTab();
-	char * c1 = "reallyreal";
-	int c1len = 10;
-	char * c2 = "a";
-	int c2len = 1;
-	char * c3 = "b";
-	int c3len = 1;
-	char * c4 = "c";
-	int c4len = 1;
-	char * c5 = "d";
-	int c5len = 1;
-	char * c6 = "mio moi mio";
-	int c6len = 11;
-	char * c7 = "RACINGTEAM";
-	int c7len = 10;
-	char * c8 = "trytohandleths";
-	int c8len = 14;
-	char * c9 = "not impressed at all";
-	int c9len = 20;
-	char * c10 = "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallyString";
-	int c10len = 67;
+#include "gtest/gtest.h"
 
+char *testInsert(StringTab *stringTab, char *input);
 
-	char *s1 = st->insert(c1, c1len);
-	char *s2 = st->insert(c2, c2len);
-	char *s3 = st->insert(c3, c3len);
-	char *s4 = st->insert(c4, c4len);
-	char *s5 = st->insert(c5, c5len);
-	char *s6 = st->insert(c6, c6len);
-	char *s7 = st->insert(c7, c7len);
-	char *s8 = st->insert(c8, c8len);
-	char *s9 = st->insert(c9, c9len);
-	char *s10 = st->insert(c10, c10len);
+TEST(stringtable, insert1) {
+    StringTab *stringTab = new StringTab();
+    EXPECT_TRUE(stringTab != nullptr);
 
-	std::cout << s1 << std::endl;
-	std::cout << s2 << std::endl;
-	std::cout << s3 << std::endl;
-	std::cout << s4 << std::endl;
-	std::cout << s5 << std::endl;
-	std::cout << s6 << std::endl;
-	std::cout << s7 << std::endl;
-	std::cout << s8 << std::endl;
-	std::cout << s9 << std::endl;
-	std::cout << s10<< std::endl;
+    EXPECT_TRUE(testInsert(stringTab, "reallyreal") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "a") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "b") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "c") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "d") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "mio moi mio") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "RACINGTEAM") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "trytohandleths") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "not impressed at all") != nullptr);
+    EXPECT_TRUE(testInsert(stringTab, "reallyreallyreallyreallyreallyreallyreallyreallyreallyreallyString") != nullptr);
+}
+
+// TODO: StringTab Test here? Better move to TestStringTab
+TEST(stringtable, insert2) {
+    // setup
+    StringTab * st = new StringTab();
+
+    const char *charPtr1 = "a";
+    int charPtrLen1 = 10;
+    const char *charPtr2 = "veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstring";
+    int charPtrLen2 = 114;
+    const char *charPtr3 = "veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstringveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongstring";
+    int charPtrLen3 = 570;
+
+    // #1
+    char *entry1 = st->insert(charPtr1, charPtrLen1);
+    EXPECT_TRUE(charPtr1 != entry1);
+    EXPECT_FALSE(strcmp(charPtr1, entry1) );
+
+    // #2
+    char *entry2 = st->insert(charPtr2, charPtrLen2);
+    EXPECT_TRUE(charPtr2 != entry2);
+    EXPECT_FALSE(strcmp(charPtr2, entry2) );
+
+    // #3
+    char *entry3 = st->insert(charPtr3, charPtrLen3);
+    EXPECT_TRUE(charPtr3 != entry3);
+    EXPECT_FALSE(strcmp(charPtr3, entry3) );
+}
+
+char *testInsert(StringTab *stringTab, char *input) {
+    std::string copy = input;
+    return stringTab->insert(copy.c_str(), (int) copy.length());
 }

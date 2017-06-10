@@ -44,11 +44,11 @@ void TokenTypeRegistry::uniteWith(TokenTypeRegistry* other) {
 }
 
 char* TokenTypeRegistry::allSetTokenNames() {
-	char* names = "";
+	char *names = (char *) "";
 	for (int i = 0; i < this->size; i++) {
 		if (this->tokenTypes[i]) {
 			if (names != "") {
-				names = StringUtil::concat(names, ", ");
+				names = StringUtil::concat(names, (char *) ", ");
 			}
 			names = StringUtil::concat(names, Token::nameOf(i));
 		}

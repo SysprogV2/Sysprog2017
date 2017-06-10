@@ -29,13 +29,13 @@ public:
      * Creates a code{Scanner} over the given file, with newly created code{Symboltable}.
      * @param filename the file to scan
      */
-	Scanner(char *filename);
+	Scanner(const char *filename);
     /**
      * Creates a code{Scanner} over the given file, with the given code{Symboltable}.
      * @param filename  the file to scan
      * @param st the code{Symboltable} to use
      */
-	Scanner(char *filename, Symboltable* st);
+	Scanner(const char *filename, Symboltable *st);
     /**
      * Calculates what type a code{Token} with the given lexem under the given state would have.
      * @return the type the code{Token} will have according to the calculation

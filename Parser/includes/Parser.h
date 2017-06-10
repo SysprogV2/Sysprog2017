@@ -16,7 +16,7 @@ class Parser {
 private:
 	Scanner* scanner;
 public:
-	Parser(char* filename);
+	Parser(const char *filename);
 	/**
 	 * Parses the file it was constructed with.
 	 * @return the code{ParseTree} that resulted from parsing the file

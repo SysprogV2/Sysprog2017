@@ -13,7 +13,7 @@ void throwError(ErrorType type) {
 	throw errorString;
 }
 
-char* errorTypeToString(ErrorType type) {
+const char* errorTypeToString(ErrorType type) {
 	switch(type) {
 	case PROHIBITED_TOKEN:
 		return "Token is not defined by the standard";
@@ -22,4 +22,6 @@ char* errorTypeToString(ErrorType type) {
 	case NON_MATCHING_TYPES:
 		return "Cannot convert from int[] to int";
 	}
+
+	return "Unknown error";
 }
