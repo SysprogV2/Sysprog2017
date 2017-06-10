@@ -11,6 +11,9 @@ target_include_directories(AutomatLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(../gtest/include gtest)
 
 add_executable(AutomatTest src/TestAutomat.cpp)
-target_link_libraries(AutomatTest LINK_PUBLIC AutomatLib gtest gtest_main)
-
+target_link_libraries(AutomatTest LINK_PUBLIC 
+	CompabLib
+	AutomatLib 
+	gtest 
+	gtest_main)
 target_compile_definitions(AutomatTest PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")

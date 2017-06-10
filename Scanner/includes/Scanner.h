@@ -14,7 +14,7 @@
 #include "../../Symboltable/includes/Symboltable.h"
 #include "../../Scanner/includes/Token.h"
 #include "../../Automat/includes/Syntax.h"
-#include "../../Compatibility/compab.h"
+#include "../../Compab/includes/compab.hpp"
 #include "TokenTypeRegistry.h"
 
 class Scanner {

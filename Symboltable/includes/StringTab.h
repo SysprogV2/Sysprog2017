@@ -15,7 +15,7 @@
 #include <stdlib.h> // throw()
 #include <errno.h>  // errors' list
 #include <string.h> // memcpy()
-#include "../../Compatibility/compab.h"
+#include "../../Compab/includes/compab.hpp"
 
 class StringTab {
 	char *string;

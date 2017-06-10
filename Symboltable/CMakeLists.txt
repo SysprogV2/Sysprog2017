@@ -13,8 +13,17 @@ include_directories(../gtest/include gtest)
 add_executable(SymboltableTest src/TestSymboltable.cpp)
 add_executable(StringtableTest src/TestStringTab.cpp)
 
-target_link_libraries(SymboltableTest LINK_PUBLIC SymboltableLib ScannerLib gtest gtest_main)
-target_link_libraries(StringtableTest LINK_PUBLIC SymboltableLib gtest gtest_main)
+target_link_libraries(SymboltableTest LINK_PUBLIC 
+	CompabLib
+	SymboltableLib 
+	ScannerLib 
+	gtest 
+	gtest_main)
+target_link_libraries(StringtableTest LINK_PUBLIC 
+	CompabLib
+	SymboltableLib 
+	gtest 
+	gtest_main)
 
 target_compile_definitions(SymboltableTest PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 target_compile_definitions(StringtableTest PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")

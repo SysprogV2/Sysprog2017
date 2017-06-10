@@ -11,8 +11,20 @@ target_include_directories(ScannerLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(../gtest/include gtest)
 
 add_executable(ScannerTest src/TestScanner.cpp)
-target_link_libraries(ScannerTest LINK_PUBLIC ScannerLib AutomatLib BufferLib SymboltableLib gtest gtest_main)
+target_link_libraries(ScannerTest LINK_PUBLIC 
+	CompabLib
+	ScannerLib 
+	AutomatLib 
+	BufferLib 
+	SymboltableLib 
+	gtest 
+	gtest_main)
 target_compile_definitions(ScannerTest PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 
 add_executable(ScannerExe src/ScannerExe.cpp)
-target_link_libraries(ScannerExe LINK_PUBLIC ScannerLib AutomatLib BufferLib SymboltableLib)
+target_link_libraries(ScannerExe LINK_PUBLIC 
+	CompabLib
+	ScannerLib 
+	AutomatLib 
+	BufferLib 
+	SymboltableLib)

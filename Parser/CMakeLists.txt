@@ -13,15 +13,18 @@ include_directories(../gtest/include gtest)
 
 add_executable(ParserExe src/ParserExe.cpp)
 target_link_libraries(ParserExe LINK_PUBLIC
+        CompabLib
         ParserLib
         ScannerLib
         SymboltableLib
         BufferLib
-        AutomatLib)
+        AutomatLib
+        )
 
 
 add_executable(ParserTest src/TestParser.cpp)
 target_link_libraries(ParserTest LINK_PUBLIC
+        CompabLib
         ParserLib
         ScannerLib
         SymboltableLib

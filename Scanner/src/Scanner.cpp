@@ -51,7 +51,7 @@ Token *Scanner::nextToken() {
 
 	/* run automat and feed it char by char, till any lexem is found */
 	if (buffer->isEnd()) {
-		return nullptr;
+		return new Token(11, automat->getLine(), automat->getColumn());
 	}
 
 	do {
@@ -96,7 +96,7 @@ Token *Scanner::nextToken() {
 
 	/* if we need to finish already*/
 	if (currentChar == '\0') {
-		return nullptr;
+		return new Token(11, line, col);
 	} else {
         // free cached Token (if existant) unless it's stored in the tree
 		if (this->cToken != nullptr && !this->idenInt->isSet(this->cToken)) {

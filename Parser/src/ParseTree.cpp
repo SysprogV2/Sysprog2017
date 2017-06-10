@@ -319,8 +319,10 @@ ProgOnly::ProgOnly(Scanner* scanner) { // reminder: PROG ::= DECLS STATEMENTS
 	} else if (compare2->isSet(scanner->currentToken())) {
 		this->declarationSegment = new DeclsEps(scanner);
 	} else {
+		Token* currentToken = scanner->currentToken();
 		std::cerr << "error line " << scanner->currentToken()->getLine() << " column " << scanner->currentToken()->getColumn() << ": unexpected token, any of " << Decls::first()->allSetTokenNames() << " expected, " << Token::nameOf(scanner->currentToken()->getType()) << " found";
-		throw(1);
+
+		throw(1); // TODO: why throwing here?
 	}
 	delete compare1;
 	delete compare2;

@@ -11,6 +11,7 @@
 #define MAX_TOKEN_SIZE 4095
 #define STACK_OVERFLOW_ERR "Error: stack can't handle such a long word (>4095). Only the last N characters will be saved"
 #define MEM_ALLOC_ERR "Couldn't allocate memory for stack. Exiting..."
+#define EXIT_FAILURE 1
 
 
 class Stack {

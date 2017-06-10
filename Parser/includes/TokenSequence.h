@@ -8,7 +8,7 @@
 #ifndef PARSER_INCLUDES_TOKENSEQUENCE_H_
 #define PARSER_INCLUDES_TOKENSEQUENCE_H_
 
-#include "../../Compatibility/compab.h"
+#include "../../Compab/includes/compab.hpp"
 #include "../../Scanner/includes/Token.h"
 #include <iostream>
 

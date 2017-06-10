@@ -1,0 +1,2 @@
+add_library(CompabLib INTERFACE)
+target_include_directories(CompabLib INTERFACE includes/)

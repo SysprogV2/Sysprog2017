@@ -28,7 +28,11 @@ void TokenTypeRegistry::toggle (Token* token) {
 }
 
 bool TokenTypeRegistry::isSet (Token* token) {
-	return this->tokenTypes[token->getType()];
+	if(token != nullptr) {
+		return this->tokenTypes[token->getType()];
+	} else {
+		return false;
+	}
 }
 
 void TokenTypeRegistry::intersectWith(TokenTypeRegistry* other) {
