@@ -5,7 +5,6 @@
 //#include <string.h> // TODO: DELETE THIS LATER!!! Prohibited library!
 #include <stdlib.h>  // for strtol()
 #include "Information.h"
-#include "../../Compab/includes/compab.hpp"
 
 #ifndef SIGN_ARRAY_SZ
 #define SIGN_ARRAY_SZ 14

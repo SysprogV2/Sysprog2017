@@ -12,7 +12,6 @@
 #include "StringTab.h"
 #include "SymtabEntry.h"
 #include "../../Scanner/includes/Information.h"
-#include "../../Compab/includes/compab.hpp"
 #include <iostream>
 
 #define TABLE_SIZE 1019 // prime number here! btw 2^x - 1 is always prime

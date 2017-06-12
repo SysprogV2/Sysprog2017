@@ -9,7 +9,6 @@
 #define SYMBOLTABLE_INCLUDES_SYMTABENTRY_H_
 
 #include "../../Scanner/includes/Information.h"
-#include "../../Compab/includes/compab.hpp"
 
 class SymtabEntry {
 	Information* information;
