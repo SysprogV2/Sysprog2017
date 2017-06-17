@@ -1,10 +1,7 @@
 *debug/
 */objs/
-*Test
 *.cbp
 *out.txt
-
-googletest-*
 
 # Created by https://www.gitignore.io/api/c,c++,eclipse,jetbrains,cmake
 

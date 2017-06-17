@@ -96,7 +96,7 @@ public:
 };
 
 /**
- * Represents the generic declaration segment, as defined by the DECLS spec.
+ * Represents the generiec declaration segment, as defined by the DECLS spec.
  */
 class Decls : public ParseTree {
 public:

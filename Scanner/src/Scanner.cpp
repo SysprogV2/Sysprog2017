@@ -51,7 +51,8 @@ Token *Scanner::nextToken() {
 
 	/* run automat and feed it char by char, till any lexem is found */
 	if (buffer->isEnd()) {
-		return new Token(11, automat->getLine(), automat->getColumn());
+		this->cToken = new Token(11, automat->getLine(), automat->getColumn());
+		return this->cToken;
 	}
 
 	do {
