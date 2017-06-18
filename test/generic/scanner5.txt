@@ -1,7 +1,7 @@
 dies ist ein :*Kommentar
 
 Kommentar*: 
-4 Zeile ok
+4 Zeile ok :* Parser-Fehler *:
 
 :*kjfksjf*jfjskfj*:
 test

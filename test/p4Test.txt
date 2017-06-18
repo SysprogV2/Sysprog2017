@@ -1,0 +1,45 @@
+int a;
+int b;
+int c;
+int d;
+int e;
+int t;
+
+a := 0;
+b := a + 5;
+c := b;
+d := 20;
+e := 100;
+b := -!!--!--!!-!-!!!---!-b;
+write(b);
+b := c;
+read(c);
+write(t);
+read(t);
+write(a+b+c);
+while(c) {
+ if(a) {
+  read(c);
+  a := !a;
+ }
+ else {
+  a := c - b;
+  b := a - b + c;
+  if (b) d := a * c;
+  else {};
+  e := d / (a + b - c);
+  write(d);
+  write(e);
+ };
+};
+write(a);
+while(d) {
+ a := !a;
+ t := a;
+ d := b > c;
+ e := d + a;
+ a := e =:= d;
+ write(a = t);
+ write(e);
+}
+write(42);
