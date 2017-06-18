@@ -11,10 +11,10 @@
 #define INITIAL_SIZE 16
 #define INITIAL_ALGN 4096
 
-#include <stdio.h>  // perror()
-#include <stdlib.h> // throw()
-#include <errno.h>  // errors' list
-#include <string.h> // memcpy()
+#include <cstdio>  // perror()
+#include <cstdlib> // throw()
+#include <cerrno>  // errors' list
+#include <cstring> // memcpy()
 #include "../../Compab/includes/compab.hpp"
 
 class StringTab {

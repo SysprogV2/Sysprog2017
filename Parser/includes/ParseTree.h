@@ -54,31 +54,41 @@ class ParseTree {
 protected:
 	CheckableType checkingType;
 public:
-	static Token* epsToken;
-	static Token* bracketsToken; // opening
-	static Token* minusToken;
-	static Token* integerToken;
-	static Token* identifierToken;
-	static Token* greaterToken;
-	static Token* notEqualsToken;
-    static Token* semicolonToken;
-    static Token* paranthesisToken; // closing
-	static Symboltable* typeTable;
+	static Token *epsToken;
+	static Token *bracketsToken; // opening
+	static Token *minusToken;
+	static Token *integerToken;
+	static Token *identifierToken;
+	static Token *greaterToken;
+	static Token *notEqualsToken;
+	static Token *semicolonToken;
+	static Token *paranthesisToken; // closing
+	static Symboltable *typeTable;
 	static std::ofstream codeOutput;
-	static LabelFactory* labelFactory;
-    static std::ofstream log;
+	static LabelFactory *labelFactory;
+	static std::ofstream log;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	static TokenTypeRegistry* first();
+
+	static TokenTypeRegistry *first();
+
 	static void prepareTreeOperations();
+
 	static void terminateTreeOperations();
+
 	static void cleanupStatic();
+
 	virtual ~ParseTree() = 0;
+
 	virtual bool typeCheck() = 0;
+
 	virtual void makeCode() = 0;
-	void setChecktype (CheckableType type);
+
+	void setChecktype(CheckableType type);
+
 	CheckableType getChecktype();
 
 };
@@ -92,7 +102,8 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	static TokenTypeRegistry* first();
+
+	static TokenTypeRegistry *first();
 };
 
 /**
@@ -100,12 +111,14 @@ public:
  */
 class Decls : public ParseTree {
 public:
-    /**
+	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-    static TokenTypeRegistry* first();
-    virtual bool isEps() = 0;
+
+	static TokenTypeRegistry *first();
+
+	virtual bool isEps() = 0;
 };
 
 /**
@@ -117,7 +130,8 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-    static TokenTypeRegistry* first();
+
+	static TokenTypeRegistry *first();
 };
 
 /**
@@ -129,7 +143,9 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	static TokenTypeRegistry* first();
+
+	static TokenTypeRegistry *first();
+
 	virtual bool isEps() = 0;
 };
 
@@ -142,7 +158,9 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	static TokenTypeRegistry* first();
+
+	static TokenTypeRegistry *first();
+
 	virtual bool isEps() = 0;
 };
 
@@ -155,7 +173,8 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	static TokenTypeRegistry* first();
+
+	static TokenTypeRegistry *first();
 };
 
 /**
@@ -167,7 +186,8 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	static TokenTypeRegistry* first();
+
+	static TokenTypeRegistry *first();
 };
 
 /**
@@ -179,7 +199,8 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	static TokenTypeRegistry* first();
+
+	static TokenTypeRegistry *first();
 };
 
 /**
@@ -191,7 +212,9 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	static TokenTypeRegistry* first();
+
+	static TokenTypeRegistry *first();
+
 	virtual bool isEps() = 0;
 };
 
@@ -204,7 +227,9 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	static TokenTypeRegistry* first();
+
+	static TokenTypeRegistry *first();
+
 	virtual bool isEps() = 0;
 };
 
@@ -217,7 +242,8 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	static TokenTypeRegistry* first();
+
+	static TokenTypeRegistry *first();
 };
 
 /**
@@ -225,17 +251,22 @@ public:
  */
 class ProgOnly : public Prog {
 private:
-	Decls* declarationSegment;
-	Statements* statementSegment;
+	Decls *declarationSegment;
+	Statements *statementSegment;
 public:
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit ProgOnly(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit ProgOnly(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~ProgOnly() override;
 
 };
@@ -245,18 +276,24 @@ public:
  */
 class DeclsSeq : public Decls {
 private:
-	Decl* firstDeclaration;
-	Decls* restOfDeclarations;
+	Decl *firstDeclaration;
+	Decls *restOfDeclarations;
 public:
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit DeclsSeq(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit DeclsSeq(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	bool isEps() override;
+
 	~DeclsSeq() override;
 
 };
@@ -270,11 +307,17 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit DeclsEps(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit DeclsEps(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	bool isEps() override;
+
 	~DeclsEps() override;
 
 };
@@ -284,19 +327,26 @@ public:
  */
 class DeclOnly : public Decl {
 private:
-	Array* size;
-	Token* identifier;
+	Array *size;
+	Token *identifier;
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit DeclOnly(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit DeclOnly(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~DeclOnly() override;
+
 	friend class ParseTree;
 };
 
@@ -305,19 +355,27 @@ public:
  */
 class ArrayIndex : public Array {
 private:
-	Token* integer;
+	Token *integer;
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit ArrayIndex(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit ArrayIndex(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	bool isEps() override;
+
 	~ArrayIndex() override;
+
 	friend class ParseTree;
 
 };
@@ -331,11 +389,17 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit ArrayEps(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit ArrayEps(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	bool isEps() override;
+
 	~ArrayEps() override;
 
 };
@@ -345,18 +409,24 @@ public:
  */
 class StatementsSeq : public Statements {
 private:
-	Statement* firstStatement;
-	Statements* restOfStatements;
+	Statement *firstStatement;
+	Statements *restOfStatements;
 public:
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit StatementsSeq(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit StatementsSeq(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	bool isEps() override;
+
 	~StatementsSeq() override;
 
 };
@@ -370,11 +440,17 @@ public:
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit StatementsEps(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit StatementsEps(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	bool isEps() override;
+
 	~StatementsEps() override;
 
 };
@@ -384,20 +460,27 @@ public:
  */
 class StatementSetValue : public Statement {
 private:
-	Token* identifier;
-	Index* index;
-	Exp* aimValue;
+	Token *identifier;
+	Index *index;
+	Exp *aimValue;
 public:
-	static Token* defaultIdentifier;
+	static Token *defaultIdentifier;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit StatementSetValue(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit StatementSetValue(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~StatementSetValue() override;
+
 	friend class ParseTree;
 
 };
@@ -407,18 +490,25 @@ public:
  */
 class StatementWrite : public Statement {
 private:
-	Exp* toPrint;
+	Exp *toPrint;
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit StatementWrite(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit StatementWrite(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~StatementWrite() override;
+
 	friend class ParseTree;
 
 };
@@ -428,19 +518,26 @@ public:
  */
 class StatementRead : public Statement {
 private:
-	Token* identifier;
-	Index* index;
+	Token *identifier;
+	Index *index;
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit StatementRead(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit StatementRead(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~StatementRead() override;
+
 	friend class ParseTree;
 
 };
@@ -450,18 +547,25 @@ public:
  */
 class StatementBlock : public Statement {
 private:
-	Statements* blockContent;
+	Statements *blockContent;
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit StatementBlock(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit StatementBlock(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~StatementBlock() override;
+
 	friend class ParseTree;
 
 };
@@ -471,20 +575,27 @@ public:
  */
 class StatementIfElse : public Statement {
 private:
-	Exp* condition;
-	Statement* thenCase;
-	Statement* elseCase;
+	Exp *condition;
+	Statement *thenCase;
+	Statement *elseCase;
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit StatementIfElse(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit StatementIfElse(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~StatementIfElse() override;
+
 	friend class ParseTree;
 
 };
@@ -494,19 +605,26 @@ public:
  */
 class StatementWhile : public Statement {
 private:
-	Exp* condition;
-	Statement* loop;
+	Exp *condition;
+	Statement *loop;
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit StatementWhile(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit StatementWhile(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~StatementWhile() override;
+
 	friend class ParseTree;
 
 };
@@ -516,17 +634,22 @@ public:
  */
 class ExpOnly : public Exp {
 private:
-	Exp2* rawExpression;
-	OpExp* calculateWith;
+	Exp2 *rawExpression;
+	OpExp *calculateWith;
 public:
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit ExpOnly(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit ExpOnly(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~ExpOnly() override;
 
 };
@@ -536,18 +659,25 @@ public:
  */
 class Exp2Nested : public Exp2 {
 private:
-	Exp* nestedExpression;
+	Exp *nestedExpression;
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit Exp2Nested(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit Exp2Nested(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~Exp2Nested() override;
+
 	friend class ParseTree;
 
 };
@@ -557,19 +687,26 @@ public:
  */
 class Exp2Variable : public Exp2 {
 private:
-	Token* identifier;
-	Index* index;
+	Token *identifier;
+	Index *index;
 public:
-	static Token* defaultIdentifier;
+	static Token *defaultIdentifier;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit Exp2Variable(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit Exp2Variable(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~Exp2Variable() override;
+
 	friend class ParseTree;
 
 };
@@ -579,19 +716,26 @@ public:
  */
 class Exp2Constant : public Exp2 {
 private:
-	Token* integer;
+	Token *integer;
 
 public:
-	static Token* defaultInteger;
+	static Token *defaultInteger;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit Exp2Constant(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit Exp2Constant(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~Exp2Constant() override;
+
 	friend class ParseTree;
 
 };
@@ -601,19 +745,26 @@ public:
  */
 class Exp2NumericNegation : public Exp2 {
 private:
-	Exp2* toNegate;
+	Exp2 *toNegate;
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit Exp2NumericNegation(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit Exp2NumericNegation(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~Exp2NumericNegation() override;
+
 	friend class ParseTree;
 
 };
@@ -623,19 +774,26 @@ public:
  */
 class Exp2LogicalNegation : public Exp2 {
 private:
-	Exp2* toNegate;
+	Exp2 *toNegate;
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit Exp2LogicalNegation(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit Exp2LogicalNegation(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~Exp2LogicalNegation() override;
+
 	friend class ParseTree;
 
 };
@@ -645,20 +803,28 @@ public:
  */
 class IndexPosition : public Index {
 private:
-	Exp* index;
+	Exp *index;
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit IndexPosition(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit IndexPosition(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	bool isEps() override;
+
 	~IndexPosition() override;
+
 	friend class ParseTree;
 
 };
@@ -668,19 +834,26 @@ public:
  */
 class IndexEps : public Index {
 private:
-    static Token* followingToken;
+	static Token *followingToken;
 public:
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit IndexEps(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit IndexEps(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	bool isEps() override;
+
 	~IndexEps() override;
-    friend class ParseTree;
+
+	friend class ParseTree;
 
 };
 
@@ -688,20 +861,28 @@ public:
  * Represents the rule `OP_EXP ::= OP EXP`, i.e. the existant combined expression.
  */
 class OpExpNext : public OpExp {
-	Op* Operator;
-	Exp* operand;
+	Op *Operator;
+	Exp *operand;
 public:
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit OpExpNext(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit OpExpNext(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	bool isEps() override;
+
 	bool isOperatorGreater();
+
 	bool isOperatorNotEquals();
+
 	~OpExpNext() override;
 
 };
@@ -711,19 +892,26 @@ public:
  */
 class OpExpEps : public OpExp {
 private:
-    static Token* followingToken;
+	static Token *followingToken;
 public:
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit OpExpEps(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit OpExpEps(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	bool isEps() override;
+
 	~OpExpEps() override;
-    friend class ParseTree;
+
+	friend class ParseTree;
 
 };
 
@@ -734,16 +922,23 @@ class OpPlus : public Op {
 private:
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit OpPlus(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit OpPlus(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~OpPlus() override;
+
 	friend class ParseTree;
 
 };
@@ -755,16 +950,23 @@ class OpMinus : public Op {
 private:
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit OpMinus(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit OpMinus(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~OpMinus() override;
+
 	friend class ParseTree;
 
 };
@@ -776,16 +978,23 @@ class OpMult : public Op {
 private:
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit OpMult(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit OpMult(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~OpMult() override;
+
 	friend class ParseTree;
 
 };
@@ -797,16 +1006,23 @@ class OpDiv : public Op {
 private:
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit OpDiv(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit OpDiv(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~OpDiv() override;
+
 	friend class ParseTree;
 
 };
@@ -818,16 +1034,23 @@ class OpLess : public Op {
 private:
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit OpLess(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit OpLess(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~OpLess() override;
+
 	friend class ParseTree;
 
 };
@@ -839,16 +1062,23 @@ class OpGreater : public Op {
 private:
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit OpGreater(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit OpGreater(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~OpGreater() override;
+
 	friend class ParseTree;
 
 };
@@ -859,16 +1089,23 @@ public:
 class OpEquals : public Op {
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit OpEquals(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit OpEquals(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~OpEquals() override;
+
 	friend class ParseTree;
 
 };
@@ -879,16 +1116,23 @@ public:
 class OpNotEquals : public Op {
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit OpNotEquals(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit OpNotEquals(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~OpNotEquals() override;
+
 	friend class ParseTree;
 
 };
@@ -899,16 +1143,23 @@ public:
 class OpAnd : public Op {
 
 public:
-	static Token* firstToken;
+	static Token *firstToken;
+
 	/**
 	 * Initializes static members of itself and related classes.
 	 */
 	static void initStatic();
-	explicit OpAnd(Scanner* scanner);
-	static TokenTypeRegistry* first();
+
+	explicit OpAnd(Scanner *scanner);
+
+	static TokenTypeRegistry *first();
+
 	bool typeCheck() override;
+
 	void makeCode() override;
+
 	~OpAnd() override;
+
 	friend class ParseTree;
 
 };

@@ -71,8 +71,8 @@ bool TEST_getChar(const char* filename) {
     }
 
     // Create 2 buffers and empty them
-    char *bufferOutputIntern = new char[length];
-    char *bufferOutputExtern = new char[length];
+    auto bufferOutputIntern = new char[length];
+    auto bufferOutputExtern = new char[length];
     for (int i = 0; i < length; i++) {
         bufferOutputExtern[i] = '\0';
         bufferOutputIntern[i] = '\0';
@@ -106,7 +106,7 @@ bool TEST_ungetChar(const char *filename) {
 
     int length = buffer.getFileLength();
 
-    char *bufferOutput = new char[length];
+    auto bufferOutput = new char[length];
     for (int i = 0; i < length; i++) {
         bufferOutput[i] = '\0';
     }

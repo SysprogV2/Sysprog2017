@@ -22,7 +22,7 @@ class Information {
 	CheckableType type;
 public:
 	Information();
-	Information(char* lexem);
+	explicit Information(char* lexem);
 	virtual ~Information();
 	void setLexem(char* lexem);
 	char* getLexem();

@@ -2,21 +2,21 @@
 #include "gtest/gtest.h"
 
 std::string* testfiles = new string[15] {
-		"/test/p0.txt",
-		"/test/p1Test.txt",
-		"/test/p2Test.txt",
-		"/test/p3Test.txt",
-		"/test/p4Test.txt",
-		"/test/p5Test.txt",
-		"/test/p6Test.txt",
-		"/test/p7Test.txt",
-		"/test/p8Test.txt",
-		"/test/parser0.txt",
-		"/test/parser1.txt",
-		"/test/parser2.txt",
-		"/test/parser3.txt",
-		"/test/parser4.txt",
-		"/test/parser5.txt"
+		string(PROJECT_SOURCE_DIR) + string("/test/p0.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/p1Test.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/p2Test.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/p3Test.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/p4Test.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/p5Test.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/p6Test.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/p7Test.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/p8Test.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/parser0.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/parser1.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/parser2.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/parser3.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/parser4.txt"),
+		string(PROJECT_SOURCE_DIR) + string("/test/parser5.txt")
 };
 
 inline bool file_exists (const std::string& name) {
@@ -30,7 +30,7 @@ TEST(parser, test1) {
 	for(int i = 0; i < 15; i++) {
 		cout << endl << endl << "Next file: " << testfiles[i].c_str() << endl;
 
-		//ASSERT_TRUE(file_exists(testfiles[i]));
+		ASSERT_TRUE(file_exists(testfiles[i]));
 
 		Parser* parser = nullptr;
 		EXPECT_NO_FATAL_FAILURE(parser = new Parser(testfiles[i].c_str()));

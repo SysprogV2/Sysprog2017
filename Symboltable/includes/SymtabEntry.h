@@ -14,8 +14,8 @@ class SymtabEntry {
 	Information* information;
 	SymtabEntry* next;
 public:
-	SymtabEntry(SymtabEntry* next);
-	SymtabEntry(Information* info);
+	explicit SymtabEntry(SymtabEntry* next);
+	explicit SymtabEntry(Information* info);
 	SymtabEntry();
 	void setInfo(Information* info);
 	Information* getInfo();

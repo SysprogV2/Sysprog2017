@@ -36,7 +36,7 @@ SymtabEntry* Symboltable::insert(const char *lexem, int size) {
 	if (hashTab[key] == nullptr) {
 		hashTab[key] = new SymtabEntry();
 	} else {
-		SymtabEntry prev = hashTab[key];
+		SymtabEntry* prev = hashTab[key];
 		hashTab[key] = new SymtabEntry(prev);
 	}
 	char* lexemPtr = strTab->insert(lexem, size);

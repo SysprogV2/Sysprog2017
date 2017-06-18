@@ -14,14 +14,16 @@
 
 class Parser {
 private:
-	Scanner* scanner;
+	Scanner *scanner;
 public:
-	Parser(const char *filename);
+	explicit Parser(const char *filename);
+
 	/**
 	 * Parses the file it was constructed with.
 	 * @return the code{ParseTree} that resulted from parsing the file
 	 */
-	ParseTree* parse();
+	ParseTree *parse();
+
 	~Parser();
 };
 

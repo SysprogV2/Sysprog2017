@@ -31,7 +31,7 @@ private:
 	bool tokensReferenced;
 public:
 	TokenSequence (int initialCapacity, int initialIncrement);
-	TokenSequence (TokenSequence* other);
+	explicit TokenSequence (TokenSequence* other);
 	void add (Token* token, bool setAsCurrent);
 	void clear (bool areStillReferenced);
 	Token* tokenAt (int index, bool jumpTo);
@@ -74,7 +74,7 @@ class LabelFactory {
 private:
 	int currentLabelNo;
 public:
-	LabelFactory(int firstLabelNo);
+	explicit LabelFactory(int firstLabelNo);
 	int newLabel();
 	~LabelFactory();
 };
