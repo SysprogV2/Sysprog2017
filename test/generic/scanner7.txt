@@ -1,4 +1,4 @@
-aaa234
+aaa234 :* Parser-Fehler *:
 
 korrekt
 ein Identifier aaa234
