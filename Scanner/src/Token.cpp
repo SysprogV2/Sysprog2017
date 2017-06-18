@@ -8,9 +8,7 @@
 #include "../includes/Token.h"
 
 #include <iostream>
-#include <errno.h>
 #include <cstdarg>
-#include <cstdio>
 
 char* StringUtil::concat(char* first, char* second) {
 	int firstLength = calcLength(first);

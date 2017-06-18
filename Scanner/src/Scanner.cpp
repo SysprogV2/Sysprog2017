@@ -6,8 +6,8 @@
  */
 #include "../includes/Scanner.h"
 
-#define CONV_ERR "error: cannot convert given CHAR* to LONG INT"
-#define CONV_ERR_OVERFLOW "error: given integer is too big to be converted to LONG INT"
+// #define CONV_ERR "error: cannot convert given CHAR* to LONG INT"
+// #define CONV_ERR_OVERFLOW "error: given integer is too big to be converted to LONG INT"
 // TODO: use somewhere
 
 Scanner::Scanner(const char *filename): Scanner(filename, new Symboltable()) {

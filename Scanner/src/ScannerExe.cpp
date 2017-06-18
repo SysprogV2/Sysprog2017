@@ -1,7 +1,5 @@
 #include "../includes/Scanner.h"
-#include <iostream>
 #include <sys/time.h>
-#include <fstream>
 
 
 /* copypasted piece of code for time measurements */

@@ -6,7 +6,6 @@
  */
 
 #include "../includes/Information.h"
-#include <iostream>
 
 Information::Information() {
 	this->type = noType;

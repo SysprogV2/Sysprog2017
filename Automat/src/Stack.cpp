@@ -6,7 +6,6 @@
  */
 #include <iostream>
 #include "../includes/Stack.h"
-#include "../../Compab/includes/compab.hpp"
 
 
 Stack::Stack() {

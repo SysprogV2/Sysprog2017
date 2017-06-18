@@ -9,18 +9,18 @@
 #include "../includes/Errors.h"
 
 void throwError(ErrorType type) {
-	const char* errorString = "Error: %s", errorTypeToString(type);
+	const char* errorString = errorTypeToString(type);
 	throw errorString;
 }
 
 const char* errorTypeToString(ErrorType type) {
 	switch(type) {
 	case PROHIBITED_TOKEN:
-		return "Token is not defined by the standard";
+		return "Error: Token is not defined by the standard";
 	case INVALID_SEMANTICS:
-		return "Tokens form incompilable code";
+		return "Error: Tokens form incompilable code";
 	case NON_MATCHING_TYPES:
-		return "Cannot convert from int[] to int";
+		return "Error: Cannot convert from int[] to int";
 	}
 
 	return "Unknown error";
