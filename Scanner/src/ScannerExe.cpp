@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
         std::ofstream output_file;
         output_file.open(argv[2]);
         if (output_file.is_open()) {
-            while ((t = s->nextToken())) {
+            while ((t = s->nextToken()) && t->getType() != Syntax::States::EOF_Z) {
                 /* console output */
                 if (t->getType() == Syntax::PROH_Z) {
                     std::cout << t->getErrorMessage()
