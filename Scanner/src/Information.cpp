@@ -7,12 +7,14 @@
 
 #include "../includes/Information.h"
 
-Information::Information() {
+Information::Information(Token* token) {
+	this->token = token;
 	this->type = noType;
 	this->lexem = '\0';
 }
 
-Information::Information(char* lexem) {
+Information::Information(char* lexem, Token* token) {
+	this->token = token;
 	setLexem(lexem);
 }
 
@@ -22,6 +24,10 @@ Information::~Information() {
 
 void Information::setLexem(char* lexem) {
 	this->lexem = lexem;
+}
+
+Token* Information::getToken() {
+	return token;
 }
 
 char* Information::getLexem() {

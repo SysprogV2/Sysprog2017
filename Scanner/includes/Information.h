@@ -10,6 +10,7 @@
 
 typedef enum {
 	uncheckedType,
+
 	intType,
 	intArrayType,
 	arrayType,
@@ -20,12 +21,14 @@ typedef enum {
 class Information {
 	char* lexem;
 	CheckableType type;
+	Token* token;
 public:
-	Information();
-	explicit Information(char* lexem);
+	Information(Token* token);
+	Information(char* lexem, Token* token);
 	virtual ~Information();
 	void setLexem(char* lexem);
 	char* getLexem();
+	Token* getToken();
 	CheckableType getType();
 	bool matches(const char* other);
 	void setType (CheckableType type);

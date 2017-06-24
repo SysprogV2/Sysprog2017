@@ -32,6 +32,9 @@ Buffer::Buffer(const char *file, int size, int segments) {
 	//open the file to get file length, then close it again
 	ifstream *fileStream = new ifstream();
 	fileStream->open(_file);
+	if(!fileStream->good()) {
+		throw("Error: file could not be opened. does it exist? do you have access?");
+	}
 	_fileLength = Buffer::getFileLength(fileStream);
 	fileStream->close();
 

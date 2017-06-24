@@ -114,7 +114,7 @@ int Automat::getFinalState() {
 	return lastFinalState;
 }
 
-const char *Automat::getLexem() {
+char *Automat::getLexem() {
 	return stack->get();
 }
 

@@ -71,7 +71,7 @@ public:
 	 * @param segments Segment count.
 	 * @return
 	 */
-	explicit Buffer(const char *file, int size = 500, int segments = 2);
+	Buffer(const char *file, int size = 500, int segments = 2);
 
 	/**
 	 * @return The current position in the source file.

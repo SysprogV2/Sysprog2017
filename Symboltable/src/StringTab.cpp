@@ -5,6 +5,7 @@
  *      Author: arty
  */
 
+#include <cstring>
 #include "../includes/StringTab.h"
 
 StringTab::StringTab() {
@@ -14,15 +15,15 @@ StringTab::StringTab() {
 	    perror("posix_memalign");
 	    throw(EXIT_FAILURE);
 	}
-	string = (char*) spacePtr;
-	freeP = string;
+	_str = (char*) spacePtr;
+	freeP = _str;
 	overallSpace = INITIAL_SIZE;
 	freeSpace = INITIAL_SIZE;
 }
 
 
 StringTab::~StringTab() {
-	delete[] string;
+	delete[] _str;
 }
 
 /*
@@ -32,7 +33,7 @@ StringTab::~StringTab() {
 char* StringTab::insert(const char *lexem, int size) {
 	char *tmpToReturn;
 	if (size >= freeSpace) {
-		resize(string, size);
+		resize(_str, size);
 	}
 	tmpToReturn = copy(freeP, lexem, size);
 	// move pointer to the new place
@@ -67,10 +68,10 @@ void StringTab::resize(char * stringItself, int size) {
 	    perror("posix_memalign");
 	    throw(EXIT_FAILURE);
     }
-	memcpy(allocPtr, string, occupiedSpace * sizeof(char));
+	memcpy(allocPtr, _str, occupiedSpace * sizeof(char));
 
 	/* update original pointers */
-	string = (char*) allocPtr;
+	_str = (char*) allocPtr;
 	freeP = (char*) allocPtr + occupiedSpace * sizeof(char);
 
 }

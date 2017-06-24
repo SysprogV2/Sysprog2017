@@ -1,30 +1,51 @@
 /*
  * Parser.h
  *
- *  Created on: 16.01.2016
- *      Author: work
+ *  Created on: Nov 18, 2015
+ *      Author: marius
  */
 
-#ifndef PARSER_INCLUDES_PARSER_H_
-#define PARSER_INCLUDES_PARSER_H_
+#include "../../Scanner/src/Scanner.h"
+#include "../../Scanner/src/Token.h"
+#include "../../Symboltable/src/Information.h"
+#include <stdio.h>
+#include "Node.h"
+#include <iostream>
+#include <fstream>
+using namespace std;
 
-#include "ParseTree.h"
-#include "../../Scanner/includes/Scanner.h"
-#include <sys/time.h>
+#ifndef PARSER_SRC_PARSER_H_
+#define PARSER_SRC_PARSER_H_
 
 class Parser {
-private:
-	Scanner *scanner;
 public:
-	explicit Parser(const char *filename);
-
-	/**
-	 * Parses the file it was constructed with.
-	 * @return the code{ParseTree} that resulted from parsing the file
-	 */
-	ParseTree *parse();
-
-	~Parser();
+	Parser(Scanner* s, char* output);
+	virtual ~Parser();
+	Node* parse();
+	Node* match(InfoTyp typ);
+	Node* match(State typ);
+	void nextToken();
+	void error();
+	Node* parseProg();
+	Node* parseDecls();
+	Node* parseDecl();
+	Node* parseArray();
+	Node* parseStatements();
+	Node* parseStatement();
+	Node* parseExp();
+	Node* parseExp2();
+	Node* parseIndex();
+	Node* parseOpExp();
+	Node* parseOp();
+	Node* createNode(NodeType ntype);
+	void typeCheck(Node* node);
+	void makeCode(Node* node);
+	void errorTypeCheck(const char* message, Token* token);
+private:
+	Scanner* scanner;
+	Token* token;
+	ofstream code;
+	uint16_t labelcounter;
 };
 
-#endif /* PARSER_INCLUDES_PARSER_H_ */
+#endif /* PARSER_SRC_PARSER_H_ */

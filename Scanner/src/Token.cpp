@@ -6,6 +6,7 @@
  */
 
 #include "../includes/Token.h"
+#include "../../Symboltable/includes/Symboltable.h"
 
 #include <iostream>
 #include <cstdarg>
@@ -152,6 +153,10 @@ int Token::getColumn() {
 
 long int Token::getValue() {
 	return value;
+}
+
+int Token::getKey() {
+	return Symboltable::hash(this->getLexem());
 }
 
 char Token::getSymbol() {

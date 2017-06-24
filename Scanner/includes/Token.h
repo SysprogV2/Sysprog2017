@@ -31,6 +31,7 @@ public:
 	int getColumn();
 	long int getValue();
 	void setValue(long int value);
+	int getKey();
 	char getSymbol();
 	void setSymbol(char symbol);
 	void setInformation(Information* info);

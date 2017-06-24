@@ -14,11 +14,10 @@
 #include <cstdio>  // perror()
 #include <cstdlib> // throw()
 #include <cerrno>  // errors' list
-#include <cstring> // memcpy()
 #include "../../Compab/includes/compab.hpp"
 
 class StringTab {
-	char *string;
+	char *_str;
 	char *freeP;
 	int overallSpace;
 	int freeSpace;

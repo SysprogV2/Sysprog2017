@@ -5,12 +5,14 @@
  *      Author: knad0001
  */
 #include "../includes/Symboltable.h"
+#include "../../Scanner/includes/Token.h"
 
 Symboltable::Symboltable() {
-	density = new int[TABLE_SIZE] {0};
+	density = new int[TABLE_SIZE];
+	density[0] = 0;
 
 	strTab = new StringTab();
-	initSymbols();
+//	initSymbols();
 }
 
 Symboltable::~Symboltable() {
@@ -18,20 +20,32 @@ Symboltable::~Symboltable() {
 	delete[] density;
 }
 
-/*
- * from Algorithms, 4th edition by Sedgewick & Wayne
- */
-int Symboltable::hash(const char *lexem) {
-	int hash = 0;
-	const char *tmpPtr = lexem;
-	while (tmpPtr[0] != '\0') {
-		hash = (R_CONST * hash + tmpPtr[0]) % TABLE_SIZE;
-		tmpPtr++;
-	}
-	return hash;
+///*
+// * from Algorithms, 4th edition by Sedgewick & Wayne
+// */
+//int Symboltable::hash(const char *lexem) {
+//	int hash = 0;
+//	const char *tmpPtr = lexem;
+//	while (tmpPtr[0] != '\0') {
+//		hash = (R_CONST * hash + tmpPtr[0]) % TABLE_SIZE;
+//		tmpPtr++;
+//	}
+//	return hash;
+//}
+
+static int Symboltable::hash(char *str)
+{
+	unsigned long hash = 5381;
+	int c;
+
+	while (c = *str++)
+		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+	return hash % TABLE_SIZE;
 }
 
-SymtabEntry* Symboltable::insert(const char *lexem, int size) {
+SymtabEntry* Symboltable::insert(char *lexem, int size, Token* token) {
+//	size++;
 	int key = hash(lexem);
 	if (hashTab[key] == nullptr) {
 		hashTab[key] = new SymtabEntry();
@@ -41,15 +55,15 @@ SymtabEntry* Symboltable::insert(const char *lexem, int size) {
 	}
 	char* lexemPtr = strTab->insert(lexem, size);
 	density[key]++;
-	hashTab[key]->setInfo(new Information(lexemPtr));
+	hashTab[key]->setInfo(new Information(lexemPtr, token));
 	return hashTab[key];
 }
+
 
 /* checks if the given lexem is already in the table */
 /* returns NULL if not 								 */
 /* returns corresponding Information* object if it is*/
-Information* Symboltable::lookup(const char* lexem) {
-	int key = hash(lexem);
+Information* Symboltable::lookup(int key) {
 	SymtabEntry* entry = hashTab[key];
 	int tmp = 0;
 	while (tmp < density[key]) {
@@ -59,6 +73,13 @@ Information* Symboltable::lookup(const char* lexem) {
 		entry = entry->getNext();
 	}
 	return nullptr;
+}
+
+/* checks if the given lexem is already in the table */
+/* returns NULL if not 								 */
+/* returns corresponding Information* object if it is*/
+Information* Symboltable::lookup(char* lexem) {
+	return lookup(hash(lexem));
 }
 
 void Symboltable::print() {

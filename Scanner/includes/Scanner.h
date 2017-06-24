@@ -37,6 +37,15 @@ public:
 	 */
 	Scanner(const char *filename, Symboltable *st);
 
+
+	/**
+	 * Get Info for key
+	 * @param key
+	 * @return
+	 */
+	Information* getInfo(int key);
+
+
 	/**
 	 * Calculates what type a code{Token} with the given lexem under the given state would have.
 	 * @return the type the code{Token} will have according to the calculation

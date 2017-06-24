@@ -10,7 +10,19 @@
 // #define CONV_ERR_OVERFLOW "error: given integer is too big to be converted to LONG INT"
 // TODO: use somewhere
 
-Scanner::Scanner(const char *filename): Scanner(filename, new Symboltable()) {
+Scanner::Scanner(const char *filename) {
+	stab = new Symboltable();
+	buffer = new Buffer(filename, 500, 2);
+	automat = new Automat();
+	syntax = new Syntax();
+	cToken = nullptr;
+	idenInt =  new TokenTypeRegistry();
+	Token* idenToken = new Token(1, 0, 0);
+	Token* intToken = new Token (2, 0, 0);
+	idenInt->set(idenToken);
+	idenInt->set(intToken);
+	delete idenToken;
+	delete intToken;
 }
 
 Scanner::Scanner(const char *filename, Symboltable *st) {
@@ -36,6 +48,10 @@ Scanner::~Scanner() {
         delete this->cToken;
     }
 	delete this->idenInt;
+}
+
+Information* Scanner::getInfo(int key) {
+	return stab->lookup(key);
 }
 
 /*
@@ -66,7 +82,7 @@ Token *Scanner::nextToken() {
 	} while (!buffer->isEnd() && currentChar != '\0' &&  !automat->isLexemReady());
 
 	/* save all information about the lexem */
-	const char* lexem = automat->getLexem();
+	char* lexem = automat->getLexem();
 	int lexemLength = automat->getLexemLength();
 	int line = automat->getLine();
 	int col = automat->getColumn();
@@ -80,7 +96,7 @@ Token *Scanner::nextToken() {
 	if (tokenType == Syntax::IDEN_Z) {
 		info = stab->lookup(lexem);
 		if (info == nullptr) {
-			SymtabEntry* entry = stab->insert(lexem, lexemLength);
+			SymtabEntry* entry = stab->insert(lexem, lexemLength, t);
 			info = entry->getInfo();
 		}
 		t->setInformation(info);

@@ -42,6 +42,7 @@ target_link_libraries(MainTest LINK_PUBLIC
 	AutomatLib 
 	gtest 
 	gtest_main)
+target_compile_definitions(MainTest PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 
 add_executable(AllTests AllTests.cpp
         Automat/src/TestAutomat.cpp

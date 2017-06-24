@@ -1,0 +1,26 @@
+/* div and mod ==> d := a mod b */
+int a;
+int b;
+int c;
+int d;
+
+/* int a; 25*/
+/* int b;  3*/
+/* int c;   */
+int x;
+int y;
+
+int mod;
+int div;
+
+/* 25 */
+read(a);
+/*   3*/
+read(b);
+if (a < 0) { a := -a; write(a);} else{};
+if (b < 0) { b := -b; write(b);} else{};
+c := a / b;
+d := a - (c * b);
+
+write (d);
+write(1);
