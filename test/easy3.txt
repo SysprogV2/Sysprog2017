@@ -1,0 +1,7 @@
+if
+while
+int
+write
+else
+read
++ - ! && ; ( )

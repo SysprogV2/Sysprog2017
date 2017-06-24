@@ -41,7 +41,8 @@ int main(int argc, char **argv) {
                     output_file
                             << syntax->getTokenTypeAsChar(t->getType())
                             << " Line: " << t->getLine()
-                            << " Column: " << t->getColumn();
+                            << " Column: " << t->getColumn()
+							<< " Type: " << t->getType();
                     if (t->getType() == Syntax::IDEN_Z) {
                         output_file << " Lexem: " << t->getLexem();
                     } else if (t->getType() == Syntax::INTG_Z) {
