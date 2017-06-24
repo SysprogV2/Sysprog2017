@@ -47,7 +47,7 @@ target_compile_definitions(MainTest PRIVATE PROJECT_SOURCE_DIR="${PROJECT_SOURCE
 add_executable(AllTests AllTests.cpp
         Automat/src/TestAutomat.cpp
         Buffer/src/TestBuffer.cpp
-        Parser/src/TestParser.cpp
+#        Parser/src/TestParser.cpp
         Scanner/src/TestScanner.cpp
         Symboltable/src/TestSymboltable.cpp
         Symboltable/src/TestStringTab.cpp)

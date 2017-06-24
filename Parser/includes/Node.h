@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
-#include "../../Scanner/src/Token.h"
+#include "../../Scanner/includes/Token.h"
 
 enum class NodeType {
 	PROG,

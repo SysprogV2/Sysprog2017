@@ -5,9 +5,9 @@
  *      Author: marius
  */
 
-#include "../../Scanner/src/Scanner.h"
-#include "../../Scanner/src/Token.h"
-#include "../../Symboltable/src/Information.h"
+#include "../../Scanner/includes/Scanner.h"
+#include "../../Scanner/includes/Token.h"
+#include "../../Scanner/includes/Information.h"
 #include <stdio.h>
 #include "Node.h"
 #include <iostream>
